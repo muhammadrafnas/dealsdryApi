@@ -217,5 +217,13 @@ module.exports = {
                resolve(data)
            }
         })
+    },
+    getPendencyDocumentGstNo:(userID)=>{
+        return new Promise(async(resolve,reject)=>{
+            let data=await user.findOne({
+                _id:userID
+            })
+            
+        })
     }
 }
