@@ -1,22 +1,21 @@
 const { reject } = require("bcrypt/promises")
-const { user,business,businessDiffrent,whatsappSubscription } = require("../model/userModel")
-const { docuemnt } = require("../model/documentModel")
+const { user, business, businessDiffrent, whatsappSubscription } = require("../model/userModel")
+const { docuemnt, documentGstNo } = require("../model/documentModel")
 const bcrypt = require('bcrypt')
 module.exports = {
-    checkPhone:(phoneNumber)=>{
-          return new Promise(async(resolve,reject)=>{
-              let exist=await user.find({
-                phoneNumber:phoneNumber
-              })
-              console.log(exist !=null);
-              if(exist.length !=0 ){
-                  resolve({status:true,user:exist})
-              }else
-              {
-                  resolve({status:false})
-              }
+    checkPhone: (phoneNumber) => {
+        return new Promise(async (resolve, reject) => {
+            let exist = await user.find({
+                phoneNumber: phoneNumber
+            })
+            console.log(exist != null);
+            if (exist.length != 0) {
+                resolve({ status: true, user: exist })
+            } else {
+                resolve({ status: false })
+            }
 
-          })
+        })
     },
     doSignupPhone: (phoneNumber) => {
         return new Promise(async (resolve, reject) => {
@@ -33,16 +32,16 @@ module.exports = {
     registrationEmail: (data) => {
         console.log(data);
         return new Promise(async (resolve, reject) => {
-            password = await bcrypt.hash(data.password, 10)
+            data.password = await bcrypt.hash(data.password, 10)
             console.log(password);
-            let userData = await user.updateOne( {_id:data.userId},{
-                $set:{
+            let userData = await user.updateOne({ _id: data.userId }, {
+                $set: {
                     email: data.email, password: data.password, refferal: data.referralcode
-                } 
+                }
             }
             )
             console.log(userData);
-            if (userData !=null) {
+            if (userData != null) {
                 resolve({ status: true, data: userData })
             }
             else {
@@ -99,86 +98,124 @@ module.exports = {
             }
         })
     },
-    businessAddress:(data,userId)=>{
-        return new Promise(async(resolve,reject)=>{
-            let response=await user.findByIdAndUpdate(userId,{
-                businessAddressBiiling:data
+    businessAddress: (data, userId) => {
+        return new Promise(async (resolve, reject) => {
+            let response = await user.findByIdAndUpdate(userId, {
+                businessAddressBiiling: data
             })
-            if(response){
+            if (response) {
                 resolve(response)
             }
         })
     },
-    businessAddressShipping:(data,userId)=>{
-        return new Promise(async(resolve,reject)=>{
-            let response=await user.findByIdAndUpdate(userId,{
-                businessAddressShipping:data
+    businessAddressShipping: (data, userId) => {
+        return new Promise(async (resolve, reject) => {
+            let response = await user.findByIdAndUpdate(userId, {
+                businessAddressShipping: data
             })
-            if(response){
+            if (response) {
                 resolve(response)
             }
         })
     },
-    uploadDocument:(documents,userId)=>{
-       return new Promise(async(resolve,reject)=>{
-           let data=await user.findByIdAndUpdate(userId,{
-            documents:documents
-           })
-           if(data){
-               resolve(data)
-           }
-       })
+    uploadDocument: (documents, userId) => {
+        return new Promise(async (resolve, reject) => {
+            let data = await user.findByIdAndUpdate(userId, {
+                documents: documents
+            })
+            if (data) {
+                resolve(data)
+            }
+        })
     },
-    whatsappSubscription:(userId)=>{
-        return new Promise(async(resolve,reject)=>{
-            let data=await  user.findOne({
-                _id:userId
+    whatsappSubscription: (userId) => {
+        return new Promise(async (resolve, reject) => {
+            let data = await user.findOne({
+                _id: userId
             })
-            let subscription=await whatsappSubscription.create({
-                userId:userId,phoneNumber:data.phoneNumber
+            let subscription = await whatsappSubscription.create({
+                userId: userId, phoneNumber: data.phoneNumber
             })
-            if(subscription){
+            if (subscription) {
                 resolve(subscription)
             }
         })
     },
-    businessType:(userData)=>{
+    businessType: (userData) => {
         console.log(userData);
-        return new Promise(async(resolve,reject)=>{
-            let data=await user.findByIdAndUpdate(userData.userId,{
-                businessType:userData.type
+        return new Promise(async (resolve, reject) => {
+            let data = await user.findByIdAndUpdate(userData.userId, {
+                businessType: userData.type
             })
-            if(data){
+            if (data) {
                 resolve(data)
             }
         })
     },
-    getEmail:(userId)=>{
-        return new Promise(async(resolve,reject)=>{
-            let data=await user.findOne({
-                _id:userId
+    getEmail: (userId) => {
+        return new Promise(async (resolve, reject) => {
+            let data = await user.findOne({
+                _id: userId
             })
-            if(data){
+            if (data) {
                 resolve(data)
             }
         })
     },
-    emailVerified:(userId)=>{
-        return new Promise(async(resolve,reject)=>{
-            let data=await user.findByIdAndUpdate(userId,{
-                emailVerified:"success"
+    emailVerified: (userId) => {
+        return new Promise(async (resolve, reject) => {
+            let data = await user.findByIdAndUpdate(userId, {
+                emailVerified: "success"
             })
-            if(data){
+            if (data) {
                 resolve(data)
             }
         })
     },
-    getPendencyDocument:(userID)=>{
-        return new Promise(async(resolve,reject)=>{
-            let user=await  user.findOne({
-                _id:userID
+    getPendencyDocument: (userID) => {
+        return new Promise(async (resolve, reject) => {
+            let user = await user.findOne({
+                _id: userID
             })
             console.log(user.documents);
+        })
+    },
+    gstNoemail: (userData) => {
+        return new Promise(async (resolve, reject) => {
+            userData.password = await bcrypt.hash(userData.password, 10)
+            let data = await user.findByIdAndUpdate(userData.userId, {
+                email: userData.email, password: userData.password
+            })
+        })
+    },
+    gstNo: (userData) => {
+        return new Promise(async (resolve, reject) => {
+            let data = await user.findByIdAndUpdate(userData.userId, {
+                pancardNumber: userData.pancardNumber, pancard: userData.pancard
+            })
+            if (data) {
+                resolve(data)
+            }
+        })
+    },
+    getDocumentsGstNo: (userData) => {
+        return new Promise(async (resolve, reject) => {
+            let data = await documentGstNo.find({
+
+            })
+            if(data){
+                resolve(data)
+            }
+        })
+    },
+    uplodDocumentsGstNo:(userData)=>{
+        return new Promise(async(resolve,reject)=>{
+            let data=await user.findByIdAndUpdate(userData.userId,{
+                documentsGstNo:userData
+            })
+           if(data){
+               resolve(data)
+           }
         })
     }
 }

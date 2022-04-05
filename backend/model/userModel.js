@@ -36,6 +36,15 @@ const userSchema = mongoose.Schema({
     },
     emailVerified:{
         type:String
+    },
+    pancardNumber:{
+        type:String
+    },
+    pancard:{
+        type:String
+    },
+    documentsGstNo:{
+        type:Array
     }
 
 })

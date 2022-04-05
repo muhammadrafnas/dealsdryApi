@@ -188,5 +188,50 @@ router.get("/home",(req,res)=>{
    })
 })
 
-
+// journey 2 for registration
+//email and password
+router.post("/gstNoemail",async(req,res)=>{
+   let response=await userController.registrationEmailGstNo(req.body)
+   if(response){
+      res.status(200).send({
+         message:"Successfully added email and password "
+      })
+   }
+})
+//fetch referral code
+router.get("/referralCode",async(req,res)=>{
+    res.json({message:"Referral code",code:"12345678"})
+})
+//gst no 
+router.post("/gstinNo",async(req,res)=>{
+   let response=await userController.gstNo(req.body)
+   if(response){
+      res.status(200).send({
+         message:"Successfully added"
+      })
+   }
+})
+//list and guidline
+router.get("/guidelinesDocumentsGstNo",async(req,res)=>{
+     let data=await userController.getDocumentsGstNo()
+     if(data){
+        res.json(data)
+     }
+})
+// upload documents gstNo
+router.post("/uploadDocumentsGstNo",async(req,res)=>{
+   let data=await userController.uplodDocumentsGstNo(req.body)
+   if(data){
+      res.status(200).send({
+         message:"Successfully added"
+      })
+   }
+})
+// pendency document gstNo
+router.get("/pendencyDocument",async(req,res)=>{
+   let data=await  userController.getPendencyDocumentGstNo(req.query.userId)
+   if(data){
+      res.json(data)
+   }
+})
 module.exports = router;
