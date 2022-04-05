@@ -124,6 +124,9 @@ module.exports = {
            let data=await user.findByIdAndUpdate(userId,{
             documents:documents
            })
+           if(data){
+               resolve(data)
+           }
        })
     },
     whatsappSubscription:(userId)=>{
@@ -140,8 +143,9 @@ module.exports = {
         })
     },
     businessType:(userData)=>{
+        console.log(userData);
         return new Promise(async(resolve,reject)=>{
-            let data=await user.findByIdAndUpdate(userData.userData,{
+            let data=await user.findByIdAndUpdate(userData.userId,{
                 businessType:userData.type
             })
             if(data){
@@ -167,6 +171,14 @@ module.exports = {
             if(data){
                 resolve(data)
             }
+        })
+    },
+    getPendencyDocument:(userID)=>{
+        return new Promise(async(resolve,reject)=>{
+            let user=await  user.findOne({
+                _id:userID
+            })
+            console.log(user.documents);
         })
     }
 }

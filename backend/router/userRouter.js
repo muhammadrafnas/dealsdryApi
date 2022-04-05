@@ -42,7 +42,7 @@ router.post("/otpVerification", async (req, res) => {
       })
    }
 })
-// get email and password and refferal code
+// get email and password and refferal code api
 router.post("/email", async (req, res) => {
    let response = await userController.registrationEmail(req.body)
    if (response.status) {
@@ -86,7 +86,6 @@ router.post("/selectCategory", async (req, res) => {
 })
 // Business details
 router.get("/businessDetails", async (req, res) => {
-   console.log("heu");
    let businessDetails = await userController.getBusinessDetials()
    if (businessDetails) {
       res.json(businessDetails)
@@ -108,7 +107,9 @@ router.get("/guidelinesDocuments", async (req, res) => {
 })
 //Business address for billing
 router.post("/businessAddress", async (req, res) => {
-   let response = await userController.businessAddress(req.body)
+   console.log("api....");
+   console.log(req.body);
+   let response = await userController.businessAddress(req.body,req.body.userId)
    if (response) {
       res.status(200).send({
          message: "Successfully added"
@@ -117,7 +118,7 @@ router.post("/businessAddress", async (req, res) => {
 })
 // business address for shipping
 router.post("/businessAddressShipping", async (req, res) => {
-   let response = await userController.businessAddressShipping(req.body)
+   let response = await userController.businessAddressShipping(req.body,req.body.userId)
    if (response) {
       res.status(200).send({
          message: "Successfully added"
@@ -126,7 +127,7 @@ router.post("/businessAddressShipping", async (req, res) => {
 })
 // upload documents
 router.post("/uploadDocuments", async (req, res) => {
-   let docuemnt = await userController.uploadDocument(req.body)
+   let docuemnt = await userController.uploadDocument(req.body,req.body.userId)
    if (docuemnt) {
       res.status(200).send({
          message: "Successfully added"
@@ -134,15 +135,15 @@ router.post("/uploadDocuments", async (req, res) => {
    }
 })
 //Registration With Pendency document
-router.get("/pendencyDocument/:id", async (req, res) => {
-   let response = await userController.getPendencyDocument(req.params.id)
+router.get("/pendencyDocument", async (req, res) => {
+   let response = await userController.getPendencyDocument(req.query.id)
    if (response) {
       res.json(response)
    }
 })
 // whatsapp subscription
-router.get("/whatsappSubscription/:id", async (req, res) => {
-   let response = await userController.whatsappSubscription(req.params.id)
+router.get("/whatsappSubscription", async (req, res) => {
+   let response = await userController.whatsappSubscription(req.query.userId)
    if (response) {
       res.status(200).send({
          message: "Whatsapp subscription successfully"
@@ -151,10 +152,11 @@ router.get("/whatsappSubscription/:id", async (req, res) => {
 })
 // email verfication
 router.get("/emailVerification",async(req,res)=>{
-   let response=await userController.getEmail(req.query.id)
+   console.log("call api...");
+   let response=await userController.getEmail(req.query.userId)
    console.log(response.email);
    if(response){
-      sendverficationEmail(response._id, response.email)
+      let email=  sendverficationEmail(response._id, response.email)
       res.status(200).send({
          message:"Verfication link send to your email "
       })
@@ -185,30 +187,6 @@ router.get("/home",(req,res)=>{
       message:"Successfully enter to home screen"
    })
 })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 module.exports = router;
