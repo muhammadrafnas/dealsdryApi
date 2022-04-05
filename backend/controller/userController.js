@@ -81,7 +81,7 @@ module.exports = {
             resolve(data)
         })
     },
-    getBusinessDetialsDiffrent: (userData) => {
+    getBusinessDetialsDiffrent: () => {
         return new Promise(async (resolve, reject) => {
             let data = await businessDiffrent.find({
             })
