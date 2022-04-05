@@ -158,5 +158,15 @@ module.exports = {
                 resolve(data)
             }
         })
+    },
+    emailVerified:(userId)=>{
+        return new Promise(async(resolve,reject)=>{
+            let data=await user.findByIdAndUpdate(userId,{
+                emailVerified:"success"
+            })
+            if(data){
+                resolve(data)
+            }
+        })
     }
 }

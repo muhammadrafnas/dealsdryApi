@@ -33,6 +33,9 @@ const userSchema = mongoose.Schema({
     },
     businessType:{
         type:String
+    },
+    emailVerified:{
+        type:String
     }
 
 })

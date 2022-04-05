@@ -164,8 +164,13 @@ router.get("/emailVerification",async(req,res)=>{
 
 })
 // verfiy
-router.get("/verify/:id/:uniqueString",(req,res)=>{
-   console.log("raff");
+router.get("/verify/:id/:uniqueString",async(req,res)=>{
+   let data=await userController.emailVerified(req.params.id)
+   if(data){
+      res.status(200).send({
+         message:"Email verified"
+      })
+   }
 })
 //get business type
 router.get("/businessType", async (req, res) => {
@@ -182,6 +187,16 @@ router.get("/home",(req,res)=>{
       message:"Successfully enter to home screen"
    })
 })
+
+
+
+
+
+
+
+
+
+
 
 
 
