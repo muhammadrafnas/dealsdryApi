@@ -2,11 +2,12 @@ const { reject } = require("bcrypt/promises")
 const { user, business, businessDiffrent, whatsappSubscription } = require("../model/userModel")
 const { docuemnt, documentGstNo } = require("../model/documentModel")
 const bcrypt = require('bcrypt')
+
 module.exports = {
-    checkPhone: (phoneNumber) => {
+    checkPhone: (mobileNumber) => {
         return new Promise(async (resolve, reject) => {
             let exist = await user.find({
-                phoneNumber: phoneNumber
+                mobile_number: mobileNumber
             })
             console.log(exist != null);
             if (exist.length != 0) {
@@ -17,10 +18,10 @@ module.exports = {
 
         })
     },
-    doSignupPhone: (phoneNumber) => {
+    mobileRegistration: (phoneNumber) => {
         return new Promise(async (resolve, reject) => {
             let data = await user.create({
-                phoneNumber: phoneNumber
+                mobile_number: phoneNumber
             })
             if (data) {
                 resolve(data)
@@ -29,18 +30,16 @@ module.exports = {
             console.log(error);
         })
     },
-    registrationEmail: (data) => {
+    emailPasswordReferralRegistartion: (data) => {
         console.log(data);
         return new Promise(async (resolve, reject) => {
             data.password = await bcrypt.hash(data.password, 10)
-            console.log(password);
             let userData = await user.updateOne({ _id: data.userId }, {
                 $set: {
-                    email: data.email, password: data.password, refferal: data.referralcode
+                    email: data.email, password: data.password, referral_id: data.referralCode
                 }
             }
             )
-            console.log(userData);
             if (userData != null) {
                 resolve({ status: true, data: userData })
             }
@@ -49,11 +48,41 @@ module.exports = {
             }
         })
     },
-    registrationGstYes: (userData) => {
+    emailPasswordRegistartion: (data) => {
+        return new Promise(async (resolve, reject) => {
+            data.password = await bcrypt.hash(data.password, 10)
+            let userData = await user.updateOne({ _id: data.userId }, {
+                $set: {
+                    email: data.email, password: data.password
+                }
+            }
+            )
+            if (userData != null) {
+                resolve({ status: true, data: userData })
+            }
+            else {
+                resolve({ status: false })
+            }
+        })
+    },
+    gstinYes: (userData, proof) => {
         return new Promise(async (resolve, reject) => {
             let data = await user.findByIdAndUpdate(userData.userId, {
-                gstInNumber: userData.gstinNumber,
-                gstInProof: userData.gstinProof
+
+                "gstin_yes.gstin_number": userData.gstinNumber,
+                "gstin_yes.gstin_document": proof
+
+            })
+            if (data) {
+                resolve(data)
+            }
+        })
+    },
+    gstNo: (userData, docuemnt) => {
+        return new Promise(async (resolve, reject) => {
+            let data = await user.findByIdAndUpdate(userData.userId, {
+                "gstin_no.pan_number": userData.panNumber,
+                "gstin_no.pancard_document": docuemnt
             })
             if (data) {
                 resolve(data)
@@ -98,30 +127,79 @@ module.exports = {
             }
         })
     },
-    businessAddress: (data, userId) => {
+    businessAddress: (data, userId, addressProof) => {
         return new Promise(async (resolve, reject) => {
             let response = await user.findByIdAndUpdate(userId, {
-                businessAddressBiiling: data
+                $push: {
+                    business_billing_address: {
+                        business_billing_address_pin_code: data.pinCode,
+                        business_billing_address_town_area: data.townArea,
+                        business_billing_address: data.billingAddress,
+                        business_billing_address_landmark: data.landmark,
+                        business_billing_address_city: data.city,
+                        business_billing_address_state: data.state,
+                        buyer_business_address_proof_name: addressProof,
+                        business_billing_address_type: data.addressType
+                    }
+                }
+
             })
             if (response) {
                 resolve(response)
             }
         })
     },
-    businessAddressShipping: (data, userId) => {
+    businessAddressShipping: (data, userId, addressProof) => {
         return new Promise(async (resolve, reject) => {
             let response = await user.findByIdAndUpdate(userId, {
-                businessAddressShipping: data
+                $push:
+                {
+                    business_shipping_address: {
+                        business_billing_address_pin_code: data.pinCode,
+                        business_billing_address_town_area: data.townArea,
+                        business_billing_address: data.billingAddress,
+                        business_billing_address_landmark: data.landmark,
+                        business_billing_address_city: data.city,
+                        business_billing_address_state: data.state,
+                        business_billing_address_type: addressType,
+                        business_contact_person_name: data.contactPersonName,
+                        business_contact_person_mobile: data.contactPersonMobile,
+                        buyer_business_address_proof_name: addressProof
+                    }
+                }
             })
             if (response) {
                 resolve(response)
             }
         })
     },
-    uploadDocument: (documents, userId) => {
+    uploadDocumentGstYes: (panCard, addressProofFront, addressProofBack, businessProof, shippingAddreesProof, userId) => {
         return new Promise(async (resolve, reject) => {
             let data = await user.findByIdAndUpdate(userId, {
-                documents: documents
+                "documents_gstYes_fseNo.pan_card": panCard,
+                "documents_gstYes_fseNo.personal_address_proof_front_cop": addressProofFront,
+                "documents_gstYes_fseNo. personal_address_proof_back_copy": addressProofBack,
+                "documents_gstYes_fseNo.business_proof": businessProof,
+                "documents_gstYes_fseNo.shipping_address_proof": shippingAddreesProof
+
+
+            })
+            if (data) {
+                resolve(data)
+            }
+        })
+    },
+    uplodDocumentsGstNo: (panCard, addressProofFront, addressProofBack, businessProof, shippingAddreesProof, shopOwnerPhoto, shopBoardPhoto,userId) => {
+        return new Promise(async (resolve, reject) => {
+            let data = await user.findByIdAndUpdate(userId, {
+                "documents_gstNo_fseYes.pan_card": panCard,
+                "documents_gstNo_fseYes.personal_address_proof_front_cop": addressProofFront,
+                " documents_gstNo_fseYes. personal_address_proof_back_copy": addressProofBack,
+                " documents_gstNo_fseYes.business_proof": businessProof,
+                " documents_gstNo_fseYes.shipping_address_proof": shippingAddreesProof,
+                " documents_gstNo_fseYes.shop_owner_photo": shopOwnerPhoto,
+                " documents_gstNo_fseYes.shop_board_photo": shopBoardPhoto
+
             })
             if (data) {
                 resolve(data)
@@ -145,7 +223,7 @@ module.exports = {
         console.log(userData);
         return new Promise(async (resolve, reject) => {
             let data = await user.findByIdAndUpdate(userData.userId, {
-                businessType: userData.type
+                business_type: userData.type
             })
             if (data) {
                 resolve(data)
@@ -165,7 +243,7 @@ module.exports = {
     emailVerified: (userId) => {
         return new Promise(async (resolve, reject) => {
             let data = await user.findByIdAndUpdate(userId, {
-                emailVerified: "success"
+                email_verified: "success"
             })
             if (data) {
                 resolve(data)
@@ -180,50 +258,22 @@ module.exports = {
             console.log(user.documents);
         })
     },
-    gstNoemail: (userData) => {
+    getDocumentsGstNo: (userData) => {
         return new Promise(async (resolve, reject) => {
-            userData.password = await bcrypt.hash(userData.password, 10)
-            let data = await user.findByIdAndUpdate(userData.userId, {
-                email: userData.email, password: userData.password
-            })
-        })
-    },
-    gstNo: (userData) => {
-        return new Promise(async (resolve, reject) => {
-            let data = await user.findByIdAndUpdate(userData.userId, {
-                pancardNumber: userData.pancardNumber, pancard: userData.pancard
+            let data = await documentGstNo.find({
+
             })
             if (data) {
                 resolve(data)
             }
         })
     },
-    getDocumentsGstNo: (userData) => {
+    getPendencyDocumentGstNo: (userID) => {
         return new Promise(async (resolve, reject) => {
-            let data = await documentGstNo.find({
+            let data = await user.findOne({
+                _id: userID
+            })
 
-            })
-            if(data){
-                resolve(data)
-            }
-        })
-    },
-    uplodDocumentsGstNo:(userData)=>{
-        return new Promise(async(resolve,reject)=>{
-            let data=await user.findByIdAndUpdate(userData.userId,{
-                documentsGstNo:userData
-            })
-           if(data){
-               resolve(data)
-           }
-        })
-    },
-    getPendencyDocumentGstNo:(userID)=>{
-        return new Promise(async(resolve,reject)=>{
-            let data=await user.findOne({
-                _id:userID
-            })
-            
         })
     }
 }

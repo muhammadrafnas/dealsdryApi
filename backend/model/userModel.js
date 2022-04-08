@@ -1,7 +1,7 @@
 const mongoose = require("mongoose")
 //user schema 
 const userSchema = mongoose.Schema({
-    phoneNumber: {
+    mobile_number: {
         type: String
     },
     email: {
@@ -10,41 +10,74 @@ const userSchema = mongoose.Schema({
     password: {
         type: String
     },
-    referral: {
-        type: String
+    referral_id: {
+        type: Number
     },
-    gstInNumber: {
-        type: String
-    },
-    gstInProof: {
-        type: String
-    },
+    gstin_yes:
+    {
+        gstin_number: Number,
+        gstin_document: String
+    }
+    ,
     category: {
         type: Array
     },
-    businessAddressBiiling: {
-        type: Array
+    business_billing_address: [
+        {
+            business_billing_address_pin_code: Number,
+            business_billing_address_town_area: String,
+            business_billing_address: String,
+            business_billing_address_landmark: String,
+            business_billing_address_city: String,
+            business_billing_address_state: String,
+            buyer_business_address_proof_name: String,
+            business_billing_address_type: String
+
+        }
+    ],
+    business_shipping_address: [
+        {
+            business_billing_address_pin_code: String,
+            business_billing_address_town_area: String,
+            business_billing_address: String,
+            business_billing_address_landmark: String,
+            business_billing_address_city: String,
+            business_billing_address_state: String,
+            business_billing_address_type: String,
+            business_contact_person_name: String,
+            business_contact_person_mobile: String,
+            buyer_business_address_proof_name:String
+        }
+    ],
+    documents_gstYes_fseNo: {
+        pan_card: String,
+        personal_address_proof_front_copy: String,
+        personal_address_proof_back_copy: String,
+        business_proof: String,
+        shipping_address_proof: String
+
     },
-    businessAddressShipping: {
-        type: Array
+    business_type: {
+        type: String
     },
-    documents: {
-        type: Array
+    email_verified: {
+        type: String
     },
-    businessType:{
-        type:String
-    },
-    emailVerified:{
-        type:String
-    },
-    pancardNumber:{
-        type:String
-    },
-    pancard:{
-        type:String
-    },
-    documentsGstNo:{
-        type:Array
+    gstin_no:
+    {
+        pan_number: Number,
+        pancard_document: String
+    }
+
+    ,
+    documents_gstNo_fseYes: {
+        pan_card: String,
+        personal_address_proof_front_copy: String,
+        personal_address_proof_back_copy: String,
+        business_proof: String,
+        shipping_address_proof: String,
+        shop_owner_photo: String,
+        shop_board_photo: String
     }
 
 })
@@ -100,10 +133,10 @@ const whatsappSubscription = mongoose.Schema({
 const business = mongoose.model("business", businessSchema)
 const businessDiffrent = mongoose.model("businessContact", businessDiffrentSchema)
 const user = mongoose.model("users", userSchema)
-const whatsappSub=mongoose.model("whatsappSubscription",whatsappSubscription)
+const whatsappSub = mongoose.model("whatsappSubscription", whatsappSubscription)
 module.exports = {
     user: user,
     business: business,
     businessDiffrent: businessDiffrent,
-    whatsappSubscription:whatsappSub
+    whatsappSubscription: whatsappSub
 }

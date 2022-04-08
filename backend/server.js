@@ -3,6 +3,7 @@ const dotenv = require("dotenv")
 dotenv.config()
 const app = express()
 const cors = require("cors")
+const fileUpload = require('express-fileupload');
 const userRouter = require("./router/userRouter")
 const connectDB=require("./config/db")
 connectDB()
@@ -12,6 +13,9 @@ app.use(
         extended: false
     })
 )
+app.use(fileUpload({
+    createParentPath: true
+}));
 app.use(cors())
 app.use("/user", userRouter)
 

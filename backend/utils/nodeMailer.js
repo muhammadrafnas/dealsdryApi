@@ -17,7 +17,6 @@
          console.log(error);
     }
     else {
-         console.log("Ready for message");
          console.log(success);
     }
  })

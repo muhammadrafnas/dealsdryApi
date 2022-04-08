@@ -2,19 +2,18 @@ const express = require("express")
 const router = express.Router()
 const { sendOtp, verificationOtp } = require("../utils/otp")
 const userController = require("../controller/userController")
-const { cloudinary } = require('../utils/cloudinary')
-const {sendverficationEmail} =require("../utils/nodeMailer")
+const { sendverficationEmail } = require("../utils/nodeMailer")
 
 
-// send OTP api
+// send OTP api for mobile number verification
 router.post("/sendOtp", async (req, res) => {
-   let phoneExist = await userController.checkPhone(req.body.phoneNumber)
+   let phoneExist = await userController.checkPhone(req.body.mobileNumber)
    console.log(phoneExist);
    if (phoneExist.status) {
       res.json({ message: "Phone number verfication already done", userData: phoneExist.user })
    }
    else {
-      let response = await sendOtp(req.body.phoneNumber)
+      let response = await sendOtp(req.body.mobileNumber)
       if (response) {
          res.status(200).send({
             message: "OTP send successfully "
@@ -27,11 +26,13 @@ router.post("/sendOtp", async (req, res) => {
       }
    }
 })
+
+
 // otp verfication api
 router.post("/otpVerification", async (req, res) => {
    let response = await verificationOtp(req.body.otp)
    if (response.status) {
-      let user = await userController.doSignupPhone(response.phoneNumber)
+      let user = await userController.mobileRegistration(response.mobileNumber)
       if (user) {
          res.json({ message: "Successfully verified mobile number", userDetails: user })
       }
@@ -42,9 +43,11 @@ router.post("/otpVerification", async (req, res) => {
       })
    }
 })
+
+
 // get email and password and refferal code api
-router.post("/email", async (req, res) => {
-   let response = await userController.registrationEmail(req.body)
+router.post("/emailwithReferral", async (req, res) => {
+   let response = await userController.emailPasswordReferralRegistartion(req.body)
    if (response.status) {
       res.status(200).send({
          message: "Successfully added email and password"
@@ -56,25 +59,40 @@ router.post("/email", async (req, res) => {
       })
    }
 })
+
+
+router.post("/emailWithoutRefferal", async (req, res) => {
+   let response = await userController.registrationEmailGstNo(req.body)
+   if (response) {
+      res.status(200).send({
+         message: "Successfully added email and password "
+      })
+   }
+})
+
+
 // GSTIN confirmation
 router.post("/gstinYes", async (req, res) => {
-   console.log(req.body);
-   try {
-      let fileStr = req.body.gstinProof;
-      const uploadedResponse = await cloudinary.uploader.
-         upload(fileStr)
-      req.body.gstinProof = uploadedResponse.secure_url
-   }
-   catch (error) {
-      console.error(error);
-   }
-   let data = await userController.registrationGstYes(req.body)
+   let data = await userController.gstinYes(req.body, req.files.gstinDocument.name)
    if (data) {
       res.status(200).send({
          message: "Successfully added "
       })
    }
 })
+
+
+//gst no 
+router.post("/gstinNo", async (req, res) => {
+   let response = await userController.gstNo(req.body, req.files.pancard.name)
+   if (response) {
+      res.status(200).send({
+         message: "Successfully added"
+      })
+   }
+})
+
+
 // select category
 router.post("/selectCategory", async (req, res) => {
    let response = await userController.registrationSelectCategory(req.body.category, req.body.userId)
@@ -84,6 +102,8 @@ router.post("/selectCategory", async (req, res) => {
       })
    }
 })
+
+
 // Business details
 router.get("/businessDetails", async (req, res) => {
    let businessDetails = await userController.getBusinessDetials()
@@ -91,6 +111,8 @@ router.get("/businessDetails", async (req, res) => {
       res.json(businessDetails)
    }
 })
+
+
 // Business details contact perosn is diffrent
 router.get("/businessDetailsDiffrent", async (req, res) => {
    let businessDetails = await userController.getBusinessDetialsDiffrent()
@@ -98,42 +120,69 @@ router.get("/businessDetailsDiffrent", async (req, res) => {
       res.json(businessDetails)
    }
 })
+
+
 //List and guidlines
-router.get("/guidelinesDocuments", async (req, res) => {
+router.get("/guidelinesDocumentsGstYes", async (req, res) => {
    let documents = await userController.getDocuments()
    if (documents) {
       res.json(documents)
    }
 })
+
+
+//list and guidline
+router.get("/guidelinesDocumentsGstNo", async (req, res) => {
+   let data = await userController.getDocumentsGstNo()
+   if (data) {
+      res.json(data)
+   }
+})
+
+
 //Business address for billing
-router.post("/businessAddress", async (req, res) => {
-   console.log("api....");
+router.post("/businessAddressBilling", async (req, res) => {
    console.log(req.body);
-   let response = await userController.businessAddress(req.body,req.body.userId)
+   let response = await userController.businessAddress(req.body, req.body.userId, req.files.addressProof.name)
    if (response) {
       res.status(200).send({
          message: "Successfully added"
       })
    }
 })
+
+
 // business address for shipping
 router.post("/businessAddressShipping", async (req, res) => {
-   let response = await userController.businessAddressShipping(req.body,req.body.userId)
+   let response = await userController.businessAddressShipping(req.body, req.body.userId)
    if (response) {
       res.status(200).send({
          message: "Successfully added"
       })
    }
 })
-// upload documents
-router.post("/uploadDocuments", async (req, res) => {
-   let docuemnt = await userController.uploadDocument(req.body,req.body.userId)
+
+
+// upload documents gst Yes
+router.post("/uploadDocumentsGstYes", async (req, res) => {
+   let docuemnt = await userController.uploadDocumentGstYes(req.files.panCard.name, req.files.addressProofFront.name, req.files.addressProofBack.name, req.files.businessProof.name, req.files.shippingAddreesProof.name, req.files.shopOwnerPhoto.name, req.files.shopBoardPhoto.name, req.body.userId)
    if (docuemnt) {
       res.status(200).send({
          message: "Successfully added"
       })
    }
 })
+// upload documents gstNo
+router.post("/uploadDocumentsGstNo", async (req, res) => {
+   let data = await userController.uplodDocumentsGstNo(req.files.panCard.name, req.files.addressProofFront.name, req.files.addressProofBack.name, req.files.businessProof.name, req.files.shippingAddreesProof.name, req.body.userId)
+   if (data) {
+      res.status(200).send({
+         message: "Successfully added"
+      })
+   }
+})
+
+
 //Registration With Pendency document
 router.get("/pendencyDocument", async (req, res) => {
    let response = await userController.getPendencyDocument(req.query.id)
@@ -141,6 +190,8 @@ router.get("/pendencyDocument", async (req, res) => {
       res.json(response)
    }
 })
+
+
 // whatsapp subscription
 router.get("/whatsappSubscription", async (req, res) => {
    let response = await userController.whatsappSubscription(req.query.userId)
@@ -150,28 +201,34 @@ router.get("/whatsappSubscription", async (req, res) => {
       })
    }
 })
+
+
 // email verfication
-router.get("/emailVerification",async(req,res)=>{
+router.get("/emailVerification", async (req, res) => {
    console.log("call api...");
-   let response=await userController.getEmail(req.query.userId)
+   let response = await userController.getEmail(req.query.userId)
    console.log(response.email);
-   if(response){
-      let email=  sendverficationEmail(response._id, response.email)
+   if (response) {
+      let email = sendverficationEmail(response._id, response.email)
       res.status(200).send({
-         message:"Verfication link send to your email "
+         message: "Verfication link send to your email "
       })
    }
 
 })
+
+
 // verfiy
-router.get("/verify/:id/:uniqueString",async(req,res)=>{
-   let data=await userController.emailVerified(req.params.id)
-   if(data){
+router.get("/verify/:id/:uniqueString", async (req, res) => {
+   let data = await userController.emailVerified(req.params.id)
+   if (data) {
       res.status(200).send({
-         message:"Email verified"
+         message: "Email verified"
       })
    }
 })
+
+
 //get business type
 router.get("/businessType", async (req, res) => {
    let response = await userController.businessType(req.body)
@@ -181,56 +238,22 @@ router.get("/businessType", async (req, res) => {
       })
    }
 })
+
+
+
 // reach to home screen as a guest
-router.get("/home",(req,res)=>{
-   res.status(200).send({ 
-      message:"Successfully enter to home screen"
+router.get("/home", (req, res) => {
+   res.status(200).send({
+      message: "Successfully enter to home screen"
    })
 })
 
-// journey 2 for registration
-//email and password
-router.post("/gstNoemail",async(req,res)=>{
-   let response=await userController.registrationEmailGstNo(req.body)
-   if(response){
-      res.status(200).send({
-         message:"Successfully added email and password "
-      })
-   }
-})
-//fetch referral code
-router.get("/referralCode",async(req,res)=>{
-    res.json({message:"Referral code",code:"12345678"})
-})
-//gst no 
-router.post("/gstinNo",async(req,res)=>{
-   let response=await userController.gstNo(req.body)
-   if(response){
-      res.status(200).send({
-         message:"Successfully added"
-      })
-   }
-})
-//list and guidline
-router.get("/guidelinesDocumentsGstNo",async(req,res)=>{
-     let data=await userController.getDocumentsGstNo()
-     if(data){
-        res.json(data)
-     }
-})
-// upload documents gstNo
-router.post("/uploadDocumentsGstNo",async(req,res)=>{
-   let data=await userController.uplodDocumentsGstNo(req.body)
-   if(data){
-      res.status(200).send({
-         message:"Successfully added"
-      })
-   }
-})
+
+
 // pendency document gstNo
-router.get("/pendencyDocument",async(req,res)=>{
-   let data=await  userController.getPendencyDocumentGstNo(req.query.userId)
-   if(data){
+router.get("/pendencyDocument", async (req, res) => {
+   let data = await userController.getPendencyDocumentGstNo(req.query.userId)
+   if (data) {
       res.json(data)
    }
 })

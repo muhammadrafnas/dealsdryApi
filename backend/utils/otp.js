@@ -8,17 +8,14 @@ const authToken = process.env.TWILO_AUTHTOKEN;
 const serviceSID = process.env.TWILO_SERVICE_SID;
 const client = require("twilio")(accountSid, authToken)
 
-let phoneNumber;
-const verification = (phone) => {
-    console.log(phone);
+let mobileNumber;
+const verification = (mobile) => {
     return new Promise((resolve, reject) => {
         client.verify.services(serviceSID).verifications.create({
-            to: `+91${phone}`,
+            to: `+91${mobile}`,
             channel: "sms"
         }).then((response) => {
-
-            phoneNumber = phone;
-            console.log(phoneNumber);
+            mobileNumber = mobile;
             resolve(true)
         }).catch(err => {
             console.log(err);
@@ -28,16 +25,14 @@ const verification = (phone) => {
 }
 
 const verificationCheck = (otp) => {
-    console.log(otp);
-    console.log(phoneNumber);
     return new Promise((resolve, reject) => {
         client.verify.services(serviceSID).verificationChecks.create({
-            to: `+91${phoneNumber}`,
+            to: `+91${mobileNumber}`,
             code: otp
         }).then((response) => {
             console.log(response);
             if (response.valid) {
-                resolve({ status: true, phoneNumber: phoneNumber })
+                resolve({ status: true, mobileNumber: mobileNumber })
             }
             else {
                 resolve({ status: false })
