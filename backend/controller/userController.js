@@ -406,6 +406,61 @@ module.exports = {
             throw new Error(err)
         })
     },
+    getPendencyDocumentPartnershipGstNo: (userID) => {
+        userID=mongoose.Types.ObjectId(userID)
+        return new Promise(async (resolve, reject) => {
+            let whatsappSubscription = await user.aggregate([
+                { $match: { _id: userID } },
+                {
+                    $lookup: {
+                        from: "whatsappsubscriptions",
+                        localField: "_id",
+                        foreignField: "userId",
+                        as: "whatsappSub"
+                    }
+                }
+            ])
+            let pendencyDocumentGstNo={}
+            if (whatsappSubscription) {
+                  if(whatsappSubscription[0].whatsappSub.length ==0){
+                         pendencyDocumentGstNo.whatsapp=" Whatsapp Not subscribed"
+                  }
+                  if(!whatsappSubscription[0].email_verified){
+                         pendencyDocumentGstNo.email="Email not verfied"
+                  }
+                  if(whatsappSubscription[0].documents_partnership_gstNo){
+                      if( !whatsappSubscription[0].documents_partnership_gstNo.hasOwnProperty('pan_card')){
+                         pendencyDocumentGstNo.panCard="Pan card Not uploaded"
+                      }
+                      if( !whatsappSubscription[0].documents_partnership_gstNo.hasOwnProperty('personal_address_proof_front_copy')){
+                           pendencyDocumentGstNo.personalAddressProofFront="Not uploaded"
+                      }
+                      if(!whatsappSubscription[0].documents_partnership_gstNo.hasOwnProperty('personal_address_proof_back_copy')){
+                           pendencyDocumentGstNo.pesonalAddressProofBack="Not uploaded"
+                      }
+                      if(!whatsappSubscription[0].documents_partnership_gstNo.hasOwnProperty('business_proof')){
+                           pendencyDocumentGstNo.businessProof="Not uploaded"
+                      }
+                      if(!whatsappSubscription[0].documents_partnership_gstNo.hasOwnProperty('shipping_address_proof')){
+                           pendencyDocumentGstNo.shppingAddressProof="Not uploaded"
+                      }
+                      if(!whatsappSubscription[0].documents_partnership_gstNo.hasOwnProperty('firm_pancard')){
+                           pendencyDocumentGstNo.firmPancard="Not uploaded"
+                      }
+                      if(!whatsappSubscription[0].documents_partnership_gstNo.hasOwnProperty('partnership_deed')){
+                            pendencyDocumentGstNo.partnershipDeed="Not uploaded"
+                      }
+                  }
+                  else{
+                        pendencyDocumentGstNo.docuemnt="All document upload pending"
+                  }
+                  resolve(pendencyDocumentGstNo)
+               
+            }
+        }).catch((err)=>{
+            throw new Error(err)
+        })
+    },
     getWithoutPendencyDocumnet:(userId)=>{
         return new Promise(async(resolve,reject)=>{
             let user=await user.aggregate([
@@ -448,13 +503,13 @@ module.exports = {
         console.log(userId);
         return new Promise(async (resolve, reject) => {
             let data = await user.findByIdAndUpdate(userId, {
-                "documents_gstNo.pan_card": panCard,
-                "documents_gstNo.personal_address_proof_front_copy": addressProofFront,
-                "documents_gstNo.personal_address_proof_back_copy": addressProofBack,
-                "documents_gstNo.business_proof": businessProof,
-                "documents_gstNo.shipping_address_proof": shippingAddreesProof,
-                "documents_gstNo.firm_pancard": firmPancard,
-                "documents_gstNo.partnership_deed": partnershipDeed
+                "documents_partnership_gstNo.pan_card": panCard,
+                "documents_partnership_gstNo.personal_address_proof_front_copy": addressProofFront,
+                "documents_partnership_gstNo.personal_address_proof_back_copy": addressProofBack,
+                "documents_partnership_gstNo.business_proof": businessProof,
+                "documents_partnership_gstNo.shipping_address_proof": shippingAddreesProof,
+                "documents_partnership_gstNo.firm_pancard": firmPancard,
+                "documents_partnership_gstNo.partnership_deed": partnershipDeed
 
             })
             if (data) {

@@ -310,6 +310,18 @@ router.get("/pendencyDocumentGstNo", async (req, res,next) => {
    }
   
 })
+// pendency document partnership gstNo
+router.get("/pendencyDocumentPartnershipGstNo", async (req, res,next) => {
+   try {
+      let data = await userController.getPendencyDocumentPartnershipGstNo(req.query.userId)
+      if (data) {
+         res.json(data)
+      }
+   } catch (error) {
+      next(error)
+   }
+  
+})
 // without pendency document
 router.get("/withoutPendencyDocumentGstNo",async(req,res,next)=>{
    try {
