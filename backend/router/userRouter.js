@@ -167,7 +167,7 @@ router.get("/businessDetailsDifferent", async (req, res,next) => {
 })
 
 
-//List and guidlines
+//List and guidlines propreitership
 router.get("/guidelinesDocumentsGstYes", async (req, res,next) => {
    try {
       let documents = await userController.getDocuments()
@@ -181,10 +181,22 @@ router.get("/guidelinesDocumentsGstYes", async (req, res,next) => {
 })
 
 
-//list and guidline
+//list and guidline propreitership
 router.get("/guidelinesDocumentsGstNo", async (req, res,next) => {
    try {
       let data = await userController.getDocumentsGstNo()
+      if (data) {
+         res.json(data)
+      }
+   } catch (error) {
+      next(error)
+   }
+  
+})
+//list and guidline partnership
+router.get("/guidelinesDocumentsPartnershipGstNo", async (req, res,next) => {
+   try {
+      let data = await userController.getDocumentsPartnershipGstNo()
       if (data) {
          res.json(data)
       }
@@ -227,7 +239,7 @@ router.post("/businessAddressShipping", async (req, res,next) => {
 })
 
 
-// upload documents gst Yes
+// upload documents gst Yes propreitership
 router.post("/uploadDocumentsGstYes", async (req, res,next) => {
    try {
       let docuemnt = await userController.uploadDocumentGstYes(req.files.panCard.name, req.files.addressProofFront.name, req.files.addressProofBack.name, req.files.businessproof.name, req.files.shippingAddressProof.name, req.body.userId)
@@ -242,7 +254,7 @@ router.post("/uploadDocumentsGstYes", async (req, res,next) => {
   
 })
 
-// upload documents gstNo
+// upload documents gstNo propreitership
 router.post("/uploadDocumentsGstNo", async (req, res,next) => {
    try {
       let data = await userController.uplodDocumentsGstNo(req.files.panCard.name, req.files.addressProofFront.name, req.files.addressProofBack.name, req.files.businessproof.name, req.files.shippingAddressProof.name, req.files.shopOwnerPhoto.name, req.files.shopBoardPhoto.name, req.body.userId)
@@ -257,6 +269,20 @@ router.post("/uploadDocumentsGstNo", async (req, res,next) => {
   
 })
 
+// upload documents gstNo partnership
+router.post("/uploadDocumentsPartnershipGstNo", async (req, res,next) => {
+   try {
+      let data = await userController.uplodDocumentsPartnershipGstNo(req.files.panCard.name, req.files.addressProofFront.name, req.files.addressProofBack.name, req.files.businessproof.name, req.files.shippingAddressProof.name, req.files.firmPancard.name, req.files.partnershipDeed.name, req.body.userId)
+      if (data) {
+         res.status(200).send({
+            message: "Successfully added"
+         })
+      }
+   } catch (error) {
+      next(error)
+   }
+  
+})
 
 //Registration With Pendency document gstYes
 router.get("/pendencyDocumentGstYes", async (req, res,next) => {

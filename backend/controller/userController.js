@@ -443,6 +443,38 @@ module.exports = {
         }).catch((err)=>{
             throw new Error(err)
         })
-    }
+    },
+    uplodDocumentsPartnershipGstNo: (panCard, addressProofFront, addressProofBack, businessProof, shippingAddreesProof, firmPancard, partnershipDeed, userId) => {
+        console.log(userId);
+        return new Promise(async (resolve, reject) => {
+            let data = await user.findByIdAndUpdate(userId, {
+                "documents_gstNo.pan_card": panCard,
+                "documents_gstNo.personal_address_proof_front_copy": addressProofFront,
+                "documents_gstNo.personal_address_proof_back_copy": addressProofBack,
+                "documents_gstNo.business_proof": businessProof,
+                "documents_gstNo.shipping_address_proof": shippingAddreesProof,
+                "documents_gstNo.firm_pancard": firmPancard,
+                "documents_gstNo.partnership_deed": partnershipDeed
+
+            })
+            if (data) {
+                resolve(data)
+            }
+        }).catch((err)=>{
+            throw new Error(err)
+        })
+    },
+    getDocumentsPartnershipGstNo: () => {
+        return new Promise(async (resolve, reject) => {
+            let data = await documentGstNo.find({
+
+            })
+            if (data) {
+                resolve(data)
+            }
+        }).catch((err)=>{
+            throw new Error(err)
+        })
+    },
   
 }

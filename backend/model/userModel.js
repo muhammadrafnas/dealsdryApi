@@ -78,7 +78,16 @@ const userSchema = mongoose.Schema({
         shipping_address_proof: String,
         shop_owner_photo: String,
         shop_board_photo: String
-    }
+    },
+    documents_partnership_gstNo: {
+        pan_card: String,
+        personal_address_proof_front_copy: String,
+        personal_address_proof_back_copy: String,
+        business_proof: String,
+        shipping_address_proof: String,
+        firm_pancard: String,
+        partnership_deed: String
+    },
 
 })
 const businessSchema = mongoose.Schema({
