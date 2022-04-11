@@ -15,10 +15,17 @@ const verification = (mobile) => {
             to: `+91${mobile}`,
             channel: "sms"
         }).then((response) => {
-            mobileNumber = mobile;
-            resolve(true)
+            console.log(response);
+            if(response.valid){
+                mobileNumber = mobile;
+                resolve(true)
+            }
+            else
+            {
+                resolve(false)
+            }
         }).catch(err => {
-            console.log(err);
+            throw new Error(err)
         })
 
     })
@@ -38,7 +45,7 @@ const verificationCheck = (otp) => {
                 resolve({ status: false })
             }
         }).catch(err => {
-            console.log(err);
+            throw new Error(err)
         })
     })
 }

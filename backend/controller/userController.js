@@ -2,6 +2,7 @@ const { reject } = require("bcrypt/promises")
 const { user, business, businessDiffrent, whatsappSubscription } = require("../model/userModel")
 const { docuemnt, documentGstNo } = require("../model/documentModel")
 const bcrypt = require('bcrypt')
+const { default: mongoose } = require("mongoose")
 
 module.exports = {
     checkPhone: (mobileNumber) => {
@@ -16,6 +17,8 @@ module.exports = {
                 resolve({ status: false })
             }
 
+        }).catch((err)=>{
+            throw new Error(err)
         })
     },
     mobileRegistration: (phoneNumber) => {
@@ -26,8 +29,8 @@ module.exports = {
             if (data) {
                 resolve(data)
             }
-        }).catch(error => {
-            console.log(error);
+        }).catch((err)=>{
+            throw new Error(err)
         })
     },
     emailPasswordReferralRegistartion: (data) => {
@@ -46,6 +49,8 @@ module.exports = {
             else {
                 resolve({ status: false })
             }
+        }).catch((err)=>{
+            throw new Error(err)
         })
     },
     emailPasswordRegistartion: (data) => {
@@ -63,6 +68,8 @@ module.exports = {
             else {
                 resolve({ status: false })
             }
+        }).catch((err)=>{
+            throw new Error(err)
         })
     },
     gstinYes: (userData, proof) => {
@@ -76,9 +83,13 @@ module.exports = {
             if (data) {
                 resolve(data)
             }
+        }).catch((err)=>{
+            throw new Error(err)
         })
     },
     gstNo: (userData, docuemnt) => {
+        console.log(docuemnt);
+        console.log(userData);
         return new Promise(async (resolve, reject) => {
             let data = await user.findByIdAndUpdate(userData.userId, {
                 "gstin_no.pan_number": userData.panNumber,
@@ -87,6 +98,8 @@ module.exports = {
             if (data) {
                 resolve(data)
             }
+        }).catch((err)=>{
+            throw new Error(err)
         })
     },
     registrationSelectCategory: (category, userId) => {
@@ -98,6 +111,8 @@ module.exports = {
             if (userData) {
                 resolve(userData)
             }
+        }).catch((err)=>{
+            throw new Error(err)
         })
     },
     getBusinessDetials: () => {
@@ -107,6 +122,8 @@ module.exports = {
             )
             console.log(data);
             resolve(data)
+        }).catch((err)=>{
+            throw new Error(err)
         })
     },
     getBusinessDetialsDiffrent: () => {
@@ -116,6 +133,8 @@ module.exports = {
             if (data) {
                 resolve(data)
             }
+        }).catch((err)=>{
+            throw new Error(err)
         })
     },
     getDocuments: () => {
@@ -125,6 +144,20 @@ module.exports = {
             if (data) {
                 resolve(data)
             }
+        }).catch((err)=>{
+            throw new Error(err)
+        })
+    },
+    getDocumentsGstNo: (userData) => {
+        return new Promise(async (resolve, reject) => {
+            let data = await documentGstNo.find({
+
+            })
+            if (data) {
+                resolve(data)
+            }
+        }).catch((err)=>{
+            throw new Error(err)
         })
     },
     businessAddress: (data, userId, addressProof) => {
@@ -147,9 +180,11 @@ module.exports = {
             if (response) {
                 resolve(response)
             }
+        }).catch((err)=>{
+            throw new Error(err)
         })
     },
-    businessAddressShipping: (data, userId, addressProof) => {
+    businessAddressShipping: (data, userId, shippingAddressProof) => {
         return new Promise(async (resolve, reject) => {
             let response = await user.findByIdAndUpdate(userId, {
                 $push:
@@ -161,49 +196,56 @@ module.exports = {
                         business_billing_address_landmark: data.landmark,
                         business_billing_address_city: data.city,
                         business_billing_address_state: data.state,
-                        business_billing_address_type: addressType,
+                        business_billing_address_type: data.addressType,
                         business_contact_person_name: data.contactPersonName,
                         business_contact_person_mobile: data.contactPersonMobile,
-                        buyer_business_address_proof_name: addressProof
+                        buyer_business_address_proof_name: shippingAddressProof
                     }
                 }
             })
             if (response) {
                 resolve(response)
             }
+        }).catch((err)=>{
+            throw new Error(err)
         })
     },
     uploadDocumentGstYes: (panCard, addressProofFront, addressProofBack, businessProof, shippingAddreesProof, userId) => {
         return new Promise(async (resolve, reject) => {
             let data = await user.findByIdAndUpdate(userId, {
-                "documents_gstYes_fseNo.pan_card": panCard,
-                "documents_gstYes_fseNo.personal_address_proof_front_cop": addressProofFront,
-                "documents_gstYes_fseNo. personal_address_proof_back_copy": addressProofBack,
-                "documents_gstYes_fseNo.business_proof": businessProof,
-                "documents_gstYes_fseNo.shipping_address_proof": shippingAddreesProof
+                "documents_gstYes.pan_card": panCard,
+                "documents_gstYes.personal_address_proof_front_copy": addressProofFront,
+                "documents_gstYes.personal_address_proof_back_copy": addressProofBack,
+                "documents_gstYes.business_proof": businessProof,
+                "documents_gstYes.shipping_address_proof": shippingAddreesProof
 
 
             })
             if (data) {
                 resolve(data)
             }
+        }).catch((err)=>{
+            throw new Error(err)
         })
     },
-    uplodDocumentsGstNo: (panCard, addressProofFront, addressProofBack, businessProof, shippingAddreesProof, shopOwnerPhoto, shopBoardPhoto,userId) => {
+    uplodDocumentsGstNo: (panCard, addressProofFront, addressProofBack, businessProof, shippingAddreesProof, shopOwnerPhoto, shopBoardPhoto, userId) => {
+        console.log(userId);
         return new Promise(async (resolve, reject) => {
             let data = await user.findByIdAndUpdate(userId, {
-                "documents_gstNo_fseYes.pan_card": panCard,
-                "documents_gstNo_fseYes.personal_address_proof_front_cop": addressProofFront,
-                " documents_gstNo_fseYes. personal_address_proof_back_copy": addressProofBack,
-                " documents_gstNo_fseYes.business_proof": businessProof,
-                " documents_gstNo_fseYes.shipping_address_proof": shippingAddreesProof,
-                " documents_gstNo_fseYes.shop_owner_photo": shopOwnerPhoto,
-                " documents_gstNo_fseYes.shop_board_photo": shopBoardPhoto
+                "documents_gstNo.pan_card": panCard,
+                "documents_gstNo.personal_address_proof_front_copy": addressProofFront,
+                "documents_gstNo.personal_address_proof_back_copy": addressProofBack,
+                "documents_gstNo.business_proof": businessProof,
+                "documents_gstNo.shipping_address_proof": shippingAddreesProof,
+                "documents_gstNo.shop_owner_photo": shopOwnerPhoto,
+                "documents_gstNo.shop_board_photo": shopBoardPhoto
 
             })
             if (data) {
                 resolve(data)
             }
+        }).catch((err)=>{
+            throw new Error(err)
         })
     },
     whatsappSubscription: (userId) => {
@@ -217,6 +259,8 @@ module.exports = {
             if (subscription) {
                 resolve(subscription)
             }
+        }).catch((err)=>{
+            throw new Error(err)
         })
     },
     businessType: (userData) => {
@@ -228,6 +272,8 @@ module.exports = {
             if (data) {
                 resolve(data)
             }
+        }).catch((err)=>{
+            throw new Error(err)
         })
     },
     getEmail: (userId) => {
@@ -238,6 +284,8 @@ module.exports = {
             if (data) {
                 resolve(data)
             }
+        }).catch((err)=>{
+            throw new Error(err)
         })
     },
     emailVerified: (userId) => {
@@ -248,32 +296,153 @@ module.exports = {
             if (data) {
                 resolve(data)
             }
+        }).catch((err)=>{
+            throw new Error(err)
         })
     },
-    getPendencyDocument: (userID) => {
+    getPendencyDocumentGstYes: (userID) => {
+       console.log(userID);
+       userID=mongoose.Types.ObjectId(userID)
         return new Promise(async (resolve, reject) => {
-            let user = await user.findOne({
-                _id: userID
-            })
-            console.log(user.documents);
-        })
-    },
-    getDocumentsGstNo: (userData) => {
-        return new Promise(async (resolve, reject) => {
-            let data = await documentGstNo.find({
-
-            })
-            if (data) {
-                resolve(data)
+            let whatsappSubscription = await user.aggregate([
+                { $match: { _id: userID } },
+                {
+                    $lookup: {
+                        from: "whatsappsubscriptions",
+                        localField: "_id",
+                        foreignField: "userId",
+                        as: "whatsappSub"
+                    }
+                }
+            ])
+            let pendencyDocumentGstYes={}
+            if (whatsappSubscription) {
+                  if(whatsappSubscription[0].whatsappSub.length ==0){
+                         pendencyDocumentGstYes.whatsapp=" Whatsapp Not subscribed"
+                  }
+                  if(!whatsappSubscription[0].email_verified){
+                         pendencyDocumentGstYes.email="Email not verfied"
+                  }
+                  if(whatsappSubscription[0].documents_gstNo_fseYes){
+                      if( !whatsappSubscription[0].documents_gstYes.hasOwnProperty('pan_card')){
+                         pendencyDocumentGstYes.panCard="Pan card Not uploaded"
+                      }
+                      if( !whatsappSubscription[0].documents_gstYes.hasOwnProperty('personal_address_proof_front_copy')){
+                           pendencyDocumentGstYes.personalAddressProofFront="Not uploaded"
+                      }
+                      if(!whatsappSubscription[0].documents_gstYes.hasOwnProperty('personal_address_proof_back_copy')){
+                           pendencyDocumentGstYes.pesonalAddressProofBack="Not uploaded"
+                      }
+                      if(!whatsappSubscription[0].documents_gstYes.hasOwnProperty('business_proof')){
+                           pendencyDocumentGstYes.businessProof="Not uploaded"
+                      }
+                      if(!whatsappSubscription[0].documents_gstYes.hasOwnProperty('shipping_address_proof')){
+                           pendencyDocumentGstYes.shppingAddressProof="Not uploaded"
+                      }
+                  }
+                  else{
+                        pendencyDocumentGstYes.docuemnt="All document upload pending"
+                  }
+                  resolve(pendencyDocumentGstYes)
+               
             }
+
+        }).catch((err)=>{
+            throw new Error(err)
         })
     },
     getPendencyDocumentGstNo: (userID) => {
+        userID=mongoose.Types.ObjectId(userID)
         return new Promise(async (resolve, reject) => {
-            let data = await user.findOne({
-                _id: userID
-            })
-
+            let whatsappSubscription = await user.aggregate([
+                { $match: { _id: userID } },
+                {
+                    $lookup: {
+                        from: "whatsappsubscriptions",
+                        localField: "_id",
+                        foreignField: "userId",
+                        as: "whatsappSub"
+                    }
+                }
+            ])
+            let pendencyDocumentGstNo={}
+            if (whatsappSubscription) {
+                  if(whatsappSubscription[0].whatsappSub.length ==0){
+                         pendencyDocumentGstNo.whatsapp=" Whatsapp Not subscribed"
+                  }
+                  if(!whatsappSubscription[0].email_verified){
+                         pendencyDocumentGstNo.email="Email not verfied"
+                  }
+                  if(whatsappSubscription[0].documents_gstNo){
+                      if( !whatsappSubscription[0].documents_gstNo.hasOwnProperty('pan_card')){
+                         pendencyDocumentGstNo.panCard="Pan card Not uploaded"
+                      }
+                      if( !whatsappSubscription[0].documents_gstNo.hasOwnProperty('personal_address_proof_front_copy')){
+                           pendencyDocumentGstNo.personalAddressProofFront="Not uploaded"
+                      }
+                      if(!whatsappSubscription[0].documents_gstNo.hasOwnProperty('personal_address_proof_back_copy')){
+                           pendencyDocumentGstNo.pesonalAddressProofBack="Not uploaded"
+                      }
+                      if(!whatsappSubscription[0].documents_gstNo.hasOwnProperty('business_proof')){
+                           pendencyDocumentGstNo.businessProof="Not uploaded"
+                      }
+                      if(!whatsappSubscription[0].documents_gstNo.hasOwnProperty('shipping_address_proof')){
+                           pendencyDocumentGstNo.shppingAddressProof="Not uploaded"
+                      }
+                      if(!whatsappSubscription[0].documents_gstNo.hasOwnProperty('shop_owner_photo')){
+                           pendencyDocumentGstNo.shopOwnerPhoto="Not uploaded"
+                      }
+                      if(!whatsappSubscription[0].documents_gstNo.hasOwnProperty('shop_board_photo')){
+                            pendencyDocumentGstNo.shopBoardphoto="Not uploaded"
+                      }
+                  }
+                  else{
+                        pendencyDocumentGstNo.docuemnt="All document upload pending"
+                  }
+                  resolve(pendencyDocumentGstNo)
+               
+            }
+        }).catch((err)=>{
+            throw new Error(err)
+        })
+    },
+    getWithoutPendencyDocumnet:(userId)=>{
+        return new Promise(async(resolve,reject)=>{
+            let user=await user.aggregate([
+                { $match: { _id: userId} },
+                {
+                    $lookup: {
+                        from: "whatsappsubscriptions",
+                        localField: "_id",
+                        foreignField: "userId",
+                        as: "whatsappSub"
+                    }
+                }
+            ])
+            let response={}
+            if(user){
+                if(!user[0].whatsappSub.length ==0){
+                    response.whatsapp=" Whatsapp subscribed"
+             }
+             else
+             {
+                 response.whtsapp="Whatsapp not subscribed"
+             }
+             if(user[0].email_verified){
+                    response.email="Emailverfied"
+             }
+             else
+             {
+                 response.email="Email not verfied"
+             }
+             resolve(response)
+            }else
+            {
+                resolve({user:"user not found"})
+            }
+        }).catch((err)=>{
+            throw new Error(err)
         })
     }
+  
 }

@@ -49,7 +49,7 @@ const userSchema = mongoose.Schema({
             buyer_business_address_proof_name:String
         }
     ],
-    documents_gstYes_fseNo: {
+    documents_gstYes: {
         pan_card: String,
         personal_address_proof_front_copy: String,
         personal_address_proof_back_copy: String,
@@ -65,12 +65,12 @@ const userSchema = mongoose.Schema({
     },
     gstin_no:
     {
-        pan_number: Number,
+        pan_number: String,
         pancard_document: String
     }
 
     ,
-    documents_gstNo_fseYes: {
+    documents_gstNo: {
         pan_card: String,
         personal_address_proof_front_copy: String,
         personal_address_proof_back_copy: String,
@@ -124,7 +124,7 @@ const businessDiffrentSchema = mongoose.Schema({
         type: String
     }
 })
-const whatsappSubscription = mongoose.Schema({
+const whatsappsubscriptions = mongoose.Schema({
     userId: { type: mongoose.Types.ObjectId, ref: "users" },
     phoneNumber: {
         type: Number
@@ -133,7 +133,7 @@ const whatsappSubscription = mongoose.Schema({
 const business = mongoose.model("business", businessSchema)
 const businessDiffrent = mongoose.model("businessContact", businessDiffrentSchema)
 const user = mongoose.model("users", userSchema)
-const whatsappSub = mongoose.model("whatsappSubscription", whatsappSubscription)
+const whatsappSub = mongoose.model("whatsappSubscription", whatsappsubscriptions)
 module.exports = {
     user: user,
     business: business,

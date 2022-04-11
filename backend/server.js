@@ -18,8 +18,10 @@ app.use(fileUpload({
 }));
 app.use(cors())
 app.use("/user", userRouter)
-
-
+app.use((err,req,res,next)=>{
+    console.log(err);
+    res.send({error:err.message})
+})
 
 
 
