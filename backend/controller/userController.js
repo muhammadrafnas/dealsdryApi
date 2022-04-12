@@ -17,7 +17,7 @@ module.exports = {
                 resolve({ status: false })
             }
 
-        }).catch((err)=>{
+        }).catch((err) => {
             throw new Error(err)
         })
     },
@@ -29,7 +29,7 @@ module.exports = {
             if (data) {
                 resolve(data)
             }
-        }).catch((err)=>{
+        }).catch((err) => {
             throw new Error(err)
         })
     },
@@ -49,7 +49,7 @@ module.exports = {
             else {
                 resolve({ status: false })
             }
-        }).catch((err)=>{
+        }).catch((err) => {
             throw new Error(err)
         })
     },
@@ -68,7 +68,7 @@ module.exports = {
             else {
                 resolve({ status: false })
             }
-        }).catch((err)=>{
+        }).catch((err) => {
             throw new Error(err)
         })
     },
@@ -83,7 +83,7 @@ module.exports = {
             if (data) {
                 resolve(data)
             }
-        }).catch((err)=>{
+        }).catch((err) => {
             throw new Error(err)
         })
     },
@@ -98,7 +98,7 @@ module.exports = {
             if (data) {
                 resolve(data)
             }
-        }).catch((err)=>{
+        }).catch((err) => {
             throw new Error(err)
         })
     },
@@ -111,7 +111,7 @@ module.exports = {
             if (userData) {
                 resolve(userData)
             }
-        }).catch((err)=>{
+        }).catch((err) => {
             throw new Error(err)
         })
     },
@@ -122,18 +122,18 @@ module.exports = {
             )
             console.log(data);
             resolve(data)
-        }).catch((err)=>{
+        }).catch((err) => {
             throw new Error(err)
         })
     },
-    getBusinessDetialsDiffrent: () => {
+    getBusinessDetialsDifferent: () => {
         return new Promise(async (resolve, reject) => {
             let data = await businessDiffrent.find({
             })
             if (data) {
                 resolve(data)
             }
-        }).catch((err)=>{
+        }).catch((err) => {
             throw new Error(err)
         })
     },
@@ -144,7 +144,7 @@ module.exports = {
             if (data) {
                 resolve(data)
             }
-        }).catch((err)=>{
+        }).catch((err) => {
             throw new Error(err)
         })
     },
@@ -156,7 +156,7 @@ module.exports = {
             if (data) {
                 resolve(data)
             }
-        }).catch((err)=>{
+        }).catch((err) => {
             throw new Error(err)
         })
     },
@@ -180,7 +180,7 @@ module.exports = {
             if (response) {
                 resolve(response)
             }
-        }).catch((err)=>{
+        }).catch((err) => {
             throw new Error(err)
         })
     },
@@ -206,7 +206,7 @@ module.exports = {
             if (response) {
                 resolve(response)
             }
-        }).catch((err)=>{
+        }).catch((err) => {
             throw new Error(err)
         })
     },
@@ -224,7 +224,7 @@ module.exports = {
             if (data) {
                 resolve(data)
             }
-        }).catch((err)=>{
+        }).catch((err) => {
             throw new Error(err)
         })
     },
@@ -244,7 +244,7 @@ module.exports = {
             if (data) {
                 resolve(data)
             }
-        }).catch((err)=>{
+        }).catch((err) => {
             throw new Error(err)
         })
     },
@@ -259,7 +259,7 @@ module.exports = {
             if (subscription) {
                 resolve(subscription)
             }
-        }).catch((err)=>{
+        }).catch((err) => {
             throw new Error(err)
         })
     },
@@ -272,7 +272,7 @@ module.exports = {
             if (data) {
                 resolve(data)
             }
-        }).catch((err)=>{
+        }).catch((err) => {
             throw new Error(err)
         })
     },
@@ -284,7 +284,7 @@ module.exports = {
             if (data) {
                 resolve(data)
             }
-        }).catch((err)=>{
+        }).catch((err) => {
             throw new Error(err)
         })
     },
@@ -296,13 +296,13 @@ module.exports = {
             if (data) {
                 resolve(data)
             }
-        }).catch((err)=>{
+        }).catch((err) => {
             throw new Error(err)
         })
     },
     getPendencyDocumentGstYes: (userID) => {
-       console.log(userID);
-       userID=mongoose.Types.ObjectId(userID)
+        console.log(userID);
+        userID = mongoose.Types.ObjectId(userID)
         return new Promise(async (resolve, reject) => {
             let whatsappSubscription = await user.aggregate([
                 { $match: { _id: userID } },
@@ -315,44 +315,44 @@ module.exports = {
                     }
                 }
             ])
-            let pendencyDocumentGstYes={}
+            let pendencyDocumentGstYes = {}
             if (whatsappSubscription) {
-                  if(whatsappSubscription[0].whatsappSub.length ==0){
-                         pendencyDocumentGstYes.whatsapp=" Whatsapp Not subscribed"
-                  }
-                  if(!whatsappSubscription[0].email_verified){
-                         pendencyDocumentGstYes.email="Email not verfied"
-                  }
-                  if(whatsappSubscription[0].documents_gstNo_fseYes){
-                      if( !whatsappSubscription[0].documents_gstYes.hasOwnProperty('pan_card')){
-                         pendencyDocumentGstYes.panCard="Pan card Not uploaded"
-                      }
-                      if( !whatsappSubscription[0].documents_gstYes.hasOwnProperty('personal_address_proof_front_copy')){
-                           pendencyDocumentGstYes.personalAddressProofFront="Not uploaded"
-                      }
-                      if(!whatsappSubscription[0].documents_gstYes.hasOwnProperty('personal_address_proof_back_copy')){
-                           pendencyDocumentGstYes.pesonalAddressProofBack="Not uploaded"
-                      }
-                      if(!whatsappSubscription[0].documents_gstYes.hasOwnProperty('business_proof')){
-                           pendencyDocumentGstYes.businessProof="Not uploaded"
-                      }
-                      if(!whatsappSubscription[0].documents_gstYes.hasOwnProperty('shipping_address_proof')){
-                           pendencyDocumentGstYes.shppingAddressProof="Not uploaded"
-                      }
-                  }
-                  else{
-                        pendencyDocumentGstYes.docuemnt="All document upload pending"
-                  }
-                  resolve(pendencyDocumentGstYes)
-               
+                if (whatsappSubscription[0].whatsappSub.length == 0) {
+                    pendencyDocumentGstYes.whatsapp = " Whatsapp Not subscribed"
+                }
+                if (!whatsappSubscription[0].email_verified) {
+                    pendencyDocumentGstYes.email = "Email not verfied"
+                }
+                if (whatsappSubscription[0].documents_gstNo_fseYes) {
+                    if (!whatsappSubscription[0].documents_gstYes.hasOwnProperty('pan_card')) {
+                        pendencyDocumentGstYes.panCard = "Pan card Not uploaded"
+                    }
+                    if (!whatsappSubscription[0].documents_gstYes.hasOwnProperty('personal_address_proof_front_copy')) {
+                        pendencyDocumentGstYes.personalAddressProofFront = "Not uploaded"
+                    }
+                    if (!whatsappSubscription[0].documents_gstYes.hasOwnProperty('personal_address_proof_back_copy')) {
+                        pendencyDocumentGstYes.pesonalAddressProofBack = "Not uploaded"
+                    }
+                    if (!whatsappSubscription[0].documents_gstYes.hasOwnProperty('business_proof')) {
+                        pendencyDocumentGstYes.businessProof = "Not uploaded"
+                    }
+                    if (!whatsappSubscription[0].documents_gstYes.hasOwnProperty('shipping_address_proof')) {
+                        pendencyDocumentGstYes.shppingAddressProof = "Not uploaded"
+                    }
+                }
+                else {
+                    pendencyDocumentGstYes.docuemnt = "All document upload pending"
+                }
+                resolve(pendencyDocumentGstYes)
+
             }
 
-        }).catch((err)=>{
+        }).catch((err) => {
             throw new Error(err)
         })
     },
     getPendencyDocumentGstNo: (userID) => {
-        userID=mongoose.Types.ObjectId(userID)
+        userID = mongoose.Types.ObjectId(userID)
         return new Promise(async (resolve, reject) => {
             let whatsappSubscription = await user.aggregate([
                 { $match: { _id: userID } },
@@ -365,49 +365,49 @@ module.exports = {
                     }
                 }
             ])
-            let pendencyDocumentGstNo={}
+            let pendencyDocumentGstNo = {}
             if (whatsappSubscription) {
-                  if(whatsappSubscription[0].whatsappSub.length ==0){
-                         pendencyDocumentGstNo.whatsapp=" Whatsapp Not subscribed"
-                  }
-                  if(!whatsappSubscription[0].email_verified){
-                         pendencyDocumentGstNo.email="Email not verfied"
-                  }
-                  if(whatsappSubscription[0].documents_gstNo){
-                      if( !whatsappSubscription[0].documents_gstNo.hasOwnProperty('pan_card')){
-                         pendencyDocumentGstNo.panCard="Pan card Not uploaded"
-                      }
-                      if( !whatsappSubscription[0].documents_gstNo.hasOwnProperty('personal_address_proof_front_copy')){
-                           pendencyDocumentGstNo.personalAddressProofFront="Not uploaded"
-                      }
-                      if(!whatsappSubscription[0].documents_gstNo.hasOwnProperty('personal_address_proof_back_copy')){
-                           pendencyDocumentGstNo.pesonalAddressProofBack="Not uploaded"
-                      }
-                      if(!whatsappSubscription[0].documents_gstNo.hasOwnProperty('business_proof')){
-                           pendencyDocumentGstNo.businessProof="Not uploaded"
-                      }
-                      if(!whatsappSubscription[0].documents_gstNo.hasOwnProperty('shipping_address_proof')){
-                           pendencyDocumentGstNo.shppingAddressProof="Not uploaded"
-                      }
-                      if(!whatsappSubscription[0].documents_gstNo.hasOwnProperty('shop_owner_photo')){
-                           pendencyDocumentGstNo.shopOwnerPhoto="Not uploaded"
-                      }
-                      if(!whatsappSubscription[0].documents_gstNo.hasOwnProperty('shop_board_photo')){
-                            pendencyDocumentGstNo.shopBoardphoto="Not uploaded"
-                      }
-                  }
-                  else{
-                        pendencyDocumentGstNo.docuemnt="All document upload pending"
-                  }
-                  resolve(pendencyDocumentGstNo)
-               
+                if (whatsappSubscription[0].whatsappSub.length == 0) {
+                    pendencyDocumentGstNo.whatsapp = " Whatsapp Not subscribed"
+                }
+                if (!whatsappSubscription[0].email_verified) {
+                    pendencyDocumentGstNo.email = "Email not verfied"
+                }
+                if (whatsappSubscription[0].documents_gstNo) {
+                    if (!whatsappSubscription[0].documents_gstNo.hasOwnProperty('pan_card')) {
+                        pendencyDocumentGstNo.panCard = "Pan card Not uploaded"
+                    }
+                    if (!whatsappSubscription[0].documents_gstNo.hasOwnProperty('personal_address_proof_front_copy')) {
+                        pendencyDocumentGstNo.personalAddressProofFront = "Not uploaded"
+                    }
+                    if (!whatsappSubscription[0].documents_gstNo.hasOwnProperty('personal_address_proof_back_copy')) {
+                        pendencyDocumentGstNo.pesonalAddressProofBack = "Not uploaded"
+                    }
+                    if (!whatsappSubscription[0].documents_gstNo.hasOwnProperty('business_proof')) {
+                        pendencyDocumentGstNo.businessProof = "Not uploaded"
+                    }
+                    if (!whatsappSubscription[0].documents_gstNo.hasOwnProperty('shipping_address_proof')) {
+                        pendencyDocumentGstNo.shppingAddressProof = "Not uploaded"
+                    }
+                    if (!whatsappSubscription[0].documents_gstNo.hasOwnProperty('shop_owner_photo')) {
+                        pendencyDocumentGstNo.shopOwnerPhoto = "Not uploaded"
+                    }
+                    if (!whatsappSubscription[0].documents_gstNo.hasOwnProperty('shop_board_photo')) {
+                        pendencyDocumentGstNo.shopBoardphoto = "Not uploaded"
+                    }
+                }
+                else {
+                    pendencyDocumentGstNo.docuemnt = "All document upload pending"
+                }
+                resolve(pendencyDocumentGstNo)
+
             }
-        }).catch((err)=>{
+        }).catch((err) => {
             throw new Error(err)
         })
     },
     getPendencyDocumentPartnershipGstNo: (userID) => {
-        userID=mongoose.Types.ObjectId(userID)
+        userID = mongoose.Types.ObjectId(userID)
         return new Promise(async (resolve, reject) => {
             let whatsappSubscription = await user.aggregate([
                 { $match: { _id: userID } },
@@ -420,51 +420,51 @@ module.exports = {
                     }
                 }
             ])
-            let pendencyDocumentGstNo={}
+            let pendencyDocumentGstNo = {}
             if (whatsappSubscription) {
-                  if(whatsappSubscription[0].whatsappSub.length ==0){
-                         pendencyDocumentGstNo.whatsapp=" Whatsapp Not subscribed"
-                  }
-                  if(!whatsappSubscription[0].email_verified){
-                         pendencyDocumentGstNo.email="Email not verfied"
-                  }
-                  if(whatsappSubscription[0].documents_partnership_gstNo){
-                      if( !whatsappSubscription[0].documents_partnership_gstNo.hasOwnProperty('pan_card')){
-                         pendencyDocumentGstNo.panCard="Pan card Not uploaded"
-                      }
-                      if( !whatsappSubscription[0].documents_partnership_gstNo.hasOwnProperty('personal_address_proof_front_copy')){
-                           pendencyDocumentGstNo.personalAddressProofFront="Not uploaded"
-                      }
-                      if(!whatsappSubscription[0].documents_partnership_gstNo.hasOwnProperty('personal_address_proof_back_copy')){
-                           pendencyDocumentGstNo.pesonalAddressProofBack="Not uploaded"
-                      }
-                      if(!whatsappSubscription[0].documents_partnership_gstNo.hasOwnProperty('business_proof')){
-                           pendencyDocumentGstNo.businessProof="Not uploaded"
-                      }
-                      if(!whatsappSubscription[0].documents_partnership_gstNo.hasOwnProperty('shipping_address_proof')){
-                           pendencyDocumentGstNo.shppingAddressProof="Not uploaded"
-                      }
-                      if(!whatsappSubscription[0].documents_partnership_gstNo.hasOwnProperty('firm_pancard')){
-                           pendencyDocumentGstNo.firmPancard="Not uploaded"
-                      }
-                      if(!whatsappSubscription[0].documents_partnership_gstNo.hasOwnProperty('partnership_deed')){
-                            pendencyDocumentGstNo.partnershipDeed="Not uploaded"
-                      }
-                  }
-                  else{
-                        pendencyDocumentGstNo.docuemnt="All document upload pending"
-                  }
-                  resolve(pendencyDocumentGstNo)
-               
+                if (whatsappSubscription[0].whatsappSub.length == 0) {
+                    pendencyDocumentGstNo.whatsapp = " Whatsapp Not subscribed"
+                }
+                if (!whatsappSubscription[0].email_verified) {
+                    pendencyDocumentGstNo.email = "Email not verfied"
+                }
+                if (whatsappSubscription[0].documents_private_limited) {
+                    if (!whatsappSubscription[0].documents_private_limited.hasOwnProperty('pan_card')) {
+                        pendencyDocumentGstNo.panCard = "Pan card Not uploaded"
+                    }
+                    if (!whatsappSubscription[0].documents_private_limited.hasOwnProperty('personal_address_proof_front_copy')) {
+                        pendencyDocumentGstNo.personalAddressProofFront = "Not uploaded"
+                    }
+                    if (!whatsappSubscription[0].documents_private_limited.hasOwnProperty('personal_address_proof_back_copy')) {
+                        pendencyDocumentGstNo.pesonalAddressProofBack = "Not uploaded"
+                    }
+                    if (!whatsappSubscription[0].documents_private_limited.hasOwnProperty('business_proof')) {
+                        pendencyDocumentGstNo.businessProof = "Not uploaded"
+                    }
+                    if (!whatsappSubscription[0].documents_private_limited.hasOwnProperty('shipping_address_proof')) {
+                        pendencyDocumentGstNo.shppingAddressProof = "Not uploaded"
+                    }
+                    if (!whatsappSubscription[0].documents_private_limited.hasOwnProperty('firm_pancard')) {
+                        pendencyDocumentGstNo.firmPancard = "Not uploaded"
+                    }
+                    if (!whatsappSubscription[0].documents_private_limited.hasOwnProperty('partnership_deed')) {
+                        pendencyDocumentGstNo.partnershipDeed = "Not uploaded"
+                    }
+                }
+                else {
+                    pendencyDocumentGstNo.docuemnt = "All document upload pending"
+                }
+                resolve(pendencyDocumentGstNo)
+
             }
-        }).catch((err)=>{
+        }).catch((err) => {
             throw new Error(err)
         })
     },
-    getWithoutPendencyDocumnet:(userId)=>{
-        return new Promise(async(resolve,reject)=>{
-            let user=await user.aggregate([
-                { $match: { _id: userId} },
+    getWithoutPendencyDocumnet: (userId) => {
+        return new Promise(async (resolve, reject) => {
+            let user = await user.aggregate([
+                { $match: { _id: userId } },
                 {
                     $lookup: {
                         from: "whatsappsubscriptions",
@@ -474,28 +474,25 @@ module.exports = {
                     }
                 }
             ])
-            let response={}
-            if(user){
-                if(!user[0].whatsappSub.length ==0){
-                    response.whatsapp=" Whatsapp subscribed"
-             }
-             else
-             {
-                 response.whtsapp="Whatsapp not subscribed"
-             }
-             if(user[0].email_verified){
-                    response.email="Emailverfied"
-             }
-             else
-             {
-                 response.email="Email not verfied"
-             }
-             resolve(response)
-            }else
-            {
-                resolve({user:"user not found"})
+            let response = {}
+            if (user) {
+                if (!user[0].whatsappSub.length == 0) {
+                    response.whatsapp = " Whatsapp subscribed"
+                }
+                else {
+                    response.whtsapp = "Whatsapp not subscribed"
+                }
+                if (user[0].email_verified) {
+                    response.email = "Emailverfied"
+                }
+                else {
+                    response.email = "Email not verfied"
+                }
+                resolve(response)
+            } else {
+                resolve({ user: "user not found" })
             }
-        }).catch((err)=>{
+        }).catch((err) => {
             throw new Error(err)
         })
     },
@@ -503,19 +500,19 @@ module.exports = {
         console.log(userId);
         return new Promise(async (resolve, reject) => {
             let data = await user.findByIdAndUpdate(userId, {
-                "documents_partnership_gstNo.pan_card": panCard,
-                "documents_partnership_gstNo.personal_address_proof_front_copy": addressProofFront,
-                "documents_partnership_gstNo.personal_address_proof_back_copy": addressProofBack,
-                "documents_partnership_gstNo.business_proof": businessProof,
-                "documents_partnership_gstNo.shipping_address_proof": shippingAddreesProof,
-                "documents_partnership_gstNo.firm_pancard": firmPancard,
-                "documents_partnership_gstNo.partnership_deed": partnershipDeed
+                "documents_private_limited.pan_card": panCard,
+                "documents_private_limited.personal_address_proof_front_copy": addressProofFront,
+                "documents_private_limited.personal_address_proof_back_copy": addressProofBack,
+                "documents_private_limited.business_proof": businessProof,
+                "documents_private_limited.shipping_address_proof": shippingAddreesProof,
+                "documents_private_limited.firm_pancard": firmPancard,
+                "documents_private_limited.partnership_deed": partnershipDeed
 
             })
             if (data) {
                 resolve(data)
             }
-        }).catch((err)=>{
+        }).catch((err) => {
             throw new Error(err)
         })
     },
@@ -527,9 +524,102 @@ module.exports = {
             if (data) {
                 resolve(data)
             }
-        }).catch((err)=>{
+        }).catch((err) => {
             throw new Error(err)
         })
     },
-  
+    getDocumnetPrivateLimited: () => {
+        return new Promise(async (resolve, reject) => {
+            let documnetsList = await documentGstNo.find({
+
+            })
+            if (documnetsList) {
+                resolve(documnetsList)
+            }
+            else {
+                resolve({ data: "No data found" })
+            }
+        })
+    },
+    uploadDocumnetPrivateLimited: (companyPancard, panCard, addressProofFront, addressProofBack, businessProof, shippingAddreesProof, certificateIncorporation, memorandumAssociation, ArticlesAssociation, userId) => {
+        return new Promise(async (resolve, reject) => {
+            let data = await user.findByIdAndUpdate(userId, {
+                "documents_private_limited.company_pancard": companyPancard,
+                "documents_private_limited.pan_card": panCard,
+                "documents_private_limited.personal_address_proof_front_copy": addressProofFront,
+                "documents_private_limited.personal_address_proof_back_copy": addressProofBack,
+                "documents_private_limited.business_proof": businessProof,
+                "documents_private_limited.shipping_address_proof": shippingAddreesProof,
+                "documents_private_limited.certificate_incorporation": certificateIncorporation,
+                "documents_private_limited.memorandum_association": memorandumAssociation,
+                "documents_private_limited.articles_Association": ArticlesAssociation
+            })
+            if (data) {
+                resolve(data)
+            }
+        }).catch((err) => {
+            throw new Error(err)
+        })
+    },
+    getPendencyDocumentPrivateLimited: (userID) => {
+        userID = mongoose.Types.ObjectId(userID)
+        return new Promise(async (resolve, reject) => {
+            let whatsappSubscription = await user.aggregate([
+                { $match: { _id: userID } },
+                {
+                    $lookup: {
+                        from: "whatsappsubscriptions",
+                        localField: "_id",
+                        foreignField: "userId",
+                        as: "whatsappSub"
+                    }
+                }
+            ])
+            let pendencyDocument= {}
+            if (whatsappSubscription) {
+                if (whatsappSubscription[0].whatsappSub.length == 0) {
+                    pendencyDocument.whatsapp = " Whatsapp Not subscribed"
+                }
+                if (!whatsappSubscription[0].email_verified) {
+                    pendencyDocument.email = "Email not verfied"
+                }
+                if (whatsappSubscription[0].documents_private_limited) {
+                    if (!whatsappSubscription[0].documents_private_limited.hasOwnProperty('company_pancard')) {
+                        pendencyDocument.panCard = "Company card Not uploaded"
+                    }
+                    if (!whatsappSubscription[0].documents_private_limited.hasOwnProperty('pan_card')) {
+                        pendencyDocument.panCard = "Pan card Not uploaded"
+                    }
+                    if (!whatsappSubscription[0].documents_private_limited.hasOwnProperty('personal_address_proof_front_copy')) {
+                        pendencyDocument.personalAddressProofFront = "Not uploaded"
+                    }
+                    if (!whatsappSubscription[0].documents_private_limited.hasOwnProperty('personal_address_proof_back_copy')) {
+                        pendencyDocument.pesonalAddressProofBack = "Not uploaded"
+                    }
+                    if (!whatsappSubscription[0].documents_private_limited.hasOwnProperty('business_proof')) {
+                        pendencyDocument.businessProof = "Not uploaded"
+                    }
+                    if (!whatsappSubscription[0].documents_private_limited.hasOwnProperty('shipping_address_proof')) {
+                        pendencyDocument.shppingAddressProof = "Not uploaded"
+                    }
+                    if (!whatsappSubscription[0].documents_private_limited.hasOwnProperty('certificate_incorporation')) {
+                        pendencyDocument.certificateIncorporation = "Certificate of incorporation not uploaded"
+                    }
+                    if (!whatsappSubscription[0].documents_private_limited.hasOwnProperty('memorandum_association')) {
+                        pendencyDocument. memorandumAssociation = "memorandum of association Not uploaded"
+                    }
+                    if (!whatsappSubscription[0].documents_private_limited.hasOwnProperty('articles_Association')) {
+                        pendencyDocument. articlesAssociation = "articles of AssociationNot uploaded"
+                    }
+                }
+                else {
+                    pendencyDocument.docuemnt = "All document upload pending"
+                }
+                resolve(pendencyDocument)
+
+            }
+        }).catch((err) => {
+            throw new Error(err)
+        })
+    }
 }

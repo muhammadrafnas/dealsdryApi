@@ -88,6 +88,17 @@ const userSchema = mongoose.Schema({
         firm_pancard: String,
         partnership_deed: String
     },
+    documents_private_limited:{
+        company_pancard:String,
+        pan_card: String,
+        personal_address_proof_front_copy: String,
+        personal_address_proof_back_copy: String,
+        business_proof: String,
+        shipping_address_proof: String,
+        certificate_incorporation:String,
+        memorandum_association:String,
+        articles_Association :String
+    }
 
 })
 const businessSchema = mongoose.Schema({
@@ -105,7 +116,7 @@ const businessSchema = mongoose.Schema({
     },
     userId: { type: mongoose.Types.ObjectId, ref: "users" },
     pancard: {
-        type: String
+        type: String``
     }
 })
 

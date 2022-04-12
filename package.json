@@ -4,7 +4,8 @@
   "description": "b2b ecommerce",
   "main": "server.js",
   "scripts": {
-    "start": "nodemon backend/server"
+    "start": "node backend/server",
+    "dev":"nodemon backend/server"
   },
   "author": "Muhammed Rafnas",
   "license": "ISC",

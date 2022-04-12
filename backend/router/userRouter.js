@@ -10,7 +10,6 @@ const { sendverficationEmail } = require("../utils/nodeMailer")
 router.post("/sendOtp", async (req, res,next) => {
    try {
       let phoneExist = await userController.checkPhone(req.body.mobileNumber)
-   console.log(phoneExist);
    if (phoneExist.status) {
       res.json({ message: "Phone number verfication already done", userData: phoneExist.user })
    }
@@ -156,7 +155,7 @@ router.get("/businessDetails", async (req, res,next) => {
 // Business details contact perosn is diffrent
 router.get("/businessDetailsDifferent", async (req, res,next) => {
    try {
-      let businessDetails = await userController.getBusinessDetialsDiffrent()
+      let businessDetails = await userController.getBusinessDetialsDifferent()
       if (businessDetails) {
          res.json(businessDetails)
       }
@@ -168,7 +167,7 @@ router.get("/businessDetailsDifferent", async (req, res,next) => {
 
 
 //List and guidlines propreitership
-router.get("/guidelinesDocumentsGstYes", async (req, res,next) => {
+router.get("/guidelinesDocumentsProprietorshipGstYes", async (req, res,next) => {
    try {
       let documents = await userController.getDocuments()
       if (documents) {
@@ -182,7 +181,7 @@ router.get("/guidelinesDocumentsGstYes", async (req, res,next) => {
 
 
 //list and guidline propreitership
-router.get("/guidelinesDocumentsGstNo", async (req, res,next) => {
+router.get("/guidelinesDocumentsProprietorshipGstNo", async (req, res,next) => {
    try {
       let data = await userController.getDocumentsGstNo()
       if (data) {
@@ -194,7 +193,7 @@ router.get("/guidelinesDocumentsGstNo", async (req, res,next) => {
   
 })
 //list and guidline partnership
-router.get("/guidelinesDocumentsPartnershipGstNo", async (req, res,next) => {
+router.get("/guidelinesDocumentsPartnership", async (req, res,next) => {
    try {
       let data = await userController.getDocumentsPartnershipGstNo()
       if (data) {
@@ -203,10 +202,19 @@ router.get("/guidelinesDocumentsPartnershipGstNo", async (req, res,next) => {
    } catch (error) {
       next(error)
    }
-  
 })
 
-
+// list and guidline documents private limited company
+router.get("/guidelinesDocumentsPrivateLimited",async(req,res)=>{
+   try {
+      let data=await userController.getDocumnetPrivateLimited()
+      if(data){
+         res.status(200).json(data)
+      }
+   } catch (error) {
+      next(error)
+   }
+})
 //Business address for billing
 router.post("/businessAddressBilling", async (req, res,next) => {
    try {
@@ -240,7 +248,7 @@ router.post("/businessAddressShipping", async (req, res,next) => {
 
 
 // upload documents gst Yes propreitership
-router.post("/uploadDocumentsGstYes", async (req, res,next) => {
+router.post("/uploadDocumentsProprietorshipGstYes", async (req, res,next) => {
    try {
       let docuemnt = await userController.uploadDocumentGstYes(req.files.panCard.name, req.files.addressProofFront.name, req.files.addressProofBack.name, req.files.businessproof.name, req.files.shippingAddressProof.name, req.body.userId)
       if (docuemnt) {
@@ -255,7 +263,7 @@ router.post("/uploadDocumentsGstYes", async (req, res,next) => {
 })
 
 // upload documents gstNo propreitership
-router.post("/uploadDocumentsGstNo", async (req, res,next) => {
+router.post("/uploadDocumentsProprietorshipGstNo", async (req, res,next) => {
    try {
       let data = await userController.uplodDocumentsGstNo(req.files.panCard.name, req.files.addressProofFront.name, req.files.addressProofBack.name, req.files.businessproof.name, req.files.shippingAddressProof.name, req.files.shopOwnerPhoto.name, req.files.shopBoardPhoto.name, req.body.userId)
       if (data) {
@@ -269,8 +277,8 @@ router.post("/uploadDocumentsGstNo", async (req, res,next) => {
   
 })
 
-// upload documents gstNo partnership
-router.post("/uploadDocumentsPartnershipGstNo", async (req, res,next) => {
+// upload documents  partnership
+router.post("/uploadDocumentsPartnership", async (req, res,next) => {
    try {
       let data = await userController.uplodDocumentsPartnershipGstNo(req.files.panCard.name, req.files.addressProofFront.name, req.files.addressProofBack.name, req.files.businessproof.name, req.files.shippingAddressProof.name, req.files.firmPancard.name, req.files.partnershipDeed.name, req.body.userId)
       if (data) {
@@ -281,11 +289,19 @@ router.post("/uploadDocumentsPartnershipGstNo", async (req, res,next) => {
    } catch (error) {
       next(error)
    }
-  
+})
+// upload documents private limited company
+router.post("/uploadDocumentsPrivateLimited",async(req,res)=>{
+   let response=await userController.uploadDocumnetPrivateLimited(req.files.companyPancard.name,req.files.panCard.name, req.files.addressProofFront.name, req.files.addressProofBack.name, req.files.businessproof.name, req.files.shippingAddressProof.name, req.files.certificateIncorporation.name, req.files.memorandumAssociation.name,req.files.ArticlesAssociation.name,req.body.userId)
+   if(response){
+      res.status(200).send({
+         message: "Successfully added"
+      })
+   }
 })
 
 //Registration With Pendency document gstYes
-router.get("/pendencyDocumentGstYes", async (req, res,next) => {
+router.get("/pendencyDocumentProprietorshipGstYes", async (req, res,next) => {
    try {
       let response = await userController.getPendencyDocumentGstYes(req.query.userId)
       if (response) {
@@ -299,7 +315,7 @@ router.get("/pendencyDocumentGstYes", async (req, res,next) => {
 
 
 // pendency document gstNo
-router.get("/pendencyDocumentGstNo", async (req, res,next) => {
+router.get("/pendencyDocumentProprietorshipGstNo", async (req, res,next) => {
    try {
       let data = await userController.getPendencyDocumentGstNo(req.query.userId)
       if (data) {
@@ -310,8 +326,8 @@ router.get("/pendencyDocumentGstNo", async (req, res,next) => {
    }
   
 })
-// pendency document partnership gstNo
-router.get("/pendencyDocumentPartnershipGstNo", async (req, res,next) => {
+// pendency document partnership 
+router.get("/pendencyDocumentPartnership", async (req, res,next) => {
    try {
       let data = await userController.getPendencyDocumentPartnershipGstNo(req.query.userId)
       if (data) {
@@ -322,8 +338,20 @@ router.get("/pendencyDocumentPartnershipGstNo", async (req, res,next) => {
    }
   
 })
+// pendency document private limited
+router.get("/pendencyDocumentPrivatelimited",async(req,res,next)=>{
+   try {
+      let pendency=await userController.getPendencyDocumentPrivateLimited(req.query.userId)
+      if(pendency){
+         res.status(200).json(pendency)
+      }
+   } catch (error) {
+      next(error)
+   }
+
+})
 // without pendency document
-router.get("/withoutPendencyDocumentGstNo",async(req,res,next)=>{
+router.get("/withoutPendencyDocument",async(req,res,next)=>{
    try {
       let data=await  userController.getWithoutPendencyDocumnet(req.query.userId)
       if(data){

@@ -15,8 +15,7 @@ const verification = (mobile) => {
             to: `+91${mobile}`,
             channel: "sms"
         }).then((response) => {
-            console.log(response);
-            if(response.valid){
+            if(response){
                 mobileNumber = mobile;
                 resolve(true)
             }
@@ -25,7 +24,7 @@ const verification = (mobile) => {
                 resolve(false)
             }
         }).catch(err => {
-            throw new Error(err)
+          resolve(false)
         })
 
     })
