@@ -192,10 +192,10 @@ router.get("/guidelinesDocumentsProprietorshipGstNo", async (req, res,next) => {
    }
   
 })
-//list and guidline partnership
-router.get("/guidelinesDocumentsPartnership", async (req, res,next) => {
+//list and guidline partnership and LLP
+router.get("/guidelinesDocuments", async (req, res,next) => {
    try {
-      let data = await userController.getDocumentsPartnershipGstNo()
+      let data = await userController.getDocumentsPartnershipAndLlp()
       if (data) {
          res.json(data)
       }
@@ -277,10 +277,10 @@ router.post("/uploadDocumentsProprietorshipGstNo", async (req, res,next) => {
   
 })
 
-// upload documents  partnership
-router.post("/uploadDocumentsPartnership", async (req, res,next) => {
+// upload documents  partnership and llp
+router.post("/uploadDocuments", async (req, res,next) => {
    try {
-      let data = await userController.uplodDocumentsPartnershipGstNo(req.files.panCard.name, req.files.addressProofFront.name, req.files.addressProofBack.name, req.files.businessproof.name, req.files.shippingAddressProof.name, req.files.firmPancard.name, req.files.partnershipDeed.name, req.body.userId)
+      let data = await userController.uplodDocuments(req.files.panCard.name, req.files.addressProofFront.name, req.files.addressProofBack.name, req.files.businessproof.name, req.files.shippingAddressProof.name, req.files.firmPancard.name, req.files.partnershipDeed.name, req.body.userId)
       if (data) {
          res.status(200).send({
             message: "Successfully added"
@@ -327,9 +327,9 @@ router.get("/pendencyDocumentProprietorshipGstNo", async (req, res,next) => {
   
 })
 // pendency document partnership 
-router.get("/pendencyDocumentPartnership", async (req, res,next) => {
+router.get("/pendencyDocuments", async (req, res,next) => {
    try {
-      let data = await userController.getPendencyDocumentPartnershipGstNo(req.query.userId)
+      let data = await userController.getPendencyDocumentPartnershipAndLlp(req.query.userId)
       if (data) {
          res.json(data)
       }

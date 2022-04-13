@@ -79,7 +79,7 @@ const userSchema = mongoose.Schema({
         shop_owner_photo: String,
         shop_board_photo: String
     },
-    documents_partnership_gstNo: {
+    documents_partnership: {
         pan_card: String,
         personal_address_proof_front_copy: String,
         personal_address_proof_back_copy: String,
