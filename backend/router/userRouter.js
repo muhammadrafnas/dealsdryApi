@@ -136,6 +136,7 @@ router.post("/gstin/no", async (req, res, next) => {
       let response = await userController.gstNo(req.body, req.files.pancard.name)
       if (response) {
          res.status(200).json({
+            status:1,
             data: {
                message: "Successfully added"
             }
@@ -143,6 +144,7 @@ router.post("/gstin/no", async (req, res, next) => {
       }
       else{
          res.status(501).json({
+            status:0,
             data:{message:"Somthing wrong!"}
          })
       }

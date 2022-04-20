@@ -88,8 +88,7 @@ module.exports = {
         })
     },
     gstNo: (userData, docuemnt) => {
-        console.log(docuemnt);
-        console.log(userData);
+   
         return new Promise(async (resolve, reject) => {
             let data = await user.findByIdAndUpdate(userData.userId, {
                 "gstin_no.pan_number": userData.panNumber,
