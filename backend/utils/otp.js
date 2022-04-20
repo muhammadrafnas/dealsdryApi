@@ -10,11 +10,14 @@ const client = require("twilio")(accountSid, authToken)
 
 let mobileNumber;
 const verification = (mobile) => {
+    console.log(mobile);
     return new Promise((resolve, reject) => {
         client.verify.services(serviceSID).verifications.create({
             to: `+91${mobile}`,
             channel: "sms"
         }).then((response) => {
+            console.log("response");
+            console.log(response);
             if(response){
                 mobileNumber = mobile;
                 resolve(true)
