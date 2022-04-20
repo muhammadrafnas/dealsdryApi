@@ -18,13 +18,15 @@ router.post("/otp", async (req, res, next) => {
          let response = await sendOtp(req.body.mobileNumber)
 
          if (response) {
-            res.status(200).json({status:1,
-              data:{ message: "OTP send successfully "}
+            res.status(200).json({
+               status: 1,
+               data: { message: "OTP send successfully " }
             })
          }
          else {
-            res.status(501).json({status:0,
-              data:{message: "Please check your mobile number"}
+            res.status(501).json({
+               status: 0,
+               data: { message: "Please check your mobile number" }
             })
          }
       }
@@ -42,12 +44,12 @@ router.post("/otp/verification", async (req, res, next) => {
       if (response.status) {
          let user = await userController.mobileRegistration(response.mobileNumber)
          if (user) {
-            res.json({status:1,data:{ message:"Successfully verified mobile number", user} })
+            res.json({ status: 1, data: { message: "Successfully verified mobile number", user } })
          }
       }
       else {
          res.status(501).json({
-           status:0, data:{message: "Enter valid OTP"}
+            status: 0, data: { message: "Enter valid OTP" }
          })
       }
    } catch (error) {
@@ -63,15 +65,15 @@ router.post("/email/referral", async (req, res, next) => {
       let response = await userController.emailPasswordReferralRegistartion(req.body)
       if (response.status) {
          res.status(200).json({
-            status:1,data:{
+            status: 1, data: {
                message: "Successfully added email and password"
             }
          })
       }
       else {
          res.status(501).json({
-            status:0,
-            data:{ message: "Somthing wrong!"}
+            status: 0,
+            data: { message: "Somthing wrong!" }
          })
       }
    } catch (error) {
@@ -81,12 +83,22 @@ router.post("/email/referral", async (req, res, next) => {
 })
 
 
-router.post("/emailWithoutReferral", async (req, res, next) => {
+router.post("/email", async (req, res, next) => {
    try {
       let response = await userController.registrationEmailGstNo(req.body)
       if (response) {
-         res.status(200).send({
-            message: "Successfully added email and password "
+         res.status(200).json({
+            status: 1,
+            data: { message: "Successfully added email and password " }
+
+         })
+      }
+      else {
+         res.status(501).json({
+            status: 0,
+            data: {
+               message: "Somthing wrong!"
+            }
          })
       }
    } catch (error) {
@@ -97,12 +109,19 @@ router.post("/emailWithoutReferral", async (req, res, next) => {
 
 
 // GSTIN confirmation
-router.post("/gstinYes", async (req, res, next) => {
+router.post("/gstin/yes", async (req, res, next) => {
    try {
       let data = await userController.gstinYes(req.body, req.files.gstinDocument.name)
       if (data) {
-         res.status(200).send({
-            message: "Successfully added "
+         res.status(200).json({
+            status: 1,
+            data: { message: "Successfully added " }
+         })
+      }
+      else {
+         res.status(501).json({
+            status: 0,
+            data: { message: "Somthing wrong!" }
          })
       }
    } catch (error) {
@@ -112,12 +131,19 @@ router.post("/gstinYes", async (req, res, next) => {
 
 
 //gst no 
-router.post("/gstinNo", async (req, res, next) => {
+router.post("/gstin/no", async (req, res, next) => {
    try {
       let response = await userController.gstNo(req.body, req.files.pancard.name)
       if (response) {
-         res.status(200).send({
-            message: "Successfully added"
+         res.status(200).json({
+            data: {
+               message: "Successfully added"
+            }
+         })
+      }
+      else{
+         res.status(501).json({
+            data:{message:"Somthing wrong!"}
          })
       }
    } catch (error) {
