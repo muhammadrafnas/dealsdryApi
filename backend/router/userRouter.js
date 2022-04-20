@@ -157,7 +157,7 @@ router.post("/gstin/no", async (req, res, next) => {
 
 
 // select category
-router.post("/selectCategory", async (req, res, next) => {
+router.post("/select/category", async (req, res, next) => {
    try {
       let response = await userController.registrationSelectCategory(req.body.category, req.body.userId)
       if (response) {
@@ -173,7 +173,7 @@ router.post("/selectCategory", async (req, res, next) => {
 
 
 // Business details
-router.get("/businessDetails", async (req, res, next) => {
+router.get("/business/details", async (req, res, next) => {
    try {
       let businessDetails = await userController.getBusinessDetials()
       if (businessDetails) {
@@ -187,7 +187,7 @@ router.get("/businessDetails", async (req, res, next) => {
 
 
 // Business details contact perosn is different
-router.get("/businessDetailsDifferent", async (req, res, next) => {
+router.get("/business/details/different", async (req, res, next) => {
    try {
       let businessDetails = await userController.getBusinessDetialsDifferent()
       if (businessDetails) {
