@@ -58,17 +58,20 @@ router.post("/otp/verification", async (req, res, next) => {
 
 
 // get email and password and refferal code api
-router.post("/emailWithReferral", async (req, res, next) => {
+router.post("/email/referral", async (req, res, next) => {
    try {
       let response = await userController.emailPasswordReferralRegistartion(req.body)
       if (response.status) {
-         res.status(200).send({
-            message: "Successfully added email and password"
+         res.status(200).json({
+            status:1,data:{
+               message: "Successfully added email and password"
+            }
          })
       }
       else {
-         res.status(501).send({
-            message: "Somthing wrong!"
+         res.status(501).json({
+            status:0,
+            data:{ message: "Somthing wrong!"}
          })
       }
    } catch (error) {
