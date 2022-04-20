@@ -54,6 +54,7 @@ module.exports = {
         })
     },
     emailPasswordRegistartion: (data) => {
+        console.log(data);
         return new Promise(async (resolve, reject) => {
             data.password = await bcrypt.hash(data.password, 10)
             let userData = await user.updateOne({ _id: data.userId }, {
@@ -88,7 +89,6 @@ module.exports = {
         })
     },
     gstNo: (userData, docuemnt) => {
-   
         return new Promise(async (resolve, reject) => {
             let data = await user.findByIdAndUpdate(userData.userId, {
                 "gstin_no.pan_number": userData.panNumber,

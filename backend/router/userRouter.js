@@ -86,7 +86,7 @@ router.post("/email/referral", async (req, res, next) => {
 
 router.post("/email", async (req, res, next) => {
    try {
-      let response = await userController.registrationEmailGstNo(req.body)
+      let response = await userController.emailPasswordRegistartion(req.body)
       if (response) {
          res.status(200).json({
             status: 1,
