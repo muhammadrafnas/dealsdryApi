@@ -109,7 +109,7 @@ router.post("/email", async (req, res, next) => {
 })
 
 
-// GSTIN confirmation
+// GSTIN confirmation an
 router.post("/gstin/yes", async (req, res, next) => {
    try {
       let data = await userController.gstinYes(req.body, req.files.gstinDocument.name)
