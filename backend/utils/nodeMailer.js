@@ -33,7 +33,7 @@
              from: process.env.AUTH_EMAIL,
              to: res,
              subject: "Verfiy Your Email",
-             html: `<p> Verfiy your email address  to complete the signup  and login  into your account</p><p>This link is <b>expires in 1 hours</b></p> <p>Press <a href=${currentUrl + "/verify/" + _id + "/" + uniqueString} >here</a><to proceed. </p>`
+             html: `<p> Verfiy your email address  to complete the signup  and login  into your account</p><p>This link is <b>expires in 1 hours</b></p> <p>Click <a href=${currentUrl + "/verify/" + _id + "/" + uniqueString} >here</a><to proceed. </p>`
         }
         const  saltRounds=10;
         bcrypt.hash(

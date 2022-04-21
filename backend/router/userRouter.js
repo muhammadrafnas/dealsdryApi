@@ -479,7 +479,7 @@ router.post("/uploadDocuments/privateLimited/publicLimited/spc", async (req, res
   
 })
 
-//Registration With Pendency document gstYes
+//Registration With Pendency Proprietorship document gstYes
 router.get("/pendencyDocument/proprietorship/gstYes", async (req, res, next) => {
    try {
       let response = await userController.getPendencyDocumentGstYes(req.query.userId)
@@ -493,7 +493,7 @@ router.get("/pendencyDocument/proprietorship/gstYes", async (req, res, next) => 
 })
 
 
-// pendency document gstNo
+// Pendency document Proprietorship gstNo
 router.get("/pendencyDocument/proprietorship/gstNo", async (req, res, next) => {
    try {
       let data = await userController.getPendencyDocumentGstNo(req.query.userId)
@@ -505,12 +505,22 @@ router.get("/pendencyDocument/proprietorship/gstNo", async (req, res, next) => {
    }
 
 })
-// pendency document partnership 
+// Pendency document partnership and llp
 router.get("/pendencyDocuments", async (req, res, next) => {
    try {
       let data = await userController.getPendencyDocumentPartnershipAndLlp(req.query.userId)
       if (data) {
-         res.json(data)
+         res.json({
+            status:1,
+            data
+         })
+      }
+      else
+      {
+         res.status(501).json({
+            status:0,
+            message:"Internal server error"
+         })
       }
    } catch (error) {
       next(error)
@@ -518,11 +528,21 @@ router.get("/pendencyDocuments", async (req, res, next) => {
 
 })
 // pendency document private limited
-router.get("/pendencyDocumentPrivatelimited", async (req, res, next) => {
+router.get("/pendencyDocument/privateLimited/publicLimited/spc", async (req, res, next) => {
    try {
-      let pendency = await userController.getPendencyDocumentPrivateLimited(req.query.userId)
-      if (pendency) {
-         res.status(200).json(pendency)
+      let data = await userController.getPendencyDocumentPrivateLimited(req.query.userId)
+      if (data) {
+         res.status(200).json({
+            status:1,
+            data
+         })
+      }
+      else
+      {
+         res.status(501).json({
+            status:0,
+            message:"Internal server error"
+         })
       }
    } catch (error) {
       next(error)
@@ -534,7 +554,17 @@ router.get("/withoutPendencyDocument", async (req, res, next) => {
    try {
       let data = await userController.getWithoutPendencyDocumnet(req.query.userId)
       if (data) {
-         res.status(200).json(data)
+         res.status(200).json({
+            status:1,
+            data
+         })
+      }
+      else
+      {
+         res.status(501).json({
+            status:0,
+            message:"Internal server error"
+         })
       }
    } catch (error) {
       next(error)
@@ -546,8 +576,11 @@ router.get("/whatsappSubscription", async (req, res, next) => {
    try {
       let response = await userController.whatsappSubscription(req.query.userId)
       if (response) {
-         res.status(200).send({
-            message: "Whatsapp subscription successfully"
+         res.status(200).json({
+            status:1,
+            data:{
+               message: "Whatsapp subscription successfully"
+            }
          })
       }
    } catch (error) {
@@ -557,21 +590,29 @@ router.get("/whatsappSubscription", async (req, res, next) => {
 
 
 // email verfication
-router.get("/emailVerification", async (req, res, next) => {
+router.get("/email/verification", async (req, res, next) => {
    try {
       let response = await userController.getEmail(req.query.userId)
       console.log(response.email);
       if (response) {
          let email = sendverficationEmail(response._id, response.email)
-         res.status(200).send({
-            message: "Verfication link send to your email "
+         res.status(200).json({
+            status:1,
+            data:{
+               message: "Verfication link send to your email "
+            }
+         })
+      }
+      else
+      {
+         res.status(501).json({
+            status:0,
+            message:"Email not found"
          })
       }
    } catch (error) {
       next(error)
    }
-
-
 })
 
 
@@ -596,8 +637,20 @@ router.get("/businessType", async (req, res, next) => {
    try {
       let response = await userController.businessType(req.body)
       if (response) {
-         res.status(200).send({
-            message: "Successfully added"
+         res.status(200).json({
+            status:1,
+            data:{
+               message: "Successfully added"
+            }
+         })
+      }
+      else
+      {
+         res.status(501).json({
+            status:0,
+            data:{
+               message:"Internal server issue"
+            }
          })
       }
    } catch (error) {
@@ -611,8 +664,11 @@ router.get("/businessType", async (req, res, next) => {
 // reach to home screen as a guest
 router.get("/home", (req, res, next) => {
    try {
-      res.status(200).send({
-         message: "Successfully enter to home screen"
+      res.status(200).json({
+         status:1,
+         data:{
+            message: "Successfully enter to home screen"
+         }
       })
    } catch (error) {
       next(error)
