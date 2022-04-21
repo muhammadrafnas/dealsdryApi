@@ -322,7 +322,7 @@ module.exports = {
                 if (!whatsappSubscription[0].email_verified) {
                     pendencyDocumentGstYes.email = "Email not verfied"
                 }
-                if (whatsappSubscription[0].documents_gstNo_fseYes) {
+                if (whatsappSubscription[0].documents_gstYes) {
                     if (!whatsappSubscription[0].documents_gstYes.hasOwnProperty('pan_card')) {
                         pendencyDocumentGstYes.panCard = "Pan card Not uploaded"
                     }

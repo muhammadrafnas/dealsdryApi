@@ -429,7 +429,7 @@ router.post("/uploadDocuments/proprietorship/gstNo", async (req, res, next) => {
 
 })
 
-// upload documents  partnership and llp
+// Upload documents  partnership and llp
 router.post("/uploadDocuments", async (req, res, next) => {
    try {
       let data = await userController.uplodDocuments(req.files.panCard.name, req.files.addressProofFront.name, req.files.addressProofBack.name, req.files.businessproof.name, req.files.shippingAddressProof.name, req.files.firmPancard.name, req.files.partnershipDeed.name, req.body.userId)
@@ -453,7 +453,7 @@ router.post("/uploadDocuments", async (req, res, next) => {
       next(error)
    }
 })
-// upload documents private limited company
+// Upload documents private limited company Public limited SPC
 router.post("/uploadDocuments/privateLimited/publicLimited/spc", async (req, res,next) => {
    try {
       let response = await userController.uploadDocumnetPrivateLimited(req.files.companyPancard.name, req.files.panCard.name, req.files.addressProofFront.name, req.files.addressProofBack.name, req.files.businessproof.name, req.files.shippingAddressProof.name, req.files.certificateIncorporation.name, req.files.memorandumAssociation.name, req.files.ArticlesAssociation.name, req.body.userId)
@@ -480,7 +480,7 @@ router.post("/uploadDocuments/privateLimited/publicLimited/spc", async (req, res
 })
 
 //Registration With Pendency document gstYes
-router.get("/pendencyDocumentProprietorshipGstYes", async (req, res, next) => {
+router.get("/pendencyDocument/proprietorship/gstYes", async (req, res, next) => {
    try {
       let response = await userController.getPendencyDocumentGstYes(req.query.userId)
       if (response) {
@@ -494,7 +494,7 @@ router.get("/pendencyDocumentProprietorshipGstYes", async (req, res, next) => {
 
 
 // pendency document gstNo
-router.get("/pendencyDocumentProprietorshipGstNo", async (req, res, next) => {
+router.get("/pendencyDocument/proprietorship/gstNo", async (req, res, next) => {
    try {
       let data = await userController.getPendencyDocumentGstNo(req.query.userId)
       if (data) {
