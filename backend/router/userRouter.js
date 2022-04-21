@@ -663,7 +663,7 @@ router.post("/business/type", async (req, res, next) => {
 
 
 
-// reach to Home screen  as guest
+// reach to Home screen  
 router.get("/home", (req, res, next) => {
    try {
       res.status(200).json({
