@@ -462,7 +462,7 @@ module.exports = {
     },
     getWithoutPendencyDocumnet: (userId) => {
         return new Promise(async (resolve, reject) => {
-            let user = await user.aggregate([
+            let userDetails = await user.aggregate([
                 { $match: { _id: userId } },
                 {
                     $lookup: {
@@ -474,14 +474,15 @@ module.exports = {
                 }
             ])
             let response = {}
-            if (user) {
-                if (!user[0].whatsappSub.length == 0) {
+            if (userDetails) {
+                console.log(userDetails);
+                if (!userDetails[0].whatsappSub.length == 0) {
                     response.whatsapp = " Whatsapp subscribed"
                 }
                 else {
                     response.whtsapp = "Whatsapp not subscribed"
                 }
-                if (user[0].email_verified) {
+                if (userDetails[0].email_verified) {
                     response.email = "Emailverfied"
                 }
                 else {
