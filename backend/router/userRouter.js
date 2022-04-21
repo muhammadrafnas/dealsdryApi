@@ -573,7 +573,7 @@ router.get("/withoutPendencyDocument", async (req, res, next) => {
    }
 
 })
-// whatsapp subscription
+// Whatsapp subscription
 router.get("/whatsappSubscription", async (req, res, next) => {
    try {
       let response = await userController.whatsappSubscription(req.query.userId)
@@ -591,7 +591,7 @@ router.get("/whatsappSubscription", async (req, res, next) => {
 })
 
 
-// email verfication
+// Email verification
 router.get("/email/verification", async (req, res, next) => {
    try {
       let response = await userController.getEmail(req.query.userId)
@@ -634,7 +634,7 @@ router.get("/verify/:id/:uniqueString", async (req, res, next) => {
 })
 
 
-//get business type
+//get Business type
 router.post("/business/type", async (req, res, next) => {
    try {
       let response = await userController.businessType(req.body)
@@ -663,7 +663,7 @@ router.post("/business/type", async (req, res, next) => {
 
 
 
-// reach to home screen as a guest
+// reach to Home screen  as guest
 router.get("/home", (req, res, next) => {
    try {
       res.status(200).json({
