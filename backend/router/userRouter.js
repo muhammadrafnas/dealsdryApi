@@ -529,7 +529,7 @@ router.get("/pendencyDocuments", async (req, res, next) => {
    }
 
 })
-// pendency document private limited
+// Pendency document private limited
 router.get("/pendencyDocument/privateLimited/publicLimited/spc", async (req, res, next) => {
    try {
       let data = await userController.getPendencyDocumentPrivateLimited(req.query.userId)
