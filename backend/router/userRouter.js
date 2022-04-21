@@ -635,7 +635,7 @@ router.get("/verify/:id/:uniqueString", async (req, res, next) => {
 
 
 //get business type
-router.get("/businessType", async (req, res, next) => {
+router.post("/business/type", async (req, res, next) => {
    try {
       let response = await userController.businessType(req.body)
       if (response) {

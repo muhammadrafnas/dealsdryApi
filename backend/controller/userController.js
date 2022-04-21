@@ -461,6 +461,7 @@ module.exports = {
         })
     },
     getWithoutPendencyDocumnet: (userId) => {
+        userId = mongoose.Types.ObjectId(userId)
         return new Promise(async (resolve, reject) => {
             let userDetails = await user.aggregate([
                 { $match: { _id: userId } },
