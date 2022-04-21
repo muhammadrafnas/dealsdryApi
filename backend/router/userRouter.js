@@ -386,7 +386,7 @@ router.post("/businessAddress/shipping", async (req, res, next) => {
 })
 
 
-// upload documents gst Yes propreitership
+// Upload documents gst Yes propreitership
 router.post("/uploadDocuments/proprietorship/gstYes", async (req, res, next) => {
    try {
       let docuemnt = await userController.uploadDocumentGstYes(req.files.panCard.name, req.files.addressProofFront.name, req.files.addressProofBack.name, req.files.businessproof.name, req.files.shippingAddressProof.name, req.body.userId)
@@ -411,7 +411,7 @@ router.post("/uploadDocuments/proprietorship/gstYes", async (req, res, next) => 
 
 })
 
-// upload documents gstNo propreitership
+// Upload documents gstNo propreitership
 router.post("/uploadDocuments/proprietorship/gstNo", async (req, res, next) => {
    try {
       let data = await userController.uplodDocumentsGstNo(req.files.panCard.name, req.files.addressProofFront.name, req.files.addressProofBack.name, req.files.businessproof.name, req.files.shippingAddressProof.name, req.files.shopOwnerPhoto.name, req.files.shopBoardPhoto.name, req.body.userId)
@@ -434,8 +434,19 @@ router.post("/uploadDocuments", async (req, res, next) => {
    try {
       let data = await userController.uplodDocuments(req.files.panCard.name, req.files.addressProofFront.name, req.files.addressProofBack.name, req.files.businessproof.name, req.files.shippingAddressProof.name, req.files.firmPancard.name, req.files.partnershipDeed.name, req.body.userId)
       if (data) {
-         res.status(200).send({
-            message: "Successfully added"
+         res.status(200).json({
+            status:1,
+            data:{
+               message: "Successfully added"
+            }
+         })
+      }
+      else{
+         res.status(501).json({
+            status:0,
+            data:{
+               message: "Internal server error"
+            }
          })
       }
    } catch (error) {
@@ -443,13 +454,29 @@ router.post("/uploadDocuments", async (req, res, next) => {
    }
 })
 // upload documents private limited company
-router.post("/uploadDocumentsPrivateLimited", async (req, res) => {
-   let response = await userController.uploadDocumnetPrivateLimited(req.files.companyPancard.name, req.files.panCard.name, req.files.addressProofFront.name, req.files.addressProofBack.name, req.files.businessproof.name, req.files.shippingAddressProof.name, req.files.certificateIncorporation.name, req.files.memorandumAssociation.name, req.files.ArticlesAssociation.name, req.body.userId)
-   if (response) {
-      res.status(200).send({
-         message: "Successfully added"
-      })
+router.post("/uploadDocuments/privateLimited/publicLimited/spc", async (req, res,next) => {
+   try {
+      let response = await userController.uploadDocumnetPrivateLimited(req.files.companyPancard.name, req.files.panCard.name, req.files.addressProofFront.name, req.files.addressProofBack.name, req.files.businessproof.name, req.files.shippingAddressProof.name, req.files.certificateIncorporation.name, req.files.memorandumAssociation.name, req.files.ArticlesAssociation.name, req.body.userId)
+      if (response) {
+         res.status(200).json({
+            status:1,
+            data:{
+               message: "Successfully added"
+            }
+         })
+      }
+      else{
+         res.status(501).json({
+            status:0,
+            data:{
+               message:"Internal server error"
+            }
+         })
+      }
+   } catch (error) {
+      next(error) 
    }
+  
 })
 
 //Registration With Pendency document gstYes
