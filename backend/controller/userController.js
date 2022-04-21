@@ -1,6 +1,6 @@
 const { reject } = require("bcrypt/promises")
 const { user, business, businessDiffrent, whatsappSubscription } = require("../model/userModel")
-const { docuemnt, documentGstNo,partnerShipDoc } = require("../model/documentModel")
+const { docuemnt, documentGstNo, partnerShipDoc } = require("../model/documentModel")
 const bcrypt = require('bcrypt')
 const { default: mongoose } = require("mongoose")
 
@@ -427,26 +427,26 @@ module.exports = {
                 if (!whatsappSubscription[0].email_verified) {
                     pendencyDocumentGstNo.email = "Email not verfied"
                 }
-                if (whatsappSubscription[0]. documents_partnership) {
-                    if (!whatsappSubscription[0]. documents_partnership.hasOwnProperty('pan_card')) {
+                if (whatsappSubscription[0].documents_partnership) {
+                    if (!whatsappSubscription[0].documents_partnership.hasOwnProperty('pan_card')) {
                         pendencyDocumentGstNo.panCard = "Pan card Not uploaded"
                     }
-                    if (!whatsappSubscription[0]. documents_partnership.hasOwnProperty('personal_address_proof_front_copy')) {
+                    if (!whatsappSubscription[0].documents_partnership.hasOwnProperty('personal_address_proof_front_copy')) {
                         pendencyDocumentGstNo.personalAddressProofFront = "Not uploaded"
                     }
-                    if (!whatsappSubscription[0]. documents_partnership.hasOwnProperty('personal_address_proof_back_copy')) {
+                    if (!whatsappSubscription[0].documents_partnership.hasOwnProperty('personal_address_proof_back_copy')) {
                         pendencyDocumentGstNo.pesonalAddressProofBack = "Not uploaded"
                     }
-                    if (!whatsappSubscription[0]. documents_partnership.hasOwnProperty('business_proof')) {
+                    if (!whatsappSubscription[0].documents_partnership.hasOwnProperty('business_proof')) {
                         pendencyDocumentGstNo.businessProof = "Not uploaded"
                     }
-                    if (!whatsappSubscription[0]. documents_partnership.hasOwnProperty('shipping_address_proof')) {
+                    if (!whatsappSubscription[0].documents_partnership.hasOwnProperty('shipping_address_proof')) {
                         pendencyDocumentGstNo.shppingAddressProof = "Not uploaded"
                     }
-                    if (!whatsappSubscription[0]. documents_partnership.hasOwnProperty('firm_pancard')) {
+                    if (!whatsappSubscription[0].documents_partnership.hasOwnProperty('firm_pancard')) {
                         pendencyDocumentGstNo.firmPancard = "Not uploaded"
                     }
-                    if (!whatsappSubscription[0]. documents_partnership.hasOwnProperty('partnership_deed')) {
+                    if (!whatsappSubscription[0].documents_partnership.hasOwnProperty('partnership_deed')) {
                         pendencyDocumentGstNo.partnershipDeed = "Not uploaded"
                     }
                 }
@@ -499,13 +499,13 @@ module.exports = {
         console.log(userId);
         return new Promise(async (resolve, reject) => {
             let data = await user.findByIdAndUpdate(userId, {
-                " documents_partnership.pan_card": panCard,
-                " documents_partnership.personal_address_proof_front_copy": addressProofFront,
-                " documents_partnership.personal_address_proof_back_copy": addressProofBack,
-                " documents_partnership.business_proof": businessProof,
-                " documents_partnership.shipping_address_proof": shippingAddreesProof,
-                " documents_partnership.firm_pancard": firmPancard,
-                " documents_partnership.partnership_deed": partnershipDeed
+                "documents_partnership.pan_card": panCard,
+                "documents_partnership.personal_address_proof_front_copy": addressProofFront,
+                "documents_partnership.personal_address_proof_back_copy": addressProofBack,
+                "documents_partnership.business_proof": businessProof,
+                "documents_partnership.shipping_address_proof": shippingAddreesProof,
+                "documents_partnership.firm_pancard": firmPancard,
+                "documents_partnership.partnership_deed": partnershipDeed
 
             })
             if (data) {
@@ -518,7 +518,7 @@ module.exports = {
     getDocumentsPartnershipAndLlp: () => {
         return new Promise(async (resolve, reject) => {
             let data = await partnerShipDoc.find({
-                
+
             })
             if (data) {
                 resolve(data)
@@ -574,7 +574,7 @@ module.exports = {
                     }
                 }
             ])
-            let pendencyDocument= {}
+            let pendencyDocument = {}
             if (whatsappSubscription) {
                 if (whatsappSubscription[0].whatsappSub.length == 0) {
                     pendencyDocument.whatsapp = " Whatsapp Not subscribed"
@@ -582,33 +582,33 @@ module.exports = {
                 if (!whatsappSubscription[0].email_verified) {
                     pendencyDocument.email = "Email not verfied"
                 }
-                if (whatsappSubscription[0]. documents_partnership) {
-                    if (!whatsappSubscription[0]. documents_partnership.hasOwnProperty('company_pancard')) {
+                if (whatsappSubscription[0].documents_partnership) {
+                    if (!whatsappSubscription[0].documents_partnership.hasOwnProperty('company_pancard')) {
                         pendencyDocument.panCard = "Company card Not uploaded"
                     }
-                    if (!whatsappSubscription[0]. documents_partnership.hasOwnProperty('pan_card')) {
+                    if (!whatsappSubscription[0].documents_partnership.hasOwnProperty('pan_card')) {
                         pendencyDocument.panCard = "Pan card Not uploaded"
                     }
-                    if (!whatsappSubscription[0]. documents_partnership.hasOwnProperty('personal_address_proof_front_copy')) {
+                    if (!whatsappSubscription[0].documents_partnership.hasOwnProperty('personal_address_proof_front_copy')) {
                         pendencyDocument.personalAddressProofFront = "Not uploaded"
                     }
-                    if (!whatsappSubscription[0]. documents_partnership.hasOwnProperty('personal_address_proof_back_copy')) {
+                    if (!whatsappSubscription[0].documents_partnership.hasOwnProperty('personal_address_proof_back_copy')) {
                         pendencyDocument.pesonalAddressProofBack = "Not uploaded"
                     }
-                    if (!whatsappSubscription[0]. documents_partnership.hasOwnProperty('business_proof')) {
+                    if (!whatsappSubscription[0].documents_partnership.hasOwnProperty('business_proof')) {
                         pendencyDocument.businessProof = "Not uploaded"
                     }
-                    if (!whatsappSubscription[0]. documents_partnership.hasOwnProperty('shipping_address_proof')) {
+                    if (!whatsappSubscription[0].documents_partnership.hasOwnProperty('shipping_address_proof')) {
                         pendencyDocument.shppingAddressProof = "Not uploaded"
                     }
-                    if (!whatsappSubscription[0]. documents_partnership.hasOwnProperty('certificate_incorporation')) {
+                    if (!whatsappSubscription[0].documents_partnership.hasOwnProperty('certificate_incorporation')) {
                         pendencyDocument.certificateIncorporation = "Certificate of incorporation not uploaded"
                     }
-                    if (!whatsappSubscription[0]. documents_partnership.hasOwnProperty('memorandum_association')) {
-                        pendencyDocument. memorandumAssociation = "memorandum of association Not uploaded"
+                    if (!whatsappSubscription[0].documents_partnership.hasOwnProperty('memorandum_association')) {
+                        pendencyDocument.memorandumAssociation = "memorandum of association Not uploaded"
                     }
-                    if (!whatsappSubscription[0]. documents_partnership.hasOwnProperty('articles_Association')) {
-                        pendencyDocument. articlesAssociation = "articles of AssociationNot uploaded"
+                    if (!whatsappSubscription[0].documents_partnership.hasOwnProperty('articles_Association')) {
+                        pendencyDocument.articlesAssociation = "articles of AssociationNot uploaded"
                     }
                 }
                 else {

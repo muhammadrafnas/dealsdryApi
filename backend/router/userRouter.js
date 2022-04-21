@@ -433,6 +433,7 @@ router.post("/uploadDocuments/proprietorship/gstNo", async (req, res, next) => {
 router.post("/uploadDocuments", async (req, res, next) => {
    try {
       let data = await userController.uplodDocuments(req.files.panCard.name, req.files.addressProofFront.name, req.files.addressProofBack.name, req.files.businessproof.name, req.files.shippingAddressProof.name, req.files.firmPancard.name, req.files.partnershipDeed.name, req.body.userId)
+      console.log(data);
       if (data) {
          res.status(200).json({
             status:1,
@@ -457,6 +458,7 @@ router.post("/uploadDocuments", async (req, res, next) => {
 router.post("/uploadDocuments/privateLimited/publicLimited/spc", async (req, res,next) => {
    try {
       let response = await userController.uploadDocumnetPrivateLimited(req.files.companyPancard.name, req.files.panCard.name, req.files.addressProofFront.name, req.files.addressProofBack.name, req.files.businessproof.name, req.files.shippingAddressProof.name, req.files.certificateIncorporation.name, req.files.memorandumAssociation.name, req.files.ArticlesAssociation.name, req.body.userId)
+      console.log(response);
       if (response) {
          res.status(200).json({
             status:1,
