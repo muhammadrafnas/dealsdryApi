@@ -161,8 +161,18 @@ router.post("/select/category", async (req, res, next) => {
    try {
       let response = await userController.registrationSelectCategory(req.body.category, req.body.userId)
       if (response) {
-         res.status(200).send({
-            message: "Successfully added "
+         res.status(200).json({
+            status:1,
+            data:{message: "Successfully added "}
+         })
+      }
+      else
+      {
+         res.status(501).json({
+            status:0,
+            data:{
+               message: "Try agian"
+            }
          })
       }
    } catch (error) {
@@ -175,9 +185,21 @@ router.post("/select/category", async (req, res, next) => {
 // Business details
 router.get("/business/details", async (req, res, next) => {
    try {
-      let businessDetails = await userController.getBusinessDetials()
-      if (businessDetails) {
-         res.json(businessDetails)
+      let data = await userController.getBusinessDetials()
+      if (data) {
+         res.status(200).json({
+            status:1,
+            data
+         })
+      }
+      else
+      {
+         res.status(501).json({
+            status:0,
+            data:{
+               message:"Try agin"
+            }
+         })
       }
    } catch (error) {
       next(error)
@@ -189,9 +211,21 @@ router.get("/business/details", async (req, res, next) => {
 // Business details contact perosn is different
 router.get("/business/details/different", async (req, res, next) => {
    try {
-      let businessDetails = await userController.getBusinessDetialsDifferent()
-      if (businessDetails) {
-         res.json(businessDetails)
+      let data = await userController.getBusinessDetialsDifferent()
+      if (data) {
+         res.status(200).json({
+            status:1,
+            data
+         })
+      }
+      else
+      {
+         res.status(200).json({
+            status:0,
+            data:{
+               message:"Try again"
+            }
+         })
       }
    } catch (error) {
       next(error)
@@ -201,11 +235,23 @@ router.get("/business/details/different", async (req, res, next) => {
 
 
 //List and guidlines propreitership
-router.get("/guidelinesDocumentsProprietorshipGstYes", async (req, res, next) => {
+router.get("/guidelinesDocuments/proprietorship/gstYes", async (req, res, next) => {
    try {
-      let documents = await userController.getDocuments()
-      if (documents) {
-         res.json(documents)
+      let data = await userController.getDocuments()
+      if (data) {
+         res.status(200).json({
+            status:1,
+            data
+         })
+      }
+      else
+      {
+         res.status(501).json({
+            status:0,
+            data:{
+               message:"Try again"
+            }
+         })
       }
    } catch (error) {
       next(error)
@@ -215,11 +261,23 @@ router.get("/guidelinesDocumentsProprietorshipGstYes", async (req, res, next) =>
 
 
 //list and guidline propreitership
-router.get("/guidelinesDocumentsProprietorshipGstNo", async (req, res, next) => {
+router.get("/guidelinesDocuments/proprietorship/gstNo", async (req, res, next) => {
    try {
       let data = await userController.getDocumentsGstNo()
       if (data) {
-         res.json(data)
+         res.status(200).json({
+            status:1,
+            data
+         })
+      }
+      else
+      {
+         res.status(501).json({
+            status:0,
+            data:{
+               message:"Try again"
+            }
+         })
       }
    } catch (error) {
       next(error)
