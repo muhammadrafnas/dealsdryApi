@@ -12,7 +12,7 @@ router.post("/otp", async (req, res, next) => {
    try {
       let phoneExist = await userController.checkPhone(req.body.mobileNumber)
       if (phoneExist.status) {
-         res.json({status:1,data:{ message: "Phone number verfication already done", userData: phoneExist.user,mobile_number_exists:"true"  } })
+         res.json({status:1,data:{ message: "Phone number verification already done", userData: phoneExist.user,mobile_number_exists:"true"  } })
       }
       else {
          let response = await sendOtp(req.body.mobileNumber)
@@ -282,14 +282,23 @@ router.get("/guidelinesDocuments/proprietorship/gstNo", async (req, res, next) =
    } catch (error) {
       next(error)
    }
-
 })
 //list and guidline partnership and LLP
 router.get("/guidelinesDocuments", async (req, res, next) => {
    try {
       let data = await userController.getDocumentsPartnershipAndLlp()
       if (data) {
-         res.json(data)
+         res.status(200).json({
+            status:1,
+            data
+         })
+      }
+      else
+      {
+         res.status(501).json({
+            status:0,
+            message:"Try again"
+         })
       }
    } catch (error) {
       next(error)
@@ -297,23 +306,48 @@ router.get("/guidelinesDocuments", async (req, res, next) => {
 })
 
 // list and guidline documents private limited company
-router.get("/guidelinesDocumentsPrivateLimited", async (req, res) => {
+router.get("/guidelinesDocuments/privateLimited/publicLimited/spc", async (req, res) => {
    try {
       let data = await userController.getDocumnetPrivateLimited()
       if (data) {
-         res.status(200).json(data)
+         res.status(200).json({
+            status:1,
+            data
+         })
+      }
+      else
+      {
+         res.status(501).json({
+            status:0,
+            data:{
+               message:"Try again"
+            }
+         })
       }
    } catch (error) {
       next(error)
    }
 })
 //Business address for billing
-router.post("/businessAddressBilling", async (req, res, next) => {
+router.post("/businessAddress/billing", async (req, res, next) => {
+   console.log(req.body);
    try {
       let response = await userController.businessAddress(req.body, req.body.userId, req.files.addressProof.name)
       if (response) {
-         res.status(200).send({
-            message: "Successfully added"
+         res.status(200).json({
+            status:1,
+            data:{
+               message: "Successfully added"
+            }
+         })
+      }
+      else
+      {
+         res.status(501).json({
+            status:0,
+            data:{
+               message:"Try again"
+            }
          })
       }
    } catch (error) {
@@ -324,12 +358,24 @@ router.post("/businessAddressBilling", async (req, res, next) => {
 
 
 // business address for shipping
-router.post("/businessAddressShipping", async (req, res, next) => {
+router.post("/businessAddress/Shipping", async (req, res, next) => {
    try {
       let response = await userController.businessAddressShipping(req.body, req.body.userId, req.files.shippingAddressProof.name)
       if (response) {
-         res.status(200).send({
-            message: "Successfully added"
+         res.status(200).json({
+            status:1,
+            data:{
+               message: "Successfully added"
+            }
+         })
+      }
+      else
+      {
+         res.status(501).json({
+            status:0,
+            data:{
+               message:"Internal server error"
+            }
          })
       }
    } catch (error) {
