@@ -358,8 +358,8 @@ router.post("/businessAddress/billing", async (req, res, next) => {
 })
 
 
-// business address for shipping
-router.post("/businessAddress/Shipping", async (req, res, next) => {
+// Business address for shipping
+router.post("/businessAddress/shipping", async (req, res, next) => {
    try {
       let response = await userController.businessAddressShipping(req.body, req.body.userId, req.files.shippingAddressProof.name)
       if (response) {
@@ -387,12 +387,22 @@ router.post("/businessAddress/Shipping", async (req, res, next) => {
 
 
 // upload documents gst Yes propreitership
-router.post("/uploadDocumentsProprietorshipGstYes", async (req, res, next) => {
+router.post("/uploadDocuments/proprietorship/gstYes", async (req, res, next) => {
    try {
       let docuemnt = await userController.uploadDocumentGstYes(req.files.panCard.name, req.files.addressProofFront.name, req.files.addressProofBack.name, req.files.businessproof.name, req.files.shippingAddressProof.name, req.body.userId)
       if (docuemnt) {
-         res.status(200).send({
-            message: "Successfully added"
+         res.status(200).json({
+            status:1,
+            data:{ message: "Successfully added" }
+         })
+      }
+      else
+      {
+         res.status(501).json({
+            status:0,
+            data:{
+               message: "Internal server error"
+            }
          })
       }
    } catch (error) {
@@ -402,12 +412,15 @@ router.post("/uploadDocumentsProprietorshipGstYes", async (req, res, next) => {
 })
 
 // upload documents gstNo propreitership
-router.post("/uploadDocumentsProprietorshipGstNo", async (req, res, next) => {
+router.post("/uploadDocuments/proprietorship/gstNo", async (req, res, next) => {
    try {
       let data = await userController.uplodDocumentsGstNo(req.files.panCard.name, req.files.addressProofFront.name, req.files.addressProofBack.name, req.files.businessproof.name, req.files.shippingAddressProof.name, req.files.shopOwnerPhoto.name, req.files.shopBoardPhoto.name, req.body.userId)
       if (data) {
-         res.status(200).send({
-            message: "Successfully added"
+         res.status(200).json({
+            status:1,
+            data:{
+               message: "Successfully added"
+            }
          })
       }
    } catch (error) {
