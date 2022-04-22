@@ -312,7 +312,6 @@ router.get("/guidelinesDocuments/privateLimited/publicLimited/spc", async (req, 
       if (data) {
          res.status(200).json({
             status:1,
-         
             data
          })
       }

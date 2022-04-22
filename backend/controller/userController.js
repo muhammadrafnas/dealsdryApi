@@ -1,6 +1,6 @@
 const { reject } = require("bcrypt/promises")
 const { user, business, businessDiffrent, whatsappSubscription } = require("../model/userModel")
-const { docuemnt, documentGstNo, partnerShipDoc } = require("../model/documentModel")
+const { docuemnt, documentGstNo, partnerShipDoc,privatePublicSpcDoc } = require("../model/documentModel")
 const bcrypt = require('bcrypt')
 const { default: mongoose } = require("mongoose")
 
@@ -530,9 +530,9 @@ module.exports = {
         })
     },
     getDocumnetPrivateLimited: () => {
+        
         return new Promise(async (resolve, reject) => {
-            let documnetsList = await documentGstNo.find({
-
+            let documnetsList = await privatePublicSpcDoc.find({
             })
             if (documnetsList) {
                 resolve(documnetsList)
