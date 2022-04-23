@@ -116,7 +116,7 @@ const businessSchema = mongoose.Schema({
     },
     userId: { type: mongoose.Types.ObjectId, ref: "users" },
     pancard: {
-        type: String``
+        type: String
     }
 })
 
