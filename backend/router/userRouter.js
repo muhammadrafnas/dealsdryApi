@@ -185,41 +185,52 @@ router.post("/select/category", async (req, res, next) => {
 // Business details
 router.get("/business/details", async (req, res, next) => {
    try {
-      if(req.query.contactPerson=="no"){
-         let data = await userController.getBusinessDetials()
-         if (data) {
-            res.status(200).json({
-               status:1,
-               data
-            })
+      if(req.query.gstin=="true"){
+         if(req.query.contactPerson=="no"){
+            let data = await userController.getBusinessDetials()
+            if (data) {
+               res.status(200).json({
+                  status:1,
+                  data
+               })
+            }
+            else
+            {
+               res.status(501).json({
+                  status:0,
+                  data:{
+                     message:"Try agin"
+                  }
+               })
+            }
          }
-         else
-         {
-            res.status(501).json({
-               status:0,
-               data:{
-                  message:"Try agin"
-               }
-            })
+         if(req.query.contactPerson=="yes"){
+            let data = await userController.getBusinessDetialsDifferent()
+            if (data) {
+               res.status(200).json({
+                  status:1,
+                  data
+               })
+            }
+            else
+            {
+               res.status(501).json({
+                  status:0,
+                  data:{
+                     message:"Try again"
+                  }
+               })
+            }
          }
       }
-      if(req.query.contactPerson=="yes"){
-         let data = await userController.getBusinessDetialsDifferent()
-         if (data) {
-            res.status(200).json({
-               status:1,
-               data
-            })
-         }
-         else
-         {
-            res.status(200).json({
-               status:0,
-               data:{
-                  message:"Try again"
-               }
-            })
-         }
+     else
+      {
+         res.status(200).json({
+             status:0,
+             data:{
+                message:"You don't have GST.Please enter the data"
+             }
+         })
       }
      
    } catch (error) {
