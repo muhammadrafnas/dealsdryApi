@@ -1,5 +1,5 @@
 const { reject, promise } = require("bcrypt/promises")
-const { user, businessDiffrent, whatsappSubscription } = require("../model/userModel")
+const { user,business,businessDiffrent, whatsappSubscription } = require("../model/userModel")
 const { docuemnt, documentGstNo, partnerShipDoc, privatePublicSpcDoc } = require("../model/documentModel")
 const bcrypt = require('bcrypt')
 const { default: mongoose } = require("mongoose")
