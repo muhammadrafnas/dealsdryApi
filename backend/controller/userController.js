@@ -1,6 +1,6 @@
 const { reject, promise } = require("bcrypt/promises")
 const { user,business,businessDiffrent, whatsappSubscription } = require("../model/userModel")
-const { docuemnt, documentGstNo, partnerShipDoc, privatePublicSpcDoc } = require("../model/documentModel")
+const { docuemnt, documentGstNo, partnerShipDoc, privatePublicSpcDoc,docList } = require("../model/documentModel")
 const bcrypt = require('bcrypt')
 const { default: mongoose } = require("mongoose")
 
@@ -137,6 +137,15 @@ module.exports = {
                 resolve(data)
             }
         })
+    },
+    getTypeOfOperation:()=>{
+       return new Promise(async(resolve,reject)=>{
+           let typeOfOperations=await  docList.find({
+           }).select("label")
+           if(typeOfOperations){
+               resolve(typeOfOperations)
+           }
+       })
     },
     postBusinessDetails: (userData, pancard) => {
         console.log(userData);

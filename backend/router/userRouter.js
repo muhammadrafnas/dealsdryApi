@@ -238,6 +238,33 @@ router.get("/business/details", async (req, res, next) => {
    }
 
 })
+// Business details type 
+router.get("/business/types",async(req,res,next)=>{
+   try {
+      let typeOfOperations=await userController.getTypeOfOperation(req.body)
+      if(typeOfOperations){
+         res.status(200).json(
+            {
+               status:1,
+               data:{
+                  typeOfOperations
+               }
+            }
+         )
+      }
+      else
+      {
+         res.status(501).json({
+            status:0,
+            data:{
+               message:"No type of operation"
+            }
+         })
+      }
+   } catch (error) {
+      next(error)
+   }
+})
 // Business details post api
 router.post("/business/details",async(req,res,next)=>{
    console.log(req.body);
