@@ -110,50 +110,46 @@ router.post("/email", async (req, res, next) => {
 
 
 // GSTIN confirmation an
-router.post("/gstin/yes", async (req, res, next) => {
+router.post("/gstin", async (req, res, next) => {
+   console.log(req.body);
    try {
-      let data = await userController.gstinYes(req.body, req.files.gstinDocument.name)
-      if (data) {
-         res.status(200).json({
-            status: 1,
-            data: { message: "Successfully added " }
-         })
+      if(req.body.gstin=="true"){
+         let data = await userController.gstinYes(req.body, req.files.gstinDocument.name)
+         if (data) {
+            res.status(200).json({
+               status: 1,
+               data: { message: "Successfully added " }
+            })
+         }
+         else {
+            res.status(501).json({
+               status: 0,
+               data: { message: "Somthing wrong!" }
+            })
+         }
       }
-      else {
-         res.status(501).json({
-            status: 0,
-            data: { message: "Somthing wrong!" }
-         })
+      if(req.body.gstin=="false"){
+         let response = await userController.gstNo(req.body, req.files.pancard.name)
+         if (response) {
+            res.status(200).json({
+               status:1,
+               data: {
+                  message: "Successfully added"
+               }
+            })
+         }
+         else{
+            res.status(501).json({
+               status:0,
+               data:{message:"Somthing wrong!"}
+            })
+         }
       }
    } catch (error) {
       next(error)
    }
 })
 
-
-//gst no 
-router.post("/gstin/no", async (req, res, next) => {
-   try {
-      let response = await userController.gstNo(req.body, req.files.pancard.name)
-      if (response) {
-         res.status(200).json({
-            status:1,
-            data: {
-               message: "Successfully added"
-            }
-         })
-      }
-      else{
-         res.status(501).json({
-            status:0,
-            data:{message:"Somthing wrong!"}
-         })
-      }
-   } catch (error) {
-      next(error)
-   }
-
-})
 
 
 // select category

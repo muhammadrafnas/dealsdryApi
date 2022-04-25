@@ -15,7 +15,7 @@ const userSchema = mongoose.Schema({
     },
     gstin_yes:
     {
-        gstin_number: Number,
+        gstin_number: String,
         gstin_document: String
     }
     ,
