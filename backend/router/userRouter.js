@@ -187,7 +187,7 @@ router.post("/select/category", async (req, res, next) => {
 router.get("/business/details", async (req, res, next) => {
    try {
       if(req.query.gstin=="true"){
-         if(req.query.contactPerson=="no"){
+         if(req.query.contactPerson=="false"){
             let data = await userController.getBusinessDetials()
             if (data) {
                res.status(200).json({
@@ -205,7 +205,7 @@ router.get("/business/details", async (req, res, next) => {
                })
             }
          }
-         if(req.query.contactPerson=="yes"){
+         if(req.query.contactPerson=="true"){
             let data = await userController.getBusinessDetialsDifferent()
             if (data) {
                res.status(200).json({
