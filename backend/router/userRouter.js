@@ -227,7 +227,33 @@ router.get("/business/details", async (req, res, next) => {
    }
 
 })
+// Business details post api
+router.post("/business/details",async(req,res,next)=>{
+   console.log(req.body);
+   try {
 
+         let data=await userController.postBusinessDetails(req.body,req.files.pancard)
+         if(data){
+            res.status(200).json({
+               status:1,
+               data:{
+                  message:"Successfully added"
+               }
+            })
+         }
+         else
+         {
+            res.status(501).json({
+               status:0,
+               data:{
+                  message:"Try again"
+               }
+            })
+         }
+   } catch (error) {
+      next(error)
+   }
+})
 
 //List and guidlines propreitership
 router.get("/guidelinesDocuments/proprietorship/gstYes", async (req, res, next) => {

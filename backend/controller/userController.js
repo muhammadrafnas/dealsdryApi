@@ -1,6 +1,6 @@
 const { reject, promise } = require("bcrypt/promises")
-const { user, business, businessDiffrent, whatsappSubscription } = require("../model/userModel")
-const { docuemnt, documentGstNo, partnerShipDoc,privatePublicSpcDoc } = require("../model/documentModel")
+const { user, businessDiffrent, whatsappSubscription } = require("../model/userModel")
+const { docuemnt, documentGstNo, partnerShipDoc, privatePublicSpcDoc } = require("../model/documentModel")
 const bcrypt = require('bcrypt')
 const { default: mongoose } = require("mongoose")
 
@@ -18,7 +18,7 @@ module.exports = {
             }
 
         }).catch((err) => {
-            if(err){
+            if (err) {
                 console.log("err");
             }
         })
@@ -80,7 +80,7 @@ module.exports = {
             let data = await user.findByIdAndUpdate(userData.userId, {
                 "gstin_yes.gstin_number": userData.gstinNumber,
                 "gstin_yes.gstin_document": proof
-            }).catch((err)=>{
+            }).catch((err) => {
                 reject(err)
             })
             if (data) {
@@ -93,7 +93,7 @@ module.exports = {
             let data = await user.findByIdAndUpdate(userData.userId, {
                 "gstin_no.pan_number": userData.panNumber,
                 "gstin_no.pancard_document": docuemnt
-            }).catch((err)=>{
+            }).catch((err) => {
                 reject(err)
             })
             if (data) {
@@ -106,7 +106,7 @@ module.exports = {
         return new Promise(async (resolve, reject) => {
             let userData = await user.findByIdAndUpdate(userId, {
                 category: category
-            }).catch((err)=>{
+            }).catch((err) => {
                 reject(err)
             })
             if (userData) {
@@ -118,19 +118,19 @@ module.exports = {
         return new Promise(async (resolve, reject) => {
             let data = await business.find(
                 {}
-            ).catch((err)=>{
+            ).catch((err) => {
                 reject(err)
             })
             console.log(data);
             resolve(data)
         }).catch((err) => {
-           reject(err)
+            reject(err)
         })
     },
     getBusinessDetialsDifferent: () => {
         return new Promise(async (resolve, reject) => {
             let data = await businessDiffrent.find({
-            }).catch((err)=>{
+            }).catch((err) => {
                 reject(err)
             })
             if (data) {
@@ -138,10 +138,29 @@ module.exports = {
             }
         })
     },
+    postBusinessDetails: (userData, pancard) => {
+        console.log(userData);
+        return new Promise(async (resolve, reject) => {
+            let data = await user.findByIdAndUpdate(userData.userId, {
+                "business_details.businessName": userData.businessName,
+                "business_details.businessType": userData.businessType,
+                "business_details.businessAuthorizedName": userData.businessAuthorizedName,
+                "business_details.pancardNumber": userData.pancardNumner,
+                "business_details.pancard": pancard,
+                "business_details.contactPerson": userData.contactPerson,
+                "business_details.desigination":userData.desigination
+            }).catch((err) => {
+                reject(err)
+            })
+            if(data){
+                resolve(data)
+            }
+        })
+    },
     getDocuments: () => {
         return new Promise(async (resolve, reject) => {
             let data = await docuemnt.find({
-            }).catch((err)=>{
+            }).catch((err) => {
                 reject(err)
             })
 
@@ -154,7 +173,7 @@ module.exports = {
         return new Promise(async (resolve, reject) => {
             let data = await documentGstNo.find({
 
-            }).catch((err)=>{
+            }).catch((err) => {
                 reject(err)
             })
             if (data) {
@@ -178,7 +197,7 @@ module.exports = {
                     }
                 }
 
-            }).catch((err)=>{
+            }).catch((err) => {
                 reject(err)
             })
             if (response) {
@@ -204,7 +223,7 @@ module.exports = {
                         buyer_business_address_proof_name: shippingAddressProof
                     }
                 }
-            }).catch((err)=>{
+            }).catch((err) => {
                 reject(err)
             })
             if (response) {
@@ -222,7 +241,7 @@ module.exports = {
                 "documents_gstYes.shipping_address_proof": shippingAddreesProof
 
 
-            }).catch((err)=>{
+            }).catch((err) => {
                 reject(err)
             })
             if (data) {
@@ -242,7 +261,7 @@ module.exports = {
                 "documents_gstNo.shop_owner_photo": shopOwnerPhoto,
                 "documents_gstNo.shop_board_photo": shopBoardPhoto
 
-            }).catch((err)=>{
+            }).catch((err) => {
                 reject(err)
             })
             if (data) {
@@ -254,12 +273,12 @@ module.exports = {
         return new Promise(async (resolve, reject) => {
             let data = await user.findOne({
                 _id: userId
-            }).catch((err)=>{
+            }).catch((err) => {
                 reject(err)
             })
             let subscription = await whatsappSubscription.create({
                 userId: userId, phoneNumber: data.phoneNumber
-            }).catch((err)=>{
+            }).catch((err) => {
                 reject(err)
             })
             if (subscription) {
@@ -272,7 +291,7 @@ module.exports = {
         return new Promise(async (resolve, reject) => {
             let data = await user.findByIdAndUpdate(userData.userId, {
                 business_type: userData.type
-            }).catch((err)=>{
+            }).catch((err) => {
                 reject(err)
             })
             if (data) {
@@ -284,7 +303,7 @@ module.exports = {
         return new Promise(async (resolve, reject) => {
             let data = await user.findOne({
                 _id: userId
-            }).catch((err)=>{
+            }).catch((err) => {
                 reject(err)
             })
             if (data) {
@@ -296,7 +315,7 @@ module.exports = {
         return new Promise(async (resolve, reject) => {
             let data = await user.findByIdAndUpdate(userId, {
                 email_verified: "success"
-            }).catch((err)=>{
+            }).catch((err) => {
                 reject(err)
             })
             if (data) {
@@ -318,7 +337,7 @@ module.exports = {
                         as: "whatsappSub"
                     }
                 }
-            ]).catch((err)=>{
+            ]).catch((err) => {
                 reject(err)
             })
             let pendencyDocumentGstYes = {}
@@ -354,7 +373,7 @@ module.exports = {
             }
 
         }).catch((err) => {
-           reject(err)
+            reject(err)
         })
     },
     getPendencyDocumentGstNo: (userID) => {
@@ -370,7 +389,7 @@ module.exports = {
                         as: "whatsappSub"
                     }
                 }
-            ]).catch((err)=>{
+            ]).catch((err) => {
                 reject(err)
             })
             let pendencyDocumentGstNo = {}
@@ -411,7 +430,7 @@ module.exports = {
 
             }
         }).catch((err) => {
-           reject(err)
+            reject(err)
         })
     },
     getPendencyDocumentPartnershipAndLlp: (userID) => {
@@ -427,7 +446,7 @@ module.exports = {
                         as: "whatsappSub"
                     }
                 }
-            ]).catch((err)=>{
+            ]).catch((err) => {
                 reject(err)
             })
             let pendencyDocumentGstNo = {}
@@ -484,7 +503,7 @@ module.exports = {
                         as: "whatsappSub"
                     }
                 }
-            ]).catch((err)=>{
+            ]).catch((err) => {
                 reject(err)
             })
             let response = {}
@@ -507,7 +526,7 @@ module.exports = {
                 resolve({ user: "user not found" })
             }
         }).catch((err) => {
-           reject(err)
+            reject(err)
         })
     },
     uplodDocuments: (panCard, addressProofFront, addressProofBack, businessProof, shippingAddreesProof, firmPancard, partnershipDeed, userId) => {
@@ -522,35 +541,35 @@ module.exports = {
                 "documents_partnership.firm_pancard": firmPancard,
                 "documents_partnership.partnership_deed": partnershipDeed
 
-            }).catch((err)=>{
+            }).catch((err) => {
                 reject(err)
             })
             if (data) {
                 resolve(data)
             }
         }).catch((err) => {
-          reject(err)
+            reject(err)
         })
     },
     getDocumentsPartnershipAndLlp: () => {
         return new Promise(async (resolve, reject) => {
             let data = await partnerShipDoc.find({
 
-            }).catch((err)=>{
+            }).catch((err) => {
                 reject(err)
             })
             if (data) {
                 resolve(data)
             }
         }).catch((err) => {
-           reject(err)
+            reject(err)
         })
     },
     getDocumnetPrivateLimited: () => {
-        
+
         return new Promise(async (resolve, reject) => {
             let documnetsList = await privatePublicSpcDoc.find({
-            }).catch((err)=>{
+            }).catch((err) => {
                 reject(err)
             })
             if (documnetsList) {
@@ -574,14 +593,14 @@ module.exports = {
                 "documents_private_limited.certificate_incorporation": certificateIncorporation,
                 "documents_private_limited.memorandum_association": memorandumAssociation,
                 "documents_private_limited.articles_Association": ArticlesAssociation
-            }).catch((err)=>{
+            }).catch((err) => {
                 reject(err)
             })
             if (data) {
                 resolve(data)
             }
         }).catch((err) => {
-           reject(err)
+            reject(err)
         })
     },
     getPendencyDocumentPrivateLimited: (userID) => {
@@ -597,7 +616,7 @@ module.exports = {
                         as: "whatsappSub"
                     }
                 }
-            ]).catch((err)=>{
+            ]).catch((err) => {
                 reject(err)
             })
             let pendencyDocument = {}
@@ -644,7 +663,7 @@ module.exports = {
 
             }
         }).catch((err) => {
-           reject(err)
+            reject(err)
         })
     }
 }

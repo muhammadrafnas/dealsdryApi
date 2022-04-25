@@ -98,27 +98,34 @@ const userSchema = mongoose.Schema({
         certificate_incorporation:String,
         memorandum_association:String,
         articles_Association :String
+    },
+    business_details:{
+        businessName: {
+            type: String
+        },
+        businessType: {
+            type: String
+        },
+        businessAuthorizedName: {
+            type: String
+        },
+        pancardNumber: {
+            type: String
+        },
+        pancard: {
+            type: Object
+        },
+        contactPerson:{
+            type:String
+        },
+        desigination:{
+            type:String
+        }
+
     }
 
 })
-const businessSchema = mongoose.Schema({
-    businessName: {
-        type: String
-    },
-    businessType: {
-        type: String
-    },
-    ownerName: {
-        type: String
-    },
-    pancardNumber: {
-        type: String
-    },
-    userId: { type: mongoose.Types.ObjectId, ref: "users" },
-    pancard: {
-        type: String
-    }
-})
+
 
 const businessDiffrentSchema = mongoose.Schema({
     businessName: {
@@ -150,13 +157,11 @@ const whatsappsubscriptions = mongoose.Schema({
         type: Number
     }
 })
-const business = mongoose.model("business", businessSchema)
 const businessDiffrent = mongoose.model("businessContact", businessDiffrentSchema)
 const user = mongoose.model("users", userSchema)
 const whatsappSub = mongoose.model("whatsappSubscription", whatsappsubscriptions)
 module.exports = {
     user: user,
-    business: business,
     businessDiffrent: businessDiffrent,
     whatsappSubscription: whatsappSub
 }
