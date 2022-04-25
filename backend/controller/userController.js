@@ -1,4 +1,4 @@
-const { reject } = require("bcrypt/promises")
+const { reject, promise } = require("bcrypt/promises")
 const { user, business, businessDiffrent, whatsappSubscription } = require("../model/userModel")
 const { docuemnt, documentGstNo, partnerShipDoc,privatePublicSpcDoc } = require("../model/documentModel")
 const bcrypt = require('bcrypt')
@@ -18,7 +18,9 @@ module.exports = {
             }
 
         }).catch((err) => {
-            throw new Error(err)
+            if(err){
+                console.log("err");
+            }
         })
     },
     mobileRegistration: (phoneNumber) => {
@@ -76,16 +78,14 @@ module.exports = {
     gstinYes: (userData, proof) => {
         return new Promise(async (resolve, reject) => {
             let data = await user.findByIdAndUpdate(userData.userId, {
-
                 "gstin_yes.gstin_number": userData.gstinNumber,
                 "gstin_yes.gstin_document": proof
-
+            }).catch((err)=>{
+                reject(err)
             })
             if (data) {
                 resolve(data)
             }
-        }).catch((err) => {
-            throw new Error(err)
         })
     },
     gstNo: (userData, docuemnt) => {
@@ -93,12 +93,12 @@ module.exports = {
             let data = await user.findByIdAndUpdate(userData.userId, {
                 "gstin_no.pan_number": userData.panNumber,
                 "gstin_no.pancard_document": docuemnt
+            }).catch((err)=>{
+                reject(err)
             })
             if (data) {
                 resolve(data)
             }
-        }).catch((err) => {
-            throw new Error(err)
         })
     },
     registrationSelectCategory: (category, userId) => {
@@ -106,57 +106,60 @@ module.exports = {
         return new Promise(async (resolve, reject) => {
             let userData = await user.findByIdAndUpdate(userId, {
                 category: category
+            }).catch((err)=>{
+                reject(err)
             })
             if (userData) {
                 resolve(userData)
             }
-        }).catch((err) => {
-            throw new Error(err)
         })
     },
     getBusinessDetials: () => {
         return new Promise(async (resolve, reject) => {
             let data = await business.find(
                 {}
-            )
+            ).catch((err)=>{
+                reject(err)
+            })
             console.log(data);
             resolve(data)
         }).catch((err) => {
-            throw new Error(err)
+           reject(err)
         })
     },
     getBusinessDetialsDifferent: () => {
         return new Promise(async (resolve, reject) => {
             let data = await businessDiffrent.find({
+            }).catch((err)=>{
+                reject(err)
             })
             if (data) {
                 resolve(data)
             }
-        }).catch((err) => {
-            throw new Error(err)
         })
     },
     getDocuments: () => {
         return new Promise(async (resolve, reject) => {
             let data = await docuemnt.find({
+            }).catch((err)=>{
+                reject(err)
             })
+
             if (data) {
                 resolve(data)
             }
-        }).catch((err) => {
-            throw new Error(err)
         })
     },
     getDocumentsGstNo: (userData) => {
         return new Promise(async (resolve, reject) => {
             let data = await documentGstNo.find({
 
+            }).catch((err)=>{
+                reject(err)
             })
             if (data) {
                 resolve(data)
             }
-        }).catch((err) => {
-            throw new Error(err)
         })
     },
     businessAddress: (data, userId, addressProof) => {
@@ -175,12 +178,12 @@ module.exports = {
                     }
                 }
 
+            }).catch((err)=>{
+                reject(err)
             })
             if (response) {
                 resolve(response)
             }
-        }).catch((err) => {
-            throw new Error(err)
         })
     },
     businessAddressShipping: (data, userId, shippingAddressProof) => {
@@ -201,12 +204,12 @@ module.exports = {
                         buyer_business_address_proof_name: shippingAddressProof
                     }
                 }
+            }).catch((err)=>{
+                reject(err)
             })
             if (response) {
                 resolve(response)
             }
-        }).catch((err) => {
-            throw new Error(err)
         })
     },
     uploadDocumentGstYes: (panCard, addressProofFront, addressProofBack, businessProof, shippingAddreesProof, userId) => {
@@ -219,12 +222,12 @@ module.exports = {
                 "documents_gstYes.shipping_address_proof": shippingAddreesProof
 
 
+            }).catch((err)=>{
+                reject(err)
             })
             if (data) {
                 resolve(data)
             }
-        }).catch((err) => {
-            throw new Error(err)
         })
     },
     uplodDocumentsGstNo: (panCard, addressProofFront, addressProofBack, businessProof, shippingAddreesProof, shopOwnerPhoto, shopBoardPhoto, userId) => {
@@ -239,27 +242,29 @@ module.exports = {
                 "documents_gstNo.shop_owner_photo": shopOwnerPhoto,
                 "documents_gstNo.shop_board_photo": shopBoardPhoto
 
+            }).catch((err)=>{
+                reject(err)
             })
             if (data) {
                 resolve(data)
             }
-        }).catch((err) => {
-            throw new Error(err)
         })
     },
     whatsappSubscription: (userId) => {
         return new Promise(async (resolve, reject) => {
             let data = await user.findOne({
                 _id: userId
+            }).catch((err)=>{
+                reject(err)
             })
             let subscription = await whatsappSubscription.create({
                 userId: userId, phoneNumber: data.phoneNumber
+            }).catch((err)=>{
+                reject(err)
             })
             if (subscription) {
                 resolve(subscription)
             }
-        }).catch((err) => {
-            throw new Error(err)
         })
     },
     businessType: (userData) => {
@@ -267,36 +272,36 @@ module.exports = {
         return new Promise(async (resolve, reject) => {
             let data = await user.findByIdAndUpdate(userData.userId, {
                 business_type: userData.type
+            }).catch((err)=>{
+                reject(err)
             })
             if (data) {
                 resolve(data)
             }
-        }).catch((err) => {
-            throw new Error(err)
         })
     },
     getEmail: (userId) => {
         return new Promise(async (resolve, reject) => {
             let data = await user.findOne({
                 _id: userId
+            }).catch((err)=>{
+                reject(err)
             })
             if (data) {
                 resolve(data)
             }
-        }).catch((err) => {
-            throw new Error(err)
         })
     },
     emailVerified: (userId) => {
         return new Promise(async (resolve, reject) => {
             let data = await user.findByIdAndUpdate(userId, {
                 email_verified: "success"
+            }).catch((err)=>{
+                reject(err)
             })
             if (data) {
                 resolve(data)
             }
-        }).catch((err) => {
-            throw new Error(err)
         })
     },
     getPendencyDocumentGstYes: (userID) => {
@@ -313,7 +318,9 @@ module.exports = {
                         as: "whatsappSub"
                     }
                 }
-            ])
+            ]).catch((err)=>{
+                reject(err)
+            })
             let pendencyDocumentGstYes = {}
             if (whatsappSubscription) {
                 if (whatsappSubscription[0].whatsappSub.length == 0) {
@@ -347,7 +354,7 @@ module.exports = {
             }
 
         }).catch((err) => {
-            throw new Error(err)
+           reject(err)
         })
     },
     getPendencyDocumentGstNo: (userID) => {
@@ -363,7 +370,9 @@ module.exports = {
                         as: "whatsappSub"
                     }
                 }
-            ])
+            ]).catch((err)=>{
+                reject(err)
+            })
             let pendencyDocumentGstNo = {}
             if (whatsappSubscription) {
                 if (whatsappSubscription[0].whatsappSub.length == 0) {
@@ -402,7 +411,7 @@ module.exports = {
 
             }
         }).catch((err) => {
-            throw new Error(err)
+           reject(err)
         })
     },
     getPendencyDocumentPartnershipAndLlp: (userID) => {
@@ -418,7 +427,9 @@ module.exports = {
                         as: "whatsappSub"
                     }
                 }
-            ])
+            ]).catch((err)=>{
+                reject(err)
+            })
             let pendencyDocumentGstNo = {}
             if (whatsappSubscription) {
                 if (whatsappSubscription[0].whatsappSub.length == 0) {
@@ -457,7 +468,7 @@ module.exports = {
 
             }
         }).catch((err) => {
-            throw new Error(err)
+            reject(err)
         })
     },
     getWithoutPendencyDocumnet: (userId) => {
@@ -473,7 +484,9 @@ module.exports = {
                         as: "whatsappSub"
                     }
                 }
-            ])
+            ]).catch((err)=>{
+                reject(err)
+            })
             let response = {}
             if (userDetails) {
                 console.log(userDetails);
@@ -494,7 +507,7 @@ module.exports = {
                 resolve({ user: "user not found" })
             }
         }).catch((err) => {
-            throw new Error(err)
+           reject(err)
         })
     },
     uplodDocuments: (panCard, addressProofFront, addressProofBack, businessProof, shippingAddreesProof, firmPancard, partnershipDeed, userId) => {
@@ -509,30 +522,36 @@ module.exports = {
                 "documents_partnership.firm_pancard": firmPancard,
                 "documents_partnership.partnership_deed": partnershipDeed
 
+            }).catch((err)=>{
+                reject(err)
             })
             if (data) {
                 resolve(data)
             }
         }).catch((err) => {
-            throw new Error(err)
+          reject(err)
         })
     },
     getDocumentsPartnershipAndLlp: () => {
         return new Promise(async (resolve, reject) => {
             let data = await partnerShipDoc.find({
 
+            }).catch((err)=>{
+                reject(err)
             })
             if (data) {
                 resolve(data)
             }
         }).catch((err) => {
-            throw new Error(err)
+           reject(err)
         })
     },
     getDocumnetPrivateLimited: () => {
         
         return new Promise(async (resolve, reject) => {
             let documnetsList = await privatePublicSpcDoc.find({
+            }).catch((err)=>{
+                reject(err)
             })
             if (documnetsList) {
                 resolve(documnetsList)
@@ -555,12 +574,14 @@ module.exports = {
                 "documents_private_limited.certificate_incorporation": certificateIncorporation,
                 "documents_private_limited.memorandum_association": memorandumAssociation,
                 "documents_private_limited.articles_Association": ArticlesAssociation
+            }).catch((err)=>{
+                reject(err)
             })
             if (data) {
                 resolve(data)
             }
         }).catch((err) => {
-            throw new Error(err)
+           reject(err)
         })
     },
     getPendencyDocumentPrivateLimited: (userID) => {
@@ -576,7 +597,9 @@ module.exports = {
                         as: "whatsappSub"
                     }
                 }
-            ])
+            ]).catch((err)=>{
+                reject(err)
+            })
             let pendencyDocument = {}
             if (whatsappSubscription) {
                 if (whatsappSubscription[0].whatsappSub.length == 0) {
@@ -621,7 +644,7 @@ module.exports = {
 
             }
         }).catch((err) => {
-            throw new Error(err)
+           reject(err)
         })
     }
 }

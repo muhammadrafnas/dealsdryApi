@@ -20,7 +20,9 @@ app.use(cors())
 app.use("/api/v2/user", userRouter)
 app.use((err,req,res,next)=>{
     console.log(err);
-    res.send({error:err.message})
+    res.status(404).json({
+        error:err.message
+    })
 })
 
 

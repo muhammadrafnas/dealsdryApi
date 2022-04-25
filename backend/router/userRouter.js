@@ -185,48 +185,43 @@ router.post("/select/category", async (req, res, next) => {
 // Business details
 router.get("/business/details", async (req, res, next) => {
    try {
-      let data = await userController.getBusinessDetials()
-      if (data) {
-         res.status(200).json({
-            status:1,
-            data
-         })
+      if(req.query.contactPerson=="no"){
+         let data = await userController.getBusinessDetials()
+         if (data) {
+            res.status(200).json({
+               status:1,
+               data
+            })
+         }
+         else
+         {
+            res.status(501).json({
+               status:0,
+               data:{
+                  message:"Try agin"
+               }
+            })
+         }
       }
-      else
-      {
-         res.status(501).json({
-            status:0,
-            data:{
-               message:"Try agin"
-            }
-         })
+      if(req.query.contactPerson=="yes"){
+         let data = await userController.getBusinessDetialsDifferent()
+         if (data) {
+            res.status(200).json({
+               status:1,
+               data
+            })
+         }
+         else
+         {
+            res.status(200).json({
+               status:0,
+               data:{
+                  message:"Try again"
+               }
+            })
+         }
       }
-   } catch (error) {
-      next(error)
-   }
-
-})
-
-
-// Business details contact perosn is different
-router.get("/business/details/different", async (req, res, next) => {
-   try {
-      let data = await userController.getBusinessDetialsDifferent()
-      if (data) {
-         res.status(200).json({
-            status:1,
-            data
-         })
-      }
-      else
-      {
-         res.status(200).json({
-            status:0,
-            data:{
-               message:"Try again"
-            }
-         })
-      }
+     
    } catch (error) {
       next(error)
    }
