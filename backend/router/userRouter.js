@@ -3,6 +3,7 @@ const router = express.Router()
 const { sendOtp, verificationOtp } = require("../utils/otp")
 const userController = require("../controller/userController")
 const { sendverficationEmail } = require("../utils/nodeMailer")
+const { route } = require("express/lib/application")
 
 
 
@@ -292,94 +293,24 @@ router.post("/business/details",async(req,res,next)=>{
       next(error)
    }
 })
-
-//List and guidlines propreitership
-router.get("/guidelinesDocuments/proprietorship/gstYes", async (req, res, next) => {
+// Guidlines Documents
+router.get("/guidelines/doc",async(req,res,next)=>{
    try {
-      let data = await userController.getDocuments()
-      if (data) {
+      let guidelinesDoc=await userController.getGuidelinesDoc(req.query.typeOfOperationId)
+      if(guidelinesDoc){
          res.status(200).json({
             status:1,
-            data
-         })
-      }
-      else
-      {
-         res.status(501).json({
-            status:0,
             data:{
-               message:"Try again"
+               guidelinesDoc
             }
          })
       }
-   } catch (error) {
-      next(error)
-   }
-
-})
-
-
-//list and guidline propreitership
-router.get("/guidelinesDocuments/proprietorship/gstNo", async (req, res, next) => {
-   try {
-      let data = await userController.getDocumentsGstNo()
-      if (data) {
-         res.status(200).json({
-            status:1,
-            data
-         })
-      }
       else
       {
          res.status(501).json({
             status:0,
             data:{
-               message:"Try again"
-            }
-         })
-      }
-   } catch (error) {
-      next(error)
-   }
-})
-//list and guidline partnership and LLP
-router.get("/guidelinesDocuments", async (req, res, next) => {
-   try {
-      let data = await userController.getDocumentsPartnershipAndLlp()
-      if (data) {
-         res.status(200).json({
-            status:1,
-            data
-         })
-      }
-      else
-      {
-         res.status(501).json({
-            status:0,
-            message:"Try again"
-         })
-      }
-   } catch (error) {
-      next(error)
-   }
-})
-
-// list and guidline documents private limited company
-router.get("/guidelinesDocuments/privateLimited/publicLimited/spc", async (req, res) => {
-   try {
-      let data = await userController.getDocumnetPrivateLimited()
-      if (data) {
-         res.status(200).json({
-            status:1,
-            data
-         })
-      }
-      else
-      {
-         res.status(501).json({
-            status:0,
-            data:{
-               message:"Try again"
+               message:"No Guidelines Documnets"
             }
          })
       }

@@ -148,7 +148,6 @@ module.exports = {
        })
     },
     postBusinessDetails: (userData, pancard) => {
-        console.log(userData);
         return new Promise(async (resolve, reject) => {
             let data = await user.findByIdAndUpdate(userData.userId, {
                 "business_details.businessName": userData.businessName,
@@ -166,29 +165,21 @@ module.exports = {
             }
         })
     },
-    getDocuments: () => {
-        return new Promise(async (resolve, reject) => {
-            let data = await docuemnt.find({
-            }).catch((err) => {
-                reject(err)
-            })
-
-            if (data) {
-                resolve(data)
-            }
-        })
-    },
-    getDocumentsGstNo: (userData) => {
-        return new Promise(async (resolve, reject) => {
-            let data = await documentGstNo.find({
-
-            }).catch((err) => {
-                reject(err)
-            })
-            if (data) {
-                resolve(data)
-            }
-        })
+    getGuidelinesDoc:(docId)=>{
+       return new Promise(async(resolve,reject)=>{
+           let documentsList=await docList.findOne({
+               _id:docId
+           }).catch((err)=>{
+               reject(err)
+           })
+           if(documentsList){
+               resolve(documentsList)
+           }
+           else
+           {
+               resolve()
+           }
+       })
     },
     businessAddress: (data, userId, addressProof) => {
         return new Promise(async (resolve, reject) => {
@@ -558,35 +549,6 @@ module.exports = {
             }
         }).catch((err) => {
             reject(err)
-        })
-    },
-    getDocumentsPartnershipAndLlp: () => {
-        return new Promise(async (resolve, reject) => {
-            let data = await partnerShipDoc.find({
-
-            }).catch((err) => {
-                reject(err)
-            })
-            if (data) {
-                resolve(data)
-            }
-        }).catch((err) => {
-            reject(err)
-        })
-    },
-    getDocumnetPrivateLimited: () => {
-
-        return new Promise(async (resolve, reject) => {
-            let documnetsList = await privatePublicSpcDoc.find({
-            }).catch((err) => {
-                reject(err)
-            })
-            if (documnetsList) {
-                resolve(documnetsList)
-            }
-            else {
-                resolve({ data: "No data found" })
-            }
         })
     },
     uploadDocumnetPrivateLimited: (companyPancard, panCard, addressProofFront, addressProofBack, businessProof, shippingAddreesProof, certificateIncorporation, memorandumAssociation, ArticlesAssociation, userId) => {
