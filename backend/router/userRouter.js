@@ -389,6 +389,7 @@ router.post("/doc/upload", async (req, res, next) => {
    }
 
 })
+// pendency document
 router.get("/pendency/detect",async(req,res,next)=>{
    try {
       let pendency=await userController.getPendencyDocument(req.query.userId,req.query.docId)
