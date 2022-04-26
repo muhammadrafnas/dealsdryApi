@@ -49,12 +49,21 @@ const userSchema = mongoose.Schema({
             buyer_business_address_proof_name:String
         }
     ],
-    documents_gstYes: {
-        pan_card: String,
-        personal_address_proof_front_copy: String,
-        personal_address_proof_back_copy: String,
-        business_proof: String,
-        shipping_address_proof: String
+    documents: {
+        pan_card: Object,
+        personal_address_proof_front_copy: Object,
+        personal_address_proof_back_copy: Object,
+        business_proof: Object,
+        shipping_address_proof: Object,
+        shop_owner_photo: Object,
+        shop_board_photo: Object,
+        firm_pancard: Object,
+        partnership_deed: Object,
+        certificate_incorporation:Object,
+        memorandum_association:Object,
+        articles_Association :Object,
+        docId: { type: mongoose.Types.ObjectId, ref: "doclists" }
+        
 
     },
     business_type: {
@@ -67,37 +76,6 @@ const userSchema = mongoose.Schema({
     {
         pan_number: String,
         pancard_document: String
-    }
-
-    ,
-    documents_gstNo: {
-        pan_card: String,
-        personal_address_proof_front_copy: String,
-        personal_address_proof_back_copy: String,
-        business_proof: String,
-        shipping_address_proof: String,
-        shop_owner_photo: String,
-        shop_board_photo: String
-    },
-    documents_partnership: {
-        pan_card: String,
-        personal_address_proof_front_copy: String,
-        personal_address_proof_back_copy: String,
-        business_proof: String,
-        shipping_address_proof: String,
-        firm_pancard: String,
-        partnership_deed: String
-    },
-    documents_private_limited:{
-        company_pancard:String,
-        pan_card: String,
-        personal_address_proof_front_copy: String,
-        personal_address_proof_back_copy: String,
-        business_proof: String,
-        shipping_address_proof: String,
-        certificate_incorporation:String,
-        memorandum_association:String,
-        articles_Association :String
     },
     business_details:{
         businessName: {
@@ -121,9 +99,7 @@ const userSchema = mongoose.Schema({
         desigination:{
             type:String
         }
-
     }
-
 })
 
 

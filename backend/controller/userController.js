@@ -1,6 +1,6 @@
 const { reject, promise } = require("bcrypt/promises")
-const { user,business,businessDiffrent, whatsappSubscription } = require("../model/userModel")
-const { docuemnt, documentGstNo, partnerShipDoc, privatePublicSpcDoc,docList } = require("../model/documentModel")
+const { user, business, businessDiffrent, whatsappSubscription } = require("../model/userModel")
+const { docList } = require("../model/documentModel")
 const bcrypt = require('bcrypt')
 const { default: mongoose } = require("mongoose")
 
@@ -138,14 +138,14 @@ module.exports = {
             }
         })
     },
-    getTypeOfOperation:()=>{
-       return new Promise(async(resolve,reject)=>{
-           let typeOfOperations=await  docList.find({
-           }).select("label")
-           if(typeOfOperations){
-               resolve(typeOfOperations)
-           }
-       })
+    getTypeOfOperation: () => {
+        return new Promise(async (resolve, reject) => {
+            let typeOfOperations = await docList.find({
+            }).select("label")
+            if (typeOfOperations) {
+                resolve(typeOfOperations)
+            }
+        })
     },
     postBusinessDetails: (userData, pancard) => {
         return new Promise(async (resolve, reject) => {
@@ -156,30 +156,29 @@ module.exports = {
                 "business_details.pancardNumber": userData.pancardNumner,
                 "business_details.pancard": pancard,
                 "business_details.contactPerson": userData.contactPerson,
-                "business_details.desigination":userData.desigination
+                "business_details.desigination": userData.desigination
             }).catch((err) => {
                 reject(err)
             })
-            if(data){
+            if (data) {
                 resolve(data)
             }
         })
     },
-    getGuidelinesDoc:(docId)=>{
-       return new Promise(async(resolve,reject)=>{
-           let documentsList=await docList.findOne({
-               _id:docId
-           }).catch((err)=>{
-               reject(err)
-           })
-           if(documentsList){
-               resolve(documentsList)
-           }
-           else
-           {
-               resolve()
-           }
-       })
+    getGuidelinesDoc: (docId) => {
+        return new Promise(async (resolve, reject) => {
+            let documentsList = await docList.findOne({
+                _id: docId
+            }).catch((err) => {
+                reject(err)
+            })
+            if (documentsList) {
+                resolve(documentsList)
+            }
+            else {
+                resolve()
+            }
+        })
     },
     businessAddress: (data, userId, addressProof) => {
         return new Promise(async (resolve, reject) => {
@@ -231,15 +230,24 @@ module.exports = {
             }
         })
     },
-    uploadDocumentGstYes: (panCard, addressProofFront, addressProofBack, businessProof, shippingAddreesProof, userId) => {
+    uploadDocuments: (panCard, addressProofFront, addressProofBack, businessProof, shippingAddreesProof,
+        shopOwnerPhoto, shopBoardPhoto, firmPancard, partnershipDeed, certificateIncorporation,
+        memorandumAssociation, ArticlesAssociation,docId, userId) => {
         return new Promise(async (resolve, reject) => {
             let data = await user.findByIdAndUpdate(userId, {
-                "documents_gstYes.pan_card": panCard,
-                "documents_gstYes.personal_address_proof_front_copy": addressProofFront,
-                "documents_gstYes.personal_address_proof_back_copy": addressProofBack,
-                "documents_gstYes.business_proof": businessProof,
-                "documents_gstYes.shipping_address_proof": shippingAddreesProof
-
+                "documents.docId":docId,
+                "documents.pan_card": panCard,
+                "documents.personal_address_proof_front_copy": addressProofFront,
+                "documents.personal_address_proof_back_copy": addressProofBack,
+                "documents.business_proof": businessProof,
+                "documents.shipping_address_proof": shippingAddreesProof,
+                "documents.shop_owner_photo": shopOwnerPhoto,
+                "documents.shop_board_photo": shopBoardPhoto,
+                "documents.firm_pancard": firmPancard,
+                "documents.partnership_deed": partnershipDeed,
+                "documents.certificate_incorporation": certificateIncorporation,
+                "documents.memorandum_association": memorandumAssociation,
+                "documents.articles_Association": ArticlesAssociation
 
             }).catch((err) => {
                 reject(err)
@@ -249,27 +257,7 @@ module.exports = {
             }
         })
     },
-    uplodDocumentsGstNo: (panCard, addressProofFront, addressProofBack, businessProof, shippingAddreesProof, shopOwnerPhoto, shopBoardPhoto, userId) => {
-        console.log(userId);
-        return new Promise(async (resolve, reject) => {
-            let data = await user.findByIdAndUpdate(userId, {
-                "documents_gstNo.pan_card": panCard,
-                "documents_gstNo.personal_address_proof_front_copy": addressProofFront,
-                "documents_gstNo.personal_address_proof_back_copy": addressProofBack,
-                "documents_gstNo.business_proof": businessProof,
-                "documents_gstNo.shipping_address_proof": shippingAddreesProof,
-                "documents_gstNo.shop_owner_photo": shopOwnerPhoto,
-                "documents_gstNo.shop_board_photo": shopBoardPhoto
-
-            }).catch((err) => {
-                reject(err)
-            })
-            if (data) {
-                resolve(data)
-            }
-        })
-    },
-    whatsappSubscription: (userId) => {
+    tsappSubscription: (userId) => {
         return new Promise(async (resolve, reject) => {
             let data = await user.findOne({
                 _id: userId
@@ -524,51 +512,6 @@ module.exports = {
                 resolve(response)
             } else {
                 resolve({ user: "user not found" })
-            }
-        }).catch((err) => {
-            reject(err)
-        })
-    },
-    uplodDocuments: (panCard, addressProofFront, addressProofBack, businessProof, shippingAddreesProof, firmPancard, partnershipDeed, userId) => {
-        console.log(userId);
-        return new Promise(async (resolve, reject) => {
-            let data = await user.findByIdAndUpdate(userId, {
-                "documents_partnership.pan_card": panCard,
-                "documents_partnership.personal_address_proof_front_copy": addressProofFront,
-                "documents_partnership.personal_address_proof_back_copy": addressProofBack,
-                "documents_partnership.business_proof": businessProof,
-                "documents_partnership.shipping_address_proof": shippingAddreesProof,
-                "documents_partnership.firm_pancard": firmPancard,
-                "documents_partnership.partnership_deed": partnershipDeed
-
-            }).catch((err) => {
-                reject(err)
-            })
-            if (data) {
-                resolve(data)
-            }
-        }).catch((err) => {
-            reject(err)
-        })
-    },
-    uploadDocumnetPrivateLimited: (companyPancard, panCard, addressProofFront, addressProofBack, businessProof, shippingAddreesProof, certificateIncorporation, memorandumAssociation, ArticlesAssociation, userId) => {
-        console.log(memorandumAssociation);
-        return new Promise(async (resolve, reject) => {
-            let data = await user.findByIdAndUpdate(userId, {
-                "documents_private_limited.company_pancard": companyPancard,
-                "documents_private_limited.pan_card": panCard,
-                "documents_private_limited.personal_address_proof_front_copy": addressProofFront,
-                "documents_private_limited.personal_address_proof_back_copy": addressProofBack,
-                "documents_private_limited.business_proof": businessProof,
-                "documents_private_limited.shipping_address_proof": shippingAddreesProof,
-                "documents_private_limited.certificate_incorporation": certificateIncorporation,
-                "documents_private_limited.memorandum_association": memorandumAssociation,
-                "documents_private_limited.articles_Association": ArticlesAssociation
-            }).catch((err) => {
-                reject(err)
-            })
-            if (data) {
-                resolve(data)
             }
         }).catch((err) => {
             reject(err)
