@@ -232,7 +232,7 @@ module.exports = {
     },
     uploadDocuments: (panCard, addressProofFront, addressProofBack, businessProof, shippingAddreesProof,
         shopOwnerPhoto, shopBoardPhoto, firmPancard, partnershipDeed, certificateIncorporation,
-        memorandumAssociation, ArticlesAssociation,docId, userId) => {
+        memorandumAssociation, ArticlesAssociation,docId,gst, userId) => {
         return new Promise(async (resolve, reject) => {
             let data = await user.findByIdAndUpdate(userId, {
                 "documents.docId":docId,
@@ -247,7 +247,8 @@ module.exports = {
                 "documents.partnership_deed": partnershipDeed,
                 "documents.certificate_incorporation": certificateIncorporation,
                 "documents.memorandum_association": memorandumAssociation,
-                "documents.articles_Association": ArticlesAssociation
+                "documents.articles_Association": ArticlesAssociation,
+                "documents.gst":gst
 
             }).catch((err) => {
                 reject(err)
@@ -257,7 +258,7 @@ module.exports = {
             }
         })
     },
-    tsappSubscription: (userId) => {
+    whatsappSubscription: (userId) => {
         return new Promise(async (resolve, reject) => {
             let data = await user.findOne({
                 _id: userId
@@ -311,173 +312,7 @@ module.exports = {
             }
         })
     },
-    getPendencyDocumentGstYes: (userID) => {
-        console.log(userID);
-        userID = mongoose.Types.ObjectId(userID)
-        return new Promise(async (resolve, reject) => {
-            let whatsappSubscription = await user.aggregate([
-                { $match: { _id: userID } },
-                {
-                    $lookup: {
-                        from: "whatsappsubscriptions",
-                        localField: "_id",
-                        foreignField: "userId",
-                        as: "whatsappSub"
-                    }
-                }
-            ]).catch((err) => {
-                reject(err)
-            })
-            let pendencyDocumentGstYes = {}
-            if (whatsappSubscription) {
-                if (whatsappSubscription[0].whatsappSub.length == 0) {
-                    pendencyDocumentGstYes.whatsapp = " Whatsapp Not subscribed"
-                }
-                if (!whatsappSubscription[0].email_verified) {
-                    pendencyDocumentGstYes.email = "Email not verfied"
-                }
-                if (whatsappSubscription[0].documents_gstYes) {
-                    if (!whatsappSubscription[0].documents_gstYes.hasOwnProperty('pan_card')) {
-                        pendencyDocumentGstYes.panCard = "Pan card Not uploaded"
-                    }
-                    if (!whatsappSubscription[0].documents_gstYes.hasOwnProperty('personal_address_proof_front_copy')) {
-                        pendencyDocumentGstYes.personalAddressProofFront = "Not uploaded"
-                    }
-                    if (!whatsappSubscription[0].documents_gstYes.hasOwnProperty('personal_address_proof_back_copy')) {
-                        pendencyDocumentGstYes.pesonalAddressProofBack = "Not uploaded"
-                    }
-                    if (!whatsappSubscription[0].documents_gstYes.hasOwnProperty('business_proof')) {
-                        pendencyDocumentGstYes.businessProof = "Not uploaded"
-                    }
-                    if (!whatsappSubscription[0].documents_gstYes.hasOwnProperty('shipping_address_proof')) {
-                        pendencyDocumentGstYes.shppingAddressProof = "Not uploaded"
-                    }
-                }
-                else {
-                    pendencyDocumentGstYes.docuemnt = "All document upload pending"
-                }
-                resolve(pendencyDocumentGstYes)
-
-            }
-
-        }).catch((err) => {
-            reject(err)
-        })
-    },
-    getPendencyDocumentGstNo: (userID) => {
-        userID = mongoose.Types.ObjectId(userID)
-        return new Promise(async (resolve, reject) => {
-            let whatsappSubscription = await user.aggregate([
-                { $match: { _id: userID } },
-                {
-                    $lookup: {
-                        from: "whatsappsubscriptions",
-                        localField: "_id",
-                        foreignField: "userId",
-                        as: "whatsappSub"
-                    }
-                }
-            ]).catch((err) => {
-                reject(err)
-            })
-            let pendencyDocumentGstNo = {}
-            if (whatsappSubscription) {
-                if (whatsappSubscription[0].whatsappSub.length == 0) {
-                    pendencyDocumentGstNo.whatsapp = " Whatsapp Not subscribed"
-                }
-                if (!whatsappSubscription[0].email_verified) {
-                    pendencyDocumentGstNo.email = "Email not verfied"
-                }
-                if (whatsappSubscription[0].documents_gstNo) {
-                    if (!whatsappSubscription[0].documents_gstNo.hasOwnProperty('pan_card')) {
-                        pendencyDocumentGstNo.panCard = "Pan card Not uploaded"
-                    }
-                    if (!whatsappSubscription[0].documents_gstNo.hasOwnProperty('personal_address_proof_front_copy')) {
-                        pendencyDocumentGstNo.personalAddressProofFront = "Not uploaded"
-                    }
-                    if (!whatsappSubscription[0].documents_gstNo.hasOwnProperty('personal_address_proof_back_copy')) {
-                        pendencyDocumentGstNo.pesonalAddressProofBack = "Not uploaded"
-                    }
-                    if (!whatsappSubscription[0].documents_gstNo.hasOwnProperty('business_proof')) {
-                        pendencyDocumentGstNo.businessProof = "Not uploaded"
-                    }
-                    if (!whatsappSubscription[0].documents_gstNo.hasOwnProperty('shipping_address_proof')) {
-                        pendencyDocumentGstNo.shppingAddressProof = "Not uploaded"
-                    }
-                    if (!whatsappSubscription[0].documents_gstNo.hasOwnProperty('shop_owner_photo')) {
-                        pendencyDocumentGstNo.shopOwnerPhoto = "Not uploaded"
-                    }
-                    if (!whatsappSubscription[0].documents_gstNo.hasOwnProperty('shop_board_photo')) {
-                        pendencyDocumentGstNo.shopBoardphoto = "Not uploaded"
-                    }
-                }
-                else {
-                    pendencyDocumentGstNo.docuemnt = "All document upload pending"
-                }
-                resolve(pendencyDocumentGstNo)
-
-            }
-        }).catch((err) => {
-            reject(err)
-        })
-    },
-    getPendencyDocumentPartnershipAndLlp: (userID) => {
-        userID = mongoose.Types.ObjectId(userID)
-        return new Promise(async (resolve, reject) => {
-            let whatsappSubscription = await user.aggregate([
-                { $match: { _id: userID } },
-                {
-                    $lookup: {
-                        from: "whatsappsubscriptions",
-                        localField: "_id",
-                        foreignField: "userId",
-                        as: "whatsappSub"
-                    }
-                }
-            ]).catch((err) => {
-                reject(err)
-            })
-            let pendencyDocumentGstNo = {}
-            if (whatsappSubscription) {
-                if (whatsappSubscription[0].whatsappSub.length == 0) {
-                    pendencyDocumentGstNo.whatsapp = " Whatsapp Not subscribed"
-                }
-                if (!whatsappSubscription[0].email_verified) {
-                    pendencyDocumentGstNo.email = "Email not verfied"
-                }
-                if (whatsappSubscription[0].documents_partnership) {
-                    if (!whatsappSubscription[0].documents_partnership.hasOwnProperty('pan_card')) {
-                        pendencyDocumentGstNo.panCard = "Pan card Not uploaded"
-                    }
-                    if (!whatsappSubscription[0].documents_partnership.hasOwnProperty('personal_address_proof_front_copy')) {
-                        pendencyDocumentGstNo.personalAddressProofFront = "Not uploaded"
-                    }
-                    if (!whatsappSubscription[0].documents_partnership.hasOwnProperty('personal_address_proof_back_copy')) {
-                        pendencyDocumentGstNo.pesonalAddressProofBack = "Not uploaded"
-                    }
-                    if (!whatsappSubscription[0].documents_partnership.hasOwnProperty('business_proof')) {
-                        pendencyDocumentGstNo.businessProof = "Not uploaded"
-                    }
-                    if (!whatsappSubscription[0].documents_partnership.hasOwnProperty('shipping_address_proof')) {
-                        pendencyDocumentGstNo.shppingAddressProof = "Not uploaded"
-                    }
-                    if (!whatsappSubscription[0].documents_partnership.hasOwnProperty('firm_pancard')) {
-                        pendencyDocumentGstNo.firmPancard = "Not uploaded"
-                    }
-                    if (!whatsappSubscription[0].documents_partnership.hasOwnProperty('partnership_deed')) {
-                        pendencyDocumentGstNo.partnershipDeed = "Not uploaded"
-                    }
-                }
-                else {
-                    pendencyDocumentGstNo.docuemnt = "All document upload pending"
-                }
-                resolve(pendencyDocumentGstNo)
-
-            }
-        }).catch((err) => {
-            reject(err)
-        })
-    },
+   
     getWithoutPendencyDocumnet: (userId) => {
         userId = mongoose.Types.ObjectId(userId)
         return new Promise(async (resolve, reject) => {
@@ -517,10 +352,12 @@ module.exports = {
             reject(err)
         })
     },
-    getPendencyDocumentPrivateLimited: (userID) => {
+    getPendencyDocument: (userID,docId) => {
         userID = mongoose.Types.ObjectId(userID)
+        docId=mongoose.Types.ObjectId(docId)
+        let pendency={}
         return new Promise(async (resolve, reject) => {
-            let whatsappSubscription = await user.aggregate([
+            let userData = await user.aggregate([
                 { $match: { _id: userID } },
                 {
                     $lookup: {
@@ -529,53 +366,61 @@ module.exports = {
                         foreignField: "userId",
                         as: "whatsappSub"
                     }
-                }
+                },
+                {
+                       $lookup:{
+                        from:"doclists",
+                        localField:"documents.docId",
+                        foreignField:"_id",
+                        as:"docLists"
+                    }
+                },
+                {
+                    $unwind:"$docLists"
+                },
             ]).catch((err) => {
                 reject(err)
             })
-            let pendencyDocument = {}
-            if (whatsappSubscription) {
-                if (whatsappSubscription[0].whatsappSub.length == 0) {
-                    pendencyDocument.whatsapp = " Whatsapp Not subscribed"
-                }
-                if (!whatsappSubscription[0].email_verified) {
-                    pendencyDocument.email = "Email not verfied"
-                }
-                if (whatsappSubscription[0].documents_private_limited) {
-                    if (!whatsappSubscription[0].documents_private_limited.hasOwnProperty('company_pancard')) {
-                        pendencyDocument.panCard = "Company card Not uploaded"
-                    }
-                    if (!whatsappSubscription[0].documents_private_limited.hasOwnProperty('pan_card')) {
-                        pendencyDocument.panCard = "Pan card Not uploaded"
-                    }
-                    if (!whatsappSubscription[0].documents_private_limited.hasOwnProperty('personal_address_proof_front_copy')) {
-                        pendencyDocument.personalAddressProofFront = "Not uploaded"
-                    }
-                    if (!whatsappSubscription[0].documents_private_limited.hasOwnProperty('personal_address_proof_back_copy')) {
-                        pendencyDocument.pesonalAddressProofBack = "Not uploaded"
-                    }
-                    if (!whatsappSubscription[0].documents_private_limited.hasOwnProperty('business_proof')) {
-                        pendencyDocument.businessProof = "Not uploaded"
-                    }
-                    if (!whatsappSubscription[0].documents_private_limited.hasOwnProperty('shipping_address_proof')) {
-                        pendencyDocument.shppingAddressProof = "Not uploaded"
-                    }
-                    if (!whatsappSubscription[0].documents_private_limited.hasOwnProperty('certificate_incorporation')) {
-                        pendencyDocument.certificateIncorporation = "Certificate of incorporation not uploaded"
-                    }
-                    if (!whatsappSubscription[0].documents_private_limited.hasOwnProperty('memorandum_association')) {
-                        pendencyDocument.memorandumAssociation = "memorandum of association Not uploaded"
-                    }
-                    if (!whatsappSubscription[0].documents_private_limited.hasOwnProperty('articles_Association')) {
-                        pendencyDocument.articlesAssociation = "articles of AssociationNot uploaded"
-                    }
-                }
-                else {
-                    pendencyDocument.docuemnt = "All document upload pending"
-                }
-                resolve(pendencyDocument)
+            if(userData){
 
+                if(userData[0].documents.gst=="true"){
+                    for(let x of userData[0].docLists.doc_gst_yes){
+                         x=x.replace(/ /g,"_");
+                        if(Object.keys(userData[0].documents).includes(x.toLowerCase())==false){
+                            console.log(x);
+                            pendency[x]="Not uploaded"
+                        }
+                    }
+                }
+                else if(userData[0].documents.gst=="false"){
+                    for(let x of userData[0].docLists.doc_gst_no){
+                        x=x.replace(/ /g,"_");
+                       if(Object.keys(userData[0].documents).includes(x.toLowerCase())==false){
+                           pendency.x="Not uploaded"
+                       }
+                   }
+                }
+                else
+                {
+                    for(let x of userData[0].docLists){
+                        x=x.replace(/ /g,"_");
+                       if(Object.keys(userData[0].documents).includes(x.toLowerCase())==false){
+                           pendency.x="Not uploaded"
+                       }
+                   }
+                }
+                if (userData[0].whatsappSub.length == 0) {
+                    pendency.whatsapp = " Whatsapp not subscribed"
+                }
+                if (!userData[0].email_verified) {
+                    pendency.email = "Email not verfied"
+                }
             }
+            else
+            {
+                resolve()
+            }
+            resolve(pendency)
         }).catch((err) => {
             reject(err)
         })

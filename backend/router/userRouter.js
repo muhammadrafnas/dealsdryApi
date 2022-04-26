@@ -13,7 +13,7 @@ router.post("/otp", async (req, res, next) => {
    try {
       let phoneExist = await userController.checkPhone(req.body.mobileNumber)
       if (phoneExist.status) {
-         res.json({status:1,data:{ message: "Phone number verification already done", userData: phoneExist.user,mobile_number_exists:"true"  } })
+         res.json({ status: 1, data: { message: "Phone number verification already done", userData: phoneExist.user, mobile_number_exists: "true" } })
       }
       else {
          let response = await sendOtp(req.body.mobileNumber)
@@ -21,7 +21,7 @@ router.post("/otp", async (req, res, next) => {
          if (response) {
             res.status(200).json({
                status: 1,
-               data: { message: "OTP send successfully ",mobile_number_exists:"false" }
+               data: { message: "OTP send successfully ", mobile_number_exists: "false" }
             })
          }
          else {
@@ -138,16 +138,16 @@ router.post("/gstin/no", async (req, res, next) => {
       let response = await userController.gstNo(req.body, req.files.pancard.name)
       if (response) {
          res.status(200).json({
-            status:1,
+            status: 1,
             data: {
                message: "Successfully added"
             }
          })
       }
-      else{
+      else {
          res.status(501).json({
-            status:0,
-            data:{message:"Somthing wrong!"}
+            status: 0,
+            data: { message: "Somthing wrong!" }
          })
       }
    } catch (error) {
@@ -163,15 +163,14 @@ router.post("/select/category", async (req, res, next) => {
       let response = await userController.registrationSelectCategory(req.body.category, req.body.userId)
       if (response) {
          res.status(200).json({
-            status:1,
-            data:{message: "Successfully added "}
+            status: 1,
+            data: { message: "Successfully added " }
          })
       }
-      else
-      {
+      else {
          res.status(501).json({
-            status:0,
-            data:{
+            status: 0,
+            data: {
                message: "Try agian"
             }
          })
@@ -186,79 +185,75 @@ router.post("/select/category", async (req, res, next) => {
 // Business details
 router.get("/business/details", async (req, res, next) => {
    try {
-      if(req.query.gstin=="true"){
-         if(req.query.contactPerson=="false"){
+      if (req.query.gstin == "true") {
+         if (req.query.contactPerson == "false") {
             let data = await userController.getBusinessDetials()
             if (data) {
                res.status(200).json({
-                  status:1,
+                  status: 1,
                   data
                })
             }
-            else
-            {
+            else {
                res.status(501).json({
-                  status:0,
-                  data:{
-                     message:"Try agin"
+                  status: 0,
+                  data: {
+                     message: "Try agin"
                   }
                })
             }
          }
-         if(req.query.contactPerson=="true"){
+         if (req.query.contactPerson == "true") {
             let data = await userController.getBusinessDetialsDifferent()
             if (data) {
                res.status(200).json({
-                  status:1,
+                  status: 1,
                   data
                })
             }
-            else
-            {
+            else {
                res.status(501).json({
-                  status:0,
-                  data:{
-                     message:"Try again"
+                  status: 0,
+                  data: {
+                     message: "Try again"
                   }
                })
             }
          }
       }
-     else
-      {
+      else {
          res.status(200).json({
-             status:0,
-             data:{
-                message:"You don't have GST.Please enter the data"
-             }
+            status: 0,
+            data: {
+               message: "You don't have GST.Please enter the data"
+            }
          })
       }
-     
+
    } catch (error) {
       next(error)
    }
 
 })
 // Business details type 
-router.get("/business/types",async(req,res,next)=>{
+router.get("/business/types", async (req, res, next) => {
    try {
-      let typeOfOperations=await userController.getTypeOfOperation(req.body)
-      if(typeOfOperations){
+      let typeOfOperations = await userController.getTypeOfOperation(req.body)
+      if (typeOfOperations) {
          res.status(200).json(
             {
-               status:1,
-               data:{
+               status: 1,
+               data: {
                   typeOfOperations
                }
             }
          )
       }
-      else
-      {
+      else {
          res.status(501).json({
-            status:0,
-            data:{
-               message:"No type of operation"
+            status: 0,
+            data: {
+               message: "No type of operation"
             }
          })
       }
@@ -267,50 +262,48 @@ router.get("/business/types",async(req,res,next)=>{
    }
 })
 // Business details post api
-router.post("/business/details",async(req,res,next)=>{
+router.post("/business/details", async (req, res, next) => {
    console.log(req.body);
    try {
 
-         let data=await userController.postBusinessDetails(req.body,req.files.pancard)
-         if(data){
-            res.status(200).json({
-               status:1,
-               data:{
-                  message:"Successfully added"
-               }
-            })
-         }
-         else
-         {
-            res.status(501).json({
-               status:0,
-               data:{
-                  message:"Try again"
-               }
-            })
-         }
+      let data = await userController.postBusinessDetails(req.body, req.files.pancard)
+      if (data) {
+         res.status(200).json({
+            status: 1,
+            data: {
+               message: "Successfully added"
+            }
+         })
+      }
+      else {
+         res.status(501).json({
+            status: 0,
+            data: {
+               message: "Try again"
+            }
+         })
+      }
    } catch (error) {
       next(error)
    }
 })
 // Guidlines Documents
-router.get("/guidelines/doc",async(req,res,next)=>{
+router.get("/guidelines/doc", async (req, res, next) => {
    try {
-      let guidelinesDoc=await userController.getGuidelinesDoc(req.query.typeOfOperationId)
-      if(guidelinesDoc){
+      let guidelinesDoc = await userController.getGuidelinesDoc(req.query.typeOfOperationId)
+      if (guidelinesDoc) {
          res.status(200).json({
-            status:1,
-            data:{
+            status: 1,
+            data: {
                guidelinesDoc
             }
          })
       }
-      else
-      {
+      else {
          res.status(501).json({
-            status:0,
-            data:{
-               message:"No Guidelines Documnets"
+            status: 0,
+            data: {
+               message: "No Guidelines Documnets"
             }
          })
       }
@@ -325,18 +318,17 @@ router.post("/businessAddress/billing", async (req, res, next) => {
       let response = await userController.businessAddress(req.body, req.body.userId, req.files.addressProof.name)
       if (response) {
          res.status(200).json({
-            status:1,
-            data:{
+            status: 1,
+            data: {
                message: "Successfully added"
             }
          })
       }
-      else
-      {
+      else {
          res.status(501).json({
-            status:0,
-            data:{
-               message:"Try again"
+            status: 0,
+            data: {
+               message: "Try again"
             }
          })
       }
@@ -353,18 +345,17 @@ router.post("/businessAddress/shipping", async (req, res, next) => {
       let response = await userController.businessAddressShipping(req.body, req.body.userId, req.files.shippingAddressProof.name)
       if (response) {
          res.status(200).json({
-            status:1,
-            data:{
+            status: 1,
+            data: {
                message: "Successfully added"
             }
          })
       }
-      else
-      {
+      else {
          res.status(501).json({
-            status:0,
-            data:{
-               message:"Internal server error"
+            status: 0,
+            data: {
+               message: "Internal server error"
             }
          })
       }
@@ -378,18 +369,17 @@ router.post("/businessAddress/shipping", async (req, res, next) => {
 router.post("/doc/upload", async (req, res, next) => {
    try {
       let docuemnt = await userController.uploadDocuments(req.files.panCard, req.files.addressProofFront, req.files.addressProofBack, req.files.businessproof, req.files.shippingAddressProof,
-         req.files.shopOwnerPhoto, req.files.shopBoardPhoto,req.files.firmPancard, req.files.partnershipDeed, req.files.certificateIncorporation, req.files.memorandumAssociation, req.files.ArticlesAssociation,req.body.docId ,req.body.userId)
+         req.files.shopOwnerPhoto, req.files.shopBoardPhoto, req.files.firmPancard, req.files.partnershipDeed, req.files.certificateIncorporation, req.files.memorandumAssociation, req.files.ArticlesAssociation, req.body.docId,req.body.gst, req.body.userId)
       if (docuemnt) {
          res.status(200).json({
-            status:1,
-            data:{ message: "Successfully added" }
+            status: 1,
+            data: { message: "Successfully added" }
          })
       }
-      else
-      {
+      else {
          res.status(501).json({
-            status:0,
-            data:{
+            status: 0,
+            data: {
                message: "Internal server error"
             }
          })
@@ -399,76 +389,29 @@ router.post("/doc/upload", async (req, res, next) => {
    }
 
 })
-
-//Registration With Pendency Proprietorship document gstYes
-router.get("/pendencyDocument/proprietorship/gstYes", async (req, res, next) => {
+router.get("/pendency/detect",async(req,res,next)=>{
    try {
-      let response = await userController.getPendencyDocumentGstYes(req.query.userId)
-      if (response) {
-         res.json(response)
-      }
-   } catch (error) {
-      next(error)
-   }
-
-})
-
-
-// Pendency document Proprietorship gstNo
-router.get("/pendencyDocument/proprietorship/gstNo", async (req, res, next) => {
-   try {
-      let data = await userController.getPendencyDocumentGstNo(req.query.userId)
-      if (data) {
-         res.json(data)
-      }
-   } catch (error) {
-      next(error)
-   }
-
-})
-// Pendency document partnership and llp
-router.get("/pendencyDocuments", async (req, res, next) => {
-   try {
-      let data = await userController.getPendencyDocumentPartnershipAndLlp(req.query.userId)
-      if (data) {
-         res.json({
-            status:1,
-            data
-         })
-      }
-      else
-      {
-         res.status(501).json({
-            status:0,
-            message:"Internal server error"
-         })
-      }
-   } catch (error) {
-      next(error)
-   }
-
-})
-// Pendency document private limited public limited spc
-router.get("/pendencyDocument/privateLimited/publicLimited/spc", async (req, res, next) => {
-   try {
-      let data = await userController.getPendencyDocumentPrivateLimited(req.query.userId)
-      if (data) {
+      let pendency=await userController.getPendencyDocument(req.query.userId,req.query.docId)
+      if(pendency){
          res.status(200).json({
             status:1,
-            data
+            data:{
+               pendency
+            }
          })
       }
       else
       {
          res.status(501).json({
             status:0,
-            message:"Internal server error"
+            data:{
+               message:"user not found"
+            }
          })
       }
    } catch (error) {
       next(error)
    }
-
 })
 // Without pendency document
 router.get("/withoutPendencyDocument", async (req, res, next) => {
@@ -476,15 +419,14 @@ router.get("/withoutPendencyDocument", async (req, res, next) => {
       let data = await userController.getWithoutPendencyDocumnet(req.query.userId)
       if (data) {
          res.status(200).json({
-            status:1,
+            status: 1,
             data
          })
       }
-      else
-      {
+      else {
          res.status(501).json({
-            status:0,
-            message:"Internal server error"
+            status: 0,
+            message: "Internal server error"
          })
       }
    } catch (error) {
@@ -498,8 +440,8 @@ router.get("/whatsappSubscription", async (req, res, next) => {
       let response = await userController.whatsappSubscription(req.query.userId)
       if (response) {
          res.status(200).json({
-            status:1,
-            data:{
+            status: 1,
+            data: {
                message: "Whatsapp subscription successfully"
             }
          })
@@ -518,17 +460,16 @@ router.get("/email/verification", async (req, res, next) => {
       if (response) {
          let email = sendverficationEmail(response._id, response.email)
          res.status(200).json({
-            status:1,
-            data:{
+            status: 1,
+            data: {
                message: "Verfication link send to your email "
             }
          })
       }
-      else
-      {
+      else {
          res.status(501).json({
-            status:0,
-            message:"Email not found"
+            status: 0,
+            message: "Email not found"
          })
       }
    } catch (error) {
@@ -559,18 +500,17 @@ router.post("/business/type", async (req, res, next) => {
       let response = await userController.businessType(req.body)
       if (response) {
          res.status(200).json({
-            status:1,
-            data:{
+            status: 1,
+            data: {
                message: "Successfully added"
             }
          })
       }
-      else
-      {
+      else {
          res.status(501).json({
-            status:0,
-            data:{
-               message:"Internal server issue"
+            status: 0,
+            data: {
+               message: "Internal server issue"
             }
          })
       }
@@ -586,8 +526,8 @@ router.post("/business/type", async (req, res, next) => {
 router.get("/home", (req, res, next) => {
    try {
       res.status(200).json({
-         status:1,
-         data:{
+         status: 1,
+         data: {
             message: "Successfully enter to home screen"
          }
       })
