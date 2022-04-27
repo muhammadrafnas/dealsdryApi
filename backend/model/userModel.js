@@ -31,19 +31,20 @@ const userSchema = mongoose.Schema({
             business_billing_address_city: String,
             business_billing_address_state: String,
             buyer_business_address_proof_name: String,
-            business_billing_address_type: String
-
+            business_billing_address_type: String,
+            business_contact_person_name: String,
+            business_contact_person_mobile: String,
         }
     ],
     business_shipping_address: [
         {
-            business_billing_address_pin_code: String,
-            business_billing_address_town_area: String,
-            business_billing_address: String,
-            business_billing_address_landmark: String,
-            business_billing_address_city: String,
-            business_billing_address_state: String,
-            business_billing_address_type: String,
+            business_shipping_address_pin_code: String,
+            business_shipping_address_town_area: String,
+            business_shipping_address: String,
+            business_shipping_address_landmark: String,
+            business_shipping_address_city: String,
+            business_shipping_address_state: String,
+            business_shipping_address_type: String,
             business_contact_person_name: String,
             business_contact_person_mobile: String,
             buyer_business_address_proof_name:String

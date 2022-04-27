@@ -366,21 +366,32 @@ router.post("/businessAddress/shipping", async (req, res, next) => {
 // Upload documents 
 router.post("/doc/upload", async (req, res, next) => {
    try {
-      let docuemnt = await userController.uploadDocuments( req.files.panCard, req.files.addressProofFront, req.files.addressProofBack, req.files.businessproof, req.files.shippingAddressProof,
-         req.files.shopOwnerPhoto, req.files.shopBoardPhoto, req.files.firmPancard, req.files.partnershipDeed, req.files.certificateIncorporation, req.files.memorandumAssociation, req.files.ArticlesAssociation, req.body.docId,req.body.gst, req.body.userId  )
-      if (docuemnt) {
-         res.status(200).json({
-            status: 1,
-            data: { message: "Successfully added" }
-         })
-      }
-      else {
+      if(req.files==null){
          res.status(501).json({
-            status: 0,
-            data: {
-               message: "Internal server error"
+            status:0,
+            data:{
+               message:"File upload pending"
             }
          })
+      }
+      else
+      {
+         let docuemnt = await userController.uploadDocuments( req.files.panCard, req.files.addressProofFront, req.files.addressProofBack, req.files.businessproof, req.files.shippingAddressProof,
+            req.files.shopOwnerPhoto, req.files.shopBoardPhoto, req.files.firmPancard, req.files.partnershipDeed, req.files.certificateIncorporation, req.files.memorandumAssociation, req.files.ArticlesAssociation, req.body.docId,req.body.gst, req.body.userId)
+         if (docuemnt) {
+            res.status(200).json({
+               status: 1,
+               data: { message: "Successfully added" }
+            })
+         }
+         else {
+            res.status(501).json({
+               status: 0,
+               data: {
+                  message: "Internal server error"
+               }
+            })
+         }
       }
    } catch (error) {
       next(error)

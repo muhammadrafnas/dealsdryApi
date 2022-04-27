@@ -193,7 +193,10 @@ module.exports = {
                         business_billing_address_city: data.city,
                         business_billing_address_state: data.state,
                         buyer_business_address_proof_name: addressProof,
-                        business_billing_address_type: data.addressType
+                        business_billing_address_type: data.addressType,
+                        business_contact_person_name: data.contactPersonName,
+                        business_contact_person_mobile: data.contactPersonMobile,
+
                     }
                 }
 
@@ -211,13 +214,13 @@ module.exports = {
                 $push:
                 {
                     business_shipping_address: {
-                        business_billing_address_pin_code: data.pinCode,
-                        business_billing_address_town_area: data.townArea,
-                        business_billing_address: data.billingAddress,
-                        business_billing_address_landmark: data.landmark,
-                        business_billing_address_city: data.city,
-                        business_billing_address_state: data.state,
-                        business_billing_address_type: data.addressType,
+                        business_shipping_address_pin_code: data.pinCode,
+                        business_shipping_address_town_area: data.townArea,
+                        business_shipping_address: data.billingAddress,
+                        business_shipping_address_landmark: data.landmark,
+                        business_shipping_address_city: data.city,
+                        business_shipping_address_state: data.state,
+                        business_shipping_address_type: data.addressType,
                         business_contact_person_name: data.contactPersonName,
                         business_contact_person_mobile: data.contactPersonMobile,
                         buyer_business_address_proof_name: shippingAddressProof
