@@ -423,5 +423,19 @@ module.exports = {
         }).catch((err) => {
             reject(err)
         })
+    },
+    userDataInfo:(userId)=>{
+        return new Promise(async(resolve,reject)=>{
+            let userData=await user.findOne({
+                _id:userId
+            })
+            if(userData){
+                resolve(userData)
+            }
+            else
+            {
+                resolve()
+            }
+        })
     }
 }

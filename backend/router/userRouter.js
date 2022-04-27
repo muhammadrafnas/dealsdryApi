@@ -556,7 +556,32 @@ router.get("/pincode",(req,res,next)=>{
    }
 
 })
-
+// User info
+router.get("/:userId/info",async(req,res,next)=>{
+   try {
+      let data=await userController.userDataInfo(req.params.userId)
+      if(data){
+         res.status(200).json({
+            status:1,
+            data:{
+               data
+            }
+         })
+      }
+      else
+      {
+         res.status(501).json({
+            status:0,
+            data:{
+               message:"User not found"
+            }
+         })
+      }
+   } catch (error) {
+      next(error)
+   }
+  
+})
 
 // reach to Home screen  as guest user
 router.get("/home", (req, res, next) => {
