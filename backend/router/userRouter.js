@@ -263,10 +263,8 @@ router.get("/business/types", async (req, res, next) => {
 })
 // Business details post api
 router.post("/business/details", async (req, res, next) => {
-   console.log(req.body);
    try {
-
-      let data = await userController.postBusinessDetails(req.body, req.files.pancard)
+      let data = await userController.postBusinessDetails(req.body,req.files ? req.files.pancard : undefined )
       if (data) {
          res.status(200).json({
             status: 1,
@@ -315,7 +313,7 @@ router.get("/guidelines/doc", async (req, res, next) => {
 router.post("/businessAddress/billing", async (req, res, next) => {
    console.log(req.body);
    try {
-      let response = await userController.businessAddress(req.body, req.body.userId, req.files.addressProof.name)
+      let response = await userController.businessAddress(req.body, req.body.userId,req.files?  req.files.addressProof.name : undefined )
       if (response) {
          res.status(200).json({
             status: 1,
@@ -342,7 +340,7 @@ router.post("/businessAddress/billing", async (req, res, next) => {
 // Business address for shipping
 router.post("/businessAddress/shipping", async (req, res, next) => {
    try {
-      let response = await userController.businessAddressShipping(req.body, req.body.userId, req.files.shippingAddressProof.name)
+      let response = await userController.businessAddressShipping(req.body, req.body.userId,req.files ? req.files.shippingAddressProof.name : undefined )
       if (response) {
          res.status(200).json({
             status: 1,
@@ -368,8 +366,8 @@ router.post("/businessAddress/shipping", async (req, res, next) => {
 // Upload documents 
 router.post("/doc/upload", async (req, res, next) => {
    try {
-      let docuemnt = await userController.uploadDocuments(req.files.panCard, req.files.addressProofFront, req.files.addressProofBack, req.files.businessproof, req.files.shippingAddressProof,
-         req.files.shopOwnerPhoto, req.files.shopBoardPhoto, req.files.firmPancard, req.files.partnershipDeed, req.files.certificateIncorporation, req.files.memorandumAssociation, req.files.ArticlesAssociation, req.body.docId,req.body.gst, req.body.userId)
+      let docuemnt = await userController.uploadDocuments( req.files.panCard, req.files.addressProofFront, req.files.addressProofBack, req.files.businessproof, req.files.shippingAddressProof,
+         req.files.shopOwnerPhoto, req.files.shopBoardPhoto, req.files.firmPancard, req.files.partnershipDeed, req.files.certificateIncorporation, req.files.memorandumAssociation, req.files.ArticlesAssociation, req.body.docId,req.body.gst, req.body.userId  )
       if (docuemnt) {
          res.status(200).json({
             status: 1,

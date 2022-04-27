@@ -148,6 +148,7 @@ module.exports = {
         })
     },
     postBusinessDetails: (userData, pancard) => {
+        
         return new Promise(async (resolve, reject) => {
             let data = await user.findByIdAndUpdate(userData.userId, {
                 "business_details.businessName": userData.businessName,
