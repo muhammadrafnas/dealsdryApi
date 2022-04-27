@@ -4,7 +4,7 @@ const { sendOtp, verificationOtp } = require("../utils/otp")
 const userController = require("../controller/userController")
 const { sendverficationEmail } = require("../utils/nodeMailer")
 const { route } = require("express/lib/application")
-
+var pincodeDirectory = require('india-pincode-lookup');
 
 
 // send OTP api for mobile number verification
@@ -529,7 +529,32 @@ router.post("/business/type", async (req, res, next) => {
    }
 
 })
+// pincode api
+router.get("/pincode",(req,res,next)=>{
+   try {
+      let data=pincodeDirectory.lookup(req.query.pincode);
+    if(!data.length==0){
+       res.status(200).json({
+          status:1,
+          data:{
+             data
+          }
+       })
+    }
+    else
+    {
+       res.status(501).json({
+          status:0,
+          data:{
+             message:"No data found"
+          }
+       })
+    }
+   } catch (error) {
+       next(error)
+   }
 
+})
 
 
 // reach to Home screen  as guest user
