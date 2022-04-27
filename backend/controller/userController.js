@@ -262,15 +262,10 @@ module.exports = {
             }
         })
     },
-    whatsappSubscription: (userId) => {
+    whatsappSubscription: (userId,mobileNumber) => {
         return new Promise(async (resolve, reject) => {
-            let data = await user.findOne({
-                _id: userId
-            }).catch((err) => {
-                reject(err)
-            })
             let subscription = await whatsappSubscription.create({
-                userId: userId, phoneNumber: data.phoneNumber
+                userId: userId, mobile_number: mobileNumber
             }).catch((err) => {
                 reject(err)
             })

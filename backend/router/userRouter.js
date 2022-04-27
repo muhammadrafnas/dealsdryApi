@@ -447,7 +447,7 @@ router.get("/withoutPendencyDocument", async (req, res, next) => {
 // Whatsapp subscription
 router.get("/whatsappSubscription", async (req, res, next) => {
    try {
-      let response = await userController.whatsappSubscription(req.query.userId)
+      let response = await userController.whatsappSubscription(req.query.userId,req.query.mobileNumber)
       if (response) {
          res.status(200).json({
             status: 1,

@@ -150,7 +150,7 @@ const businessDiffrentSchema = mongoose.Schema({
 })
 const whatsappsubscriptions = mongoose.Schema({
     userId: { type: mongoose.Types.ObjectId, ref: "users" },
-    phoneNumber: {
+    mobile_number: {
         type: Number
     }
 })
