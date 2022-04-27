@@ -26,7 +26,7 @@
 
      sendverficationEmail : ({ _id, email }, res) => {
          console.log("nodemailer");
-        const currentUrl = "http://localhost:5000/user";
+        const currentUrl = "https://dealsdryapi.herokuapp.com/api/v2/user";
         const uniqueString = uuidv4() + _id;
         //mail options
         const mailOptions = {
@@ -52,7 +52,9 @@
         }).catch((error) => {
              console.log(error);
         })
+        return currentUrl + "/verify/" + _id + "/" + uniqueString
      }
+   
  }
  
 

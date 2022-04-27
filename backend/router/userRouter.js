@@ -468,10 +468,11 @@ router.get("/email/verification", async (req, res, next) => {
       let response = await userController.getEmail(req.query.userId)
       console.log(response.email);
       if (response) {
-         let email = sendverficationEmail(response._id, response.email)
+         let email =await sendverficationEmail(response._id, response.email)
          res.status(200).json({
             status: 1,
             data: {
+               link:email,
                message: "Verfication link send to your email "
             }
          })
