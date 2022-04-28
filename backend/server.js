@@ -5,6 +5,7 @@ const app = express()
 const cors = require("cors")
 const fileUpload = require('express-fileupload');
 const userRouter = require("./router/userRouter")
+const path=require("path")
 const connectDB=require("./config/db")
 connectDB()
 app.use(express.json())
@@ -18,6 +19,7 @@ app.use(fileUpload({
 }));
 app.use(cors())
 app.use("/api/v2/user", userRouter)
+app.use("/icons",express.static(__dirname + '/public/icons'));
 app.use((err,req,res,next)=>{
     console.log(err);
     res.status(404).json({

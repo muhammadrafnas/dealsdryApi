@@ -16,9 +16,11 @@
     "dotenv": "^16.0.0",
     "express": "^4.17.3",
     "express-fileupload": "^1.3.1",
+    "fs": "^0.0.1-security",
     "india-pincode-lookup": "^1.0.3",
     "mongoose": "^6.2.9",
     "nodemailer": "^6.7.3",
+    "path": "^0.12.7",
     "pincode": "^1.0.0",
     "twilio": "^3.76.0",
     "uuid": "^8.3.2"

@@ -3,7 +3,7 @@ const router = express.Router()
 const { sendOtp, verificationOtp } = require("../utils/otp")
 const userController = require("../controller/userController")
 const { sendverficationEmail } = require("../utils/nodeMailer")
-const { route } = require("express/lib/application")
+var fs = require('fs');
 var pincodeDirectory = require('india-pincode-lookup');
 let pin=require("pincode")
 
@@ -239,7 +239,7 @@ router.get("/business/details", async (req, res, next) => {
 // Business details type 
 router.get("/business/types", async (req, res, next) => {
    try {
-      let typeOfOperations = await userController.getTypeOfOperation(req.body)
+      let typeOfOperations = await userController.getTypeOfOperation()
       if (typeOfOperations) {
          res.status(200).json(
             {
@@ -289,7 +289,7 @@ router.post("/business/details", async (req, res, next) => {
 // Guidlines Documents
 router.get("/guidelines/doc", async (req, res, next) => {
    try {
-      let guidelinesDoc = await userController.getGuidelinesDoc(req.query.typeOfOperationId)
+      let guidelinesDoc = await userController.getGuidelinesDoc(req.query.operationId,req.query.referral,req.query.gst)
       if (guidelinesDoc) {
          res.status(200).json({
             status: 1,
@@ -560,6 +560,7 @@ router.get("/pincode",(req,res,next)=>{
 // User info
 router.get("/:userId/info",async(req,res,next)=>{
    try {
+
       let data=await userController.userDataInfo(req.params.userId)
       if(data){
          res.status(200).json({
@@ -582,6 +583,13 @@ router.get("/:userId/info",async(req,res,next)=>{
       next(error)
    }
   
+})
+// icons api
+router.get("/icons/:img",(req,res)=>{
+   fs.readFile("public/icons/"+ req.params.img, function(err, data) {
+      if (err) throw err; // Fail if the file can't be read.
+        console.log(data);
+    });
 })
 
 // reach to Home screen  as guest user

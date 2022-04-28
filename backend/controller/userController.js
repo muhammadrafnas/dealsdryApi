@@ -1,6 +1,6 @@
 const { reject, promise } = require("bcrypt/promises")
 const { user, business, businessDiffrent, whatsappSubscription } = require("../model/userModel")
-const { docList } = require("../model/documentModel")
+const { docList,guidlineDoc } = require("../model/documentModel")
 const bcrypt = require('bcrypt')
 const { default: mongoose } = require("mongoose")
 
@@ -141,7 +141,7 @@ module.exports = {
     getTypeOfOperation: () => {
         return new Promise(async (resolve, reject) => {
             let typeOfOperations = await docList.find({
-            }).select("label")
+            })
             if (typeOfOperations) {
                 resolve(typeOfOperations)
             }
@@ -166,10 +166,13 @@ module.exports = {
             }
         })
     },
-    getGuidelinesDoc: (docId) => {
+    getGuidelinesDoc: (operationId,referral,gst) => {
         return new Promise(async (resolve, reject) => {
-            let documentsList = await docList.findOne({
-                _id: docId
+            let documentsList = await guidlineDoc.find({
+                operationId:operationId,
+                referral:referral,
+                gst:gst
+
             }).catch((err) => {
                 reject(err)
             })
