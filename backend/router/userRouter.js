@@ -286,7 +286,7 @@ router.post("/business/details", async (req, res, next) => {
       next(error)
    }
 })
-// Guidlines Documents
+// Guidlines Documents kkkk
 router.get("/guidelines/doc", async (req, res, next) => {
    try {
       let guidelinesDoc = await userController.getGuidelinesDoc(req.query.operationId,req.query.referral,req.query.gst)
