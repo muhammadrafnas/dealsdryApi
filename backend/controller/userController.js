@@ -428,7 +428,7 @@ module.exports = {
         return new Promise(async(resolve,reject)=>{
             let userData=await user.findOne({
                 _id:userId
-            })
+            }).select("business_details email mobile_number gstin_yes gstin_no,business_billing_address business_shipping_address")
             if(userData){
                 resolve(userData)
             }

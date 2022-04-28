@@ -19,6 +19,7 @@
     "india-pincode-lookup": "^1.0.3",
     "mongoose": "^6.2.9",
     "nodemailer": "^6.7.3",
+    "pincode": "^1.0.0",
     "twilio": "^3.76.0",
     "uuid": "^8.3.2"
   },

@@ -5,6 +5,7 @@ const userController = require("../controller/userController")
 const { sendverficationEmail } = require("../utils/nodeMailer")
 const { route } = require("express/lib/application")
 var pincodeDirectory = require('india-pincode-lookup');
+let pin=require("pincode")
 
 
 // send OTP api for mobile number verification
@@ -135,7 +136,7 @@ router.post("/gstin/yes", async (req, res, next) => {
 //gst no 
 router.post("/gstin/no", async (req, res, next) => {
    try {
-      let response = await userController.gstNo(req.body, req.files.pancard.name)
+      let response = await userController.gstNo(req.body,req.files.pancard.name)
       if (response) {
          res.status(200).json({
             status: 1,
