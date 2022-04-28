@@ -166,12 +166,17 @@ module.exports = {
             }
         })
     },
-    getGuidelinesDoc: (operationId,referral,gst) => {
+    getGuidelinesDoc: (userData) => {
         return new Promise(async (resolve, reject) => {
-            let documentsList = await guidlineDoc.find({
-                operationId:operationId,
-                referral:referral,
-                gst:gst
+            let documentsList = await guidlineDoc.create({
+                operationId:userData.operationId,
+                documentName:userData.documentName,
+                documentOptions:userData.documentOptions,
+                businessName:userData.businessName,
+                referral:userData.referral,
+                gst:userData.gst,
+                label:userData.label,
+                imgUrl:userData.imgUrl
 
             }).catch((err) => {
                 reject(err)
@@ -354,9 +359,8 @@ module.exports = {
             reject(err)
         })
     },
-    getPendencyDocument: (userID,docId) => {
+    getPendencyDocument: (userID,gst,referral) => {
         userID = mongoose.Types.ObjectId(userID)
-        docId=mongoose.Types.ObjectId(docId)
         let pendency={}
         return new Promise(async (resolve, reject) => {
             let userData = await user.aggregate([
@@ -371,46 +375,30 @@ module.exports = {
                 },
                 {
                        $lookup:{
-                        from:"doclists",
+                        from:"guidlinesdocs",
                         localField:"documents.docId",
-                        foreignField:"_id",
-                        as:"docLists"
+                        foreignField:"operationId",
+                        as:"doc"
                     }
                 },
-                {
-                    $unwind:"$docLists"
-                },
+
+              
             ]).catch((err) => {
                 reject(err)
             })
+         ;
+            // console.log(userData[0].doc);
+        
             if(userData){
-
-                if(userData[0].documents.gst=="true"){
-                    for(let x of userData[0].docLists.doc_gst_yes){
-                         x=x.replace(/ /g,"_");
-                        if(Object.keys(userData[0].documents).includes(x.toLowerCase())==false){
-                            console.log(x);
-                            pendency[x]="Not uploaded"
-                        }
+                    for(let x of userData[0].doc){
+                       if(x.gst==gst && x.referral==gst){
+                           let docname=Object.values(x.documentName).join("").replace(/ /g,"_")
+                           if(Object.keys(userData[0].documents).includes(docname.toLowerCase())==false){
+                                pendency.documents=x
+                            }
+                       }
                     }
-                }
-                else if(userData[0].documents.gst=="false"){
-                    for(let x of userData[0].docLists.doc_gst_no){
-                        x=x.replace(/ /g,"_");
-                       if(Object.keys(userData[0].documents).includes(x.toLowerCase())==false){
-                           pendency.x="Not uploaded"
-                       }
-                   }
-                }
-                else
-                {
-                    for(let x of userData[0].docLists){
-                        x=x.replace(/ /g,"_");
-                       if(Object.keys(userData[0].documents).includes(x.toLowerCase())==false){
-                           pendency.x="Not uploaded"
-                       }
-                   }
-                }
+                
                 if (userData[0].whatsappSub.length == 0) {
                     pendency.whatsapp = " Whatsapp not subscribed"
                 }

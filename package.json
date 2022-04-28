@@ -10,6 +10,7 @@
   "author": "Muhammed Rafnas",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.27.2",
     "bcrypt": "^5.0.1",
     "cloudinary": "^1.29.0",
     "cors": "^2.8.5",
@@ -19,6 +20,7 @@
     "fs": "^0.0.1-security",
     "india-pincode-lookup": "^1.0.3",
     "mongoose": "^6.2.9",
+    "node-fetch": "2.0",
     "nodemailer": "^6.7.3",
     "path": "^0.12.7",
     "pincode": "^1.0.0",

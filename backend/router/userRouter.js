@@ -6,6 +6,9 @@ const { sendverficationEmail } = require("../utils/nodeMailer")
 var fs = require('fs');
 var pincodeDirectory = require('india-pincode-lookup');
 let pin=require("pincode")
+const fetch = require('node-fetch');
+const dotenv = require("dotenv")
+dotenv.config()
 
 
 // send OTP api for mobile number verification
@@ -287,9 +290,9 @@ router.post("/business/details", async (req, res, next) => {
    }
 })
 // Guidlines Documents kkkk
-router.get("/guidelines/doc", async (req, res, next) => {
+router.post("/guidelines/doc", async (req, res, next) => {
    try {
-      let guidelinesDoc = await userController.getGuidelinesDoc(req.query.operationId,req.query.referral,req.query.gst)
+      let guidelinesDoc = await userController.getGuidelinesDoc(req.body)
       if (guidelinesDoc) {
          res.status(200).json({
             status: 1,
@@ -361,7 +364,6 @@ router.post("/businessAddress/shipping", async (req, res, next) => {
    } catch (error) {
       next(error)
    }
-
 })
 
 // Upload documents 
@@ -402,7 +404,7 @@ router.post("/doc/upload", async (req, res, next) => {
 // pendency document
 router.get("/pendency/detect",async(req,res,next)=>{
    try {
-      let pendency=await userController.getPendencyDocument(req.query.userId,req.query.docId)
+      let pendency=await userController.getPendencyDocument(req.query.userId,req.query.gst,req.query.referral)
       if(pendency){
          res.status(200).json({
             status:1,
@@ -532,26 +534,21 @@ router.post("/business/type", async (req, res, next) => {
 
 })
 // pincode api
-router.get("/pincode",(req,res,next)=>{
+router.get("/pincode",async(req,res,next)=>{
    try {
-      let data=pincodeDirectory.lookup(req.query.pincode);
-    if(!data.length==0){
-       res.status(200).json({
-          status:1,
-          data:{
-             data
-          }
-       })
-    }
-    else
-    {
-       res.status(501).json({
-          status:0,
-          data:{
-             message:"No data found"
-          }
-       })
-    }
+     const pinCode=await fetch(process.env.GET_LOCATIONS + req.query.pincode)
+     const [jsonPincodes] = await pinCode.json();
+          const pins = jsonPincodes['PostOffice'].map(pins => ({ 
+               town: pins.Name,
+               pinCode
+           }))
+           const [SD] = jsonPincodes['PostOffice'];
+      res.status(200).json({
+         status:1,
+         data:{
+            locations: pins, state: [SD.State], city: [SD.District] 
+         }
+      })
    } catch (error) {
        next(error)
    }

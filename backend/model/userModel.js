@@ -63,7 +63,7 @@ const userSchema = mongoose.Schema({
         certificate_incorporation:Object,
         memorandum_association:Object,
         articles_Association :Object,
-        docId: { type: mongoose.Types.ObjectId, ref: "doclists" },
+        docId: { type: mongoose.Types.ObjectId,ref: "typeOfOperations" },
         gst:String
         
 

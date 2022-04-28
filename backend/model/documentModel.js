@@ -6,7 +6,7 @@ const docList=mongoose.Schema({
    
 })
 const guidelinesdocs=mongoose.Schema({
-    operationId: { type: mongoose.Types.ObjectId, ref: "doclists" },
+    operationId: { type: mongoose.Types.ObjectId, ref: "typeOfOperations" },
     documentName:String,
     documentOptions:String,
     businessName:String,
@@ -16,7 +16,7 @@ const guidelinesdocs=mongoose.Schema({
     imgUrl:String
 })
 const docLists=mongoose.model("typeOfOperations",docList)
-const guidelines=mongoose.model("guidlinesDoc",guidelinesdocs)
+const guidelines=mongoose.model("guidlinesDocs",guidelinesdocs)
 module.exports={
     docList:docLists,
     guidlineDoc:guidelines
