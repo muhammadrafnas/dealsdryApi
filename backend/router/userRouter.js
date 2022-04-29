@@ -289,19 +289,19 @@ router.post("/business/details", async (req, res, next) => {
       next(error)
    }
 })
-// Guidlines Documents 
+// Guidlines Documents kkkk
 router.get("/guidelines/doc", async (req, res, next) => {
-   console.log("api..");
-   console.log(req.query);
    try {
-      let guidelinesDoc = await userController.getGuidelinesDoc(req.query.operationId,req.query.referral,req.query.gst)
+      let guidelinesDoc = await userController.getGuidelinesDoc(req.query.operationId,req.query.referral,req.query.gst,req.query.userId)
+      console.log(guidelinesDoc.userName);
       if (guidelinesDoc) {
          let count=guidelinesDoc.length
          res.status(200).json({
             status: 1,
             data: {
                count,
-               guidelinesDoc
+               userName:guidelinesDoc.userName,
+               guidelinesDoc:guidelinesDoc.guidelinesDoc
             }
          })
       }

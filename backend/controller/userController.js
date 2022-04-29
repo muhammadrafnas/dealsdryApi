@@ -170,8 +170,7 @@ module.exports = {
             }
         })
     },
-    getGuidelinesDoc: (operationId,referral,gst) => {
-        console.log(operationId);
+    getGuidelinesDoc: (operationId,referral,gst,userId) => {
         return new Promise(async (resolve, reject) => {
             let documentsList = await guidlineDoc.find({
                operationId:operationId,referral:referral,gst:gst
@@ -179,8 +178,11 @@ module.exports = {
             }).catch((err) => {
                 reject(err)
             })
+            let userName=await user.findOne({
+                _id:userId
+            }).select("business_details.businessAuthorizedName")
             if (documentsList) {
-                resolve(documentsList)
+                resolve({guidelinesDoc:documentsList,userName:userName})
             }
             else {
                 resolve()
