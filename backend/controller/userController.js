@@ -389,8 +389,8 @@ module.exports = {
             ]).catch((err) => {
                 reject(err)
             })
-            console.log();
-            if(userData){
+            
+            if(!userData.length ==0){
                 if(!userData[0].doc.length==0){
                     for(let x of userData[0].doc){
                        if(x.gst==gst && x.referral==referral){
