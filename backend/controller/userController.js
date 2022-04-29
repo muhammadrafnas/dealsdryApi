@@ -44,7 +44,9 @@ module.exports = {
                     email: data.email, password: data.password, referral_id: data.referralCode
                 }
             }
-            )
+            ).catch((err) => {
+                reject(err)
+            })
             if (userData != null) {
                 resolve({ status: true, data: userData })
             }
@@ -64,7 +66,9 @@ module.exports = {
                     email: data.email, password: data.password
                 }
             }
-            )
+            ).catch((err) => {
+                reject(err)
+            })
             if (userData != null) {
                 resolve({ status: true, data: userData })
             }
