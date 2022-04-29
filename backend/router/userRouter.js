@@ -289,14 +289,18 @@ router.post("/business/details", async (req, res, next) => {
       next(error)
    }
 })
-// Guidlines Documents kkkk
-router.post("/guidelines/doc", async (req, res, next) => {
+// Guidlines Documents 
+router.get("/guidelines/doc", async (req, res, next) => {
+   console.log("api..");
+   console.log(req.query);
    try {
-      let guidelinesDoc = await userController.getGuidelinesDoc(req.body)
+      let guidelinesDoc = await userController.getGuidelinesDoc(req.query.operationId,req.query.referral,req.query.gst)
       if (guidelinesDoc) {
+         let count=guidelinesDoc.length
          res.status(200).json({
             status: 1,
             data: {
+               count,
                guidelinesDoc
             }
          })

@@ -170,17 +170,11 @@ module.exports = {
             }
         })
     },
-    getGuidelinesDoc: (userData) => {
+    getGuidelinesDoc: (operationId,referral,gst) => {
+        console.log(operationId);
         return new Promise(async (resolve, reject) => {
-            let documentsList = await guidlineDoc.create({
-                operationId:userData.operationId,
-                documentName:userData.documentName,
-                documentOptions:userData.documentOptions,
-                businessName:userData.businessName,
-                referral:userData.referral,
-                gst:userData.gst,
-                label:userData.label,
-                imgUrl:userData.imgUrl
+            let documentsList = await guidlineDoc.find({
+               operationId:operationId,referral:referral,gst:gst
 
             }).catch((err) => {
                 reject(err)
