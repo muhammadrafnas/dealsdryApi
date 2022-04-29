@@ -408,7 +408,7 @@ router.post("/doc/upload", async (req, res, next) => {
 // pendency document
 router.get("/pendency/detect",async(req,res,next)=>{
    try {
-      let pendency=await userController.getPendencyDocument(req.query.userId,req.query.gst,req.query.referral)
+      let pendency=await userController.getPendencyDocument(req.query.userId,req.query.gst,req.query.referral,req.query.operationId)
       if(pendency){
          res.status(200).json({
             status:1,
