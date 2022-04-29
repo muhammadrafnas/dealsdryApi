@@ -592,7 +592,7 @@ router.get("/icons/:img",(req,res)=>{
     });
 })
 
-// reach to Home screen  as guest user
+// reach to Home screen  as guest user .
 router.get("/home", (req, res, next) => {
    try {
       res.status(200).json({
