@@ -300,7 +300,7 @@ router.get("/guidelines/doc", async (req, res, next) => {
             status: 1,
             data: {
                count,
-               userName:guidelinesDoc.userName,
+               userDetails:guidelinesDoc.userName,
                guidelinesDoc:guidelinesDoc.guidelinesDoc
             }
          })
