@@ -391,7 +391,7 @@ module.exports = {
         
             if(userData){
                     for(let x of userData[0].doc){
-                       if(x.gst==gst && x.referral==gst){
+                       if(x.gst==gst && x.referral==referral){
                            let docname=Object.values(x.documentName).join("").replace(/ /g,"_")
                            if(Object.keys(userData[0].documents).includes(docname.toLowerCase())==false){
                                 pendency.documents=x
