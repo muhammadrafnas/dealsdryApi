@@ -359,10 +359,13 @@ module.exports = {
             reject(err)
         })
     },
-    getPendencyDocument: (userID,gst,referral) => {
+    getPendencyDocument: (userID,gst,referral,operationId) => {
         userID = mongoose.Types.ObjectId(userID)
         let pendency={}
         return new Promise(async (resolve, reject) => {
+            let documents=await guidlineDoc.find({
+                  operationId:operationId
+            })
             let userData = await user.aggregate([
                 { $match: { _id: userID } },
                 {
@@ -386,10 +389,9 @@ module.exports = {
             ]).catch((err) => {
                 reject(err)
             })
-         ;
-            // console.log(userData[0].doc);
         
             if(userData){
+                if(!userData[0].doc.length==0){
                     for(let x of userData[0].doc){
                        if(x.gst==gst && x.referral==referral){
                            let docname=Object.values(x.documentName).join("").replace(/ /g,"_")
@@ -398,6 +400,11 @@ module.exports = {
                             }
                        }
                     }
+                }
+                else
+                {
+                    pendency.docuemnt=documents
+                }
                 
                 if (userData[0].whatsappSub.length == 0) {
                     pendency.whatsapp = " Whatsapp not subscribed"
