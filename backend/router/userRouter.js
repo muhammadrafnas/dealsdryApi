@@ -607,7 +607,13 @@ router.get("/home", (req, res, next) => {
 
 })
 
-
+router.get("/referral",(req,res)=>{
+   let code=12345678
+   res.status(200).json({
+      status:1,
+      code
+   })
+})
 
 
 module.exports = router;
