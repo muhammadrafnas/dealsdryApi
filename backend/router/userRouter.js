@@ -295,7 +295,7 @@ router.get("/guidelines/doc", async (req, res, next) => {
       let guidelinesDoc = await userController.getGuidelinesDoc(req.query.operationId,req.query.referral,req.query.gst,req.query.userId)
       console.log(guidelinesDoc.userName);
       if (guidelinesDoc) {
-         let count=guidelinesDoc.length
+         let count=guidelinesDoc.guidelinesDoc.length
          res.status(200).json({
             status: 1,
             data: {
