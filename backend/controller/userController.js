@@ -180,7 +180,7 @@ module.exports = {
             })
             let userName=await user.findOne({
                 _id:userId
-            }).select("business_details.businessAuthorizedName business_details.businessName")
+            }).select("business_details.businessAuthorizedName business_details.businessName gstin_no gstin_yes ")
             if (documentsList) {
                 resolve({guidelinesDoc:documentsList,userName:userName})
             }

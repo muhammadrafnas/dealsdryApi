@@ -117,7 +117,7 @@ router.post("/email", async (req, res, next) => {
 // GSTIN confirmation an
 router.post("/gstin/yes", async (req, res, next) => {
    try {
-      let data = await userController.gstinYes(req.body, req.files.gstinDocument.name)
+      let data = await userController.gstinYes(req.body, req.files.gstinDocument)
       if (data) {
          res.status(200).json({
             status: 1,
@@ -139,7 +139,7 @@ router.post("/gstin/yes", async (req, res, next) => {
 //gst no 
 router.post("/gstin/no", async (req, res, next) => {
    try {
-      let response = await userController.gstNo(req.body,req.files.pancard.name)
+      let response = await userController.gstNo(req.body,req.files.pancard)
       if (response) {
          res.status(200).json({
             status: 1,
@@ -289,7 +289,7 @@ router.post("/business/details", async (req, res, next) => {
       next(error)
    }
 })
-// Guidlines Documents kkkk
+// Guidlines Documents 
 router.get("/guidelines/doc", async (req, res, next) => {
    try {
       let guidelinesDoc = await userController.getGuidelinesDoc(req.query.operationId,req.query.referral,req.query.gst,req.query.userId)

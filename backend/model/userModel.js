@@ -16,7 +16,7 @@ const userSchema = mongoose.Schema({
     gstin_yes:
     {
         gstin_number: String,
-        gstin_document: String
+        gstin_document: Object
     }
     ,
     category: {
@@ -77,7 +77,7 @@ const userSchema = mongoose.Schema({
     gstin_no:
     {
         pan_number: String,
-        pancard_document: String
+        pancard_document: Object
     },
     business_details:{
         businessName: {
