@@ -3,23 +3,26 @@ const dotenv = require("dotenv")
 dotenv.config()
 const app = express()
 const cors = require("cors")
-const fileUpload = require('express-fileupload');
-const userRouter = require("./router/userRouter")
-const path=require("path")
+const logger=require("morgan")
+const registrationRouter = require("./router/RegistrationRouter")
+const documentUploadRouter=require("./router/DocumentUploadRouter")
 const connectDB=require("./config/db")
+const { uploadDocuments } = require("./controller/userController")
+
 connectDB()
+app.use(logger('dev'))
 app.use(express.json())
 app.use(
     express.urlencoded({
         extended: false
     })
 )
-app.use(fileUpload({
-    createParentPath: true
-}));
 app.use(cors())
-app.use("/api/v2/user", userRouter)
+app.use("/api/v2/user", registrationRouter)
+app.use("/api/v2/user/doc", documentUploadRouter)
 app.use("/icons",express.static(__dirname + '/public/icons'));
+
+
 app.use((err,req,res,next)=>{
     console.log(err);
     res.status(404).json({

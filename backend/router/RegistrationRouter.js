@@ -4,10 +4,10 @@ const { sendOtp, verificationOtp } = require("../utils/otp")
 const userController = require("../controller/userController")
 const { sendverficationEmail } = require("../utils/nodeMailer")
 var fs = require('fs');
-var pincodeDirectory = require('india-pincode-lookup');
-let pin=require("pincode")
+const cloudinary = require("../utils/cloudinary")
 const fetch = require('node-fetch');
 const dotenv = require("dotenv")
+const upload = require("../utils/multer")
 dotenv.config()
 
 
@@ -60,26 +60,24 @@ router.post("/otp/verification", async (req, res, next) => {
    } catch (error) {
       next(error)
    }
-
 })
 
 
 // get email and password and refferal code api
 router.post("/email/referral", async (req, res, next) => {
-   console.log("api....");
    try {
       let response = await userController.emailPasswordReferralRegistartion(req.body)
       if (response.status) {
          res.status(200).json({
             status: 1, data: {
-               message: "Successfully added email and password"
+               message: "Successfully added"
             }
          })
       }
       else {
          res.status(501).json({
             status: 0,
-            data: { message: "Somthing wrong!" }
+            data: { message: "wrong!" }
          })
       }
    } catch (error) {
@@ -88,7 +86,7 @@ router.post("/email/referral", async (req, res, next) => {
 
 })
 
-
+// Email api
 router.post("/email", async (req, res, next) => {
    try {
       let response = await userController.emailPasswordRegistartion(req.body)
@@ -114,10 +112,14 @@ router.post("/email", async (req, res, next) => {
 })
 
 
-// GSTIN confirmation an
-router.post("/gstin/yes", async (req, res, next) => {
+// GSTIN confirmation 
+router.post("/gstin/yes", upload.single("gstinDocument"), async (req, res, next) => {
    try {
-      let data = await userController.gstinYes(req.body, req.files.gstinDocument)
+      /*@cloudinary 
+        files storing
+     */
+      let gstDoumnat = await cloudinary.fileUpload(req.file)
+      let data = await userController.gstinYes(req.body, gstDoumnat)
       if (data) {
          res.status(200).json({
             status: 1,
@@ -137,9 +139,13 @@ router.post("/gstin/yes", async (req, res, next) => {
 
 
 //gst no 
-router.post("/gstin/no", async (req, res, next) => {
+router.post("/gstin/no", upload.single("pancard"), async (req, res, next) => {
    try {
-      let response = await userController.gstNo(req.body,req.files.pancard)
+      /*@cloudinary 
+         files storing
+      */
+      let pancard = await cloudinary.fileUpload(req.file)
+      let response = await userController.gstNo(req.body, pancard)
       if (response) {
          res.status(200).json({
             status: 1,
@@ -237,8 +243,8 @@ router.get("/business/details", async (req, res, next) => {
    } catch (error) {
       next(error)
    }
-
 })
+
 // Business details type 
 router.get("/business/types", async (req, res, next) => {
    try {
@@ -265,10 +271,17 @@ router.get("/business/types", async (req, res, next) => {
       next(error)
    }
 })
+
+
 // Business details post api
-router.post("/business/details", async (req, res, next) => {
+router.post("/business/details", upload.single("pancard"), async (req, res, next) => {
    try {
-      let data = await userController.postBusinessDetails(req.body,req.files ? req.files.pancard : undefined )
+      /*@cloudinary 
+         files storing
+      */
+      let pancard = await cloudinary.fileUpload(req.file)
+      console.log(pancard);
+      let data = await userController.postBusinessDetails(req.body, pancard)
       if (data) {
          res.status(200).json({
             status: 1,
@@ -289,19 +302,21 @@ router.post("/business/details", async (req, res, next) => {
       next(error)
    }
 })
+
+
 // Guidlines Documents 
 router.get("/guidelines/doc", async (req, res, next) => {
    try {
-      let guidelinesDoc = await userController.getGuidelinesDoc(req.query.operationId,req.query.referral,req.query.gst,req.query.userId)
+      let guidelinesDoc = await userController.getGuidelinesDoc(req.query.operationId, req.query.referral, req.query.gst, req.query.userId)
       console.log(guidelinesDoc.userName);
       if (guidelinesDoc) {
-         let count=guidelinesDoc.guidelinesDoc.length
+         let count = guidelinesDoc.guidelinesDoc.length
          res.status(200).json({
             status: 1,
             data: {
                count,
-               userDetails:guidelinesDoc.userName,
-               guidelinesDoc:guidelinesDoc.guidelinesDoc
+               userDetails: guidelinesDoc.userName,
+               guidelinesDoc: guidelinesDoc.guidelinesDoc
             }
          })
       }
@@ -317,11 +332,12 @@ router.get("/guidelines/doc", async (req, res, next) => {
       next(error)
    }
 })
+
 //Business address for billing
-router.post("/businessAddress/billing", async (req, res, next) => {
-   console.log(req.body);
+router.post("/businessAddress/billing", upload.single("addressProof"), async (req, res, next) => {
    try {
-      let response = await userController.businessAddress(req.body, req.body.userId,req.files?  req.files.addressProof.name : undefined )
+      let addressProof = await cloudinary.fileUpload(req.file)
+      let response = await userController.businessAddress(req.body, req.body.userId, addressProof)
       if (response) {
          res.status(200).json({
             status: 1,
@@ -348,7 +364,8 @@ router.post("/businessAddress/billing", async (req, res, next) => {
 // Business address for shipping
 router.post("/businessAddress/shipping", async (req, res, next) => {
    try {
-      let response = await userController.businessAddressShipping(req.body, req.body.userId,req.files ? req.files.shippingAddressProof.name : undefined )
+      let shippingAddressProof = await cloudinary.fileUpload(req.file)
+      let response = await userController.businessAddressShipping(req.body, req.body.userId, shippingAddressProof)
       if (response) {
          res.status(200).json({
             status: 1,
@@ -370,59 +387,24 @@ router.post("/businessAddress/shipping", async (req, res, next) => {
    }
 })
 
-// Upload documents 
-router.post("/doc/upload", async (req, res, next) => {
-   try {
-      if(req.files==null){
-         res.status(501).json({
-            status:0,
-            data:{
-               message:"File upload pending"
-            }
-         })
-      }
-      else
-      {
-         let docuemnt = await userController.uploadDocuments( req.files.panCard, req.files.addressProofFront, req.files.addressProofBack, req.files.businessproof, req.files.shippingAddressProof,
-            req.files.shopOwnerPhoto, req.files.shopBoardPhoto, req.files.firmPancard, req.files.partnershipDeed, req.files.certificateIncorporation, req.files.memorandumAssociation, req.files.ArticlesAssociation, req.body.docId,req.body.gst, req.body.userId)
-         if (docuemnt) {
-            res.status(200).json({
-               status: 1,
-               data: { message: "Successfully added" }
-            })
-         }
-         else {
-            res.status(501).json({
-               status: 0,
-               data: {
-                  message: "Internal server error"
-               }
-            })
-         }
-      }
-   } catch (error) {
-      next(error)
-   }
 
-})
 // pendency document
-router.get("/pendency/detect",async(req,res,next)=>{
+router.get("/pendency/detect", async (req, res, next) => {
    try {
-      let pendency=await userController.getPendencyDocument(req.query.userId,req.query.gst,req.query.referral,req.query.operationId)
-      if(pendency){
+      let pendency = await userController.getPendencyDocument(req.query.userId, req.query.gst, req.query.referral, req.query.operationId)
+      if (pendency) {
          res.status(200).json({
-            status:1,
-            data:{
+            status: 1,
+            data: {
                pendency
             }
          })
       }
-      else
-      {
+      else {
          res.status(501).json({
-            status:0,
-            data:{
-               message:"user not found"
+            status: 0,
+            data: {
+               message: "user not found"
             }
          })
       }
@@ -430,6 +412,7 @@ router.get("/pendency/detect",async(req,res,next)=>{
       next(error)
    }
 })
+
 // Without pendency document
 router.get("/withoutPendencyDocument", async (req, res, next) => {
    try {
@@ -454,7 +437,7 @@ router.get("/withoutPendencyDocument", async (req, res, next) => {
 // Whatsapp subscription
 router.get("/whatsappSubscription", async (req, res, next) => {
    try {
-      let response = await userController.whatsappSubscription(req.query.userId,req.query.mobileNumber)
+      let response = await userController.whatsappSubscription(req.query.userId, req.query.mobileNumber)
       if (response) {
          res.status(200).json({
             status: 1,
@@ -474,11 +457,11 @@ router.get("/email/verification", async (req, res, next) => {
    try {
       let response = await userController.getEmail(req.query.userId)
       if (response) {
-         let email =await sendverficationEmail(response._id, response.email)
+         let email = await sendverficationEmail(response._id, response.email)
          res.status(200).json({
             status: 1,
             data: {
-               link:email,
+               link: email,
                message: "Verfication link send to your email "
             }
          })
@@ -534,62 +517,61 @@ router.post("/business/type", async (req, res, next) => {
    } catch (error) {
       next(error)
    }
-
 })
+
 // pincode api
-router.get("/pincode",async(req,res,next)=>{
+router.get("/pincode", async (req, res, next) => {
    try {
-     const pinCode=await fetch(process.env.GET_LOCATIONS + req.query.pincode)
-     const [jsonPincodes] = await pinCode.json();
-          const pins = jsonPincodes['PostOffice'].map(pins => ({ 
-               town: pins.Name,
-               pinCode
-           }))
-           const [SD] = jsonPincodes['PostOffice'];
+      const pinCode = await fetch(process.env.GET_LOCATIONS + req.query.pincode)
+      const [jsonPincodes] = await pinCode.json();
+      const pins = jsonPincodes['PostOffice'].map(pins => ({
+         town: pins.Name,
+         pinCode
+      }))
+      const [SD] = jsonPincodes['PostOffice'];
       res.status(200).json({
-         status:1,
-         data:{
-            locations: pins, state: [SD.State], city: [SD.District] 
+         status: 1,
+         data: {
+            locations: pins, state: [SD.State], city: [SD.District]
          }
       })
    } catch (error) {
-       next(error)
+      next(error)
    }
-
 })
-// User info
-router.get("/:userId/info",async(req,res,next)=>{
-   try {
 
-      let data=await userController.userDataInfo(req.params.userId)
-      if(data){
+// User info
+router.get("/:userId/info", async (req, res, next) => {
+   try {
+      let data = await userController.userDataInfo(req.params.userId)
+      if (data) {
          res.status(200).json({
-            status:1,
-            data:{
+            status: 1,
+            data: {
                data
             }
          })
       }
-      else
-      {
+      else {
          res.status(501).json({
-            status:0,
-            data:{
-               message:"User not found"
+            status: 0,
+            data: {
+               message: "User not found"
             }
          })
       }
    } catch (error) {
       next(error)
    }
-  
+
 })
+
 // icons api
-router.get("/icons/:img",(req,res)=>{
-   fs.readFile("public/icons/"+ req.params.img, function(err, data) {
+router.get("/icons/:img", (req, res) => {
+   fs.readFile("public/icons/" + req.params.img, function (err, data) {
       if (err) throw err; // Fail if the file can't be read.
-        console.log(data);
-    });
+      console.log(data);
+   });
 })
 
 // reach to Home screen  as guest user .
@@ -607,10 +589,10 @@ router.get("/home", (req, res, next) => {
 
 })
 
-router.get("/referral",(req,res)=>{
-   let code=12345678
+router.get("/referral", (req, res) => {
+   let code = 12345678
    res.status(200).json({
-      status:1,
+      status: 1,
       code
    })
 })

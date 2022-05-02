@@ -16,7 +16,7 @@ const userSchema = mongoose.Schema({
     gstin_yes:
     {
         gstin_number: String,
-        gstin_document: Object
+        gstin_document: String
     }
     ,
     category: {
@@ -51,20 +51,21 @@ const userSchema = mongoose.Schema({
         }
     ],
     documents: {
-        pan_card: Object,
-        personal_address_proof_front_copy: Object,
-        personal_address_proof_back_copy: Object,
-        business_proof: Object,
-        shipping_address_proof: Object,
-        shop_owner_photo: Object,
-        shop_board_photo: Object,
-        firm_pancard: Object,
-        partnership_deed: Object,
-        certificate_incorporation:Object,
-        memorandum_association:Object,
-        articles_Association :Object,
+        pan_card: String,
+        personal_address_proof_front_copy: String,
+        personal_address_proof_back_copy: String,
+        business_proof: String,
+        shipping_address_proof: String,
+        shop_owner_photo: String,
+        shop_board_photo: String,
+        firm_pancard: String,
+        partnership_deed: String,
+        certificate_incorporation:String,
+        memorandum_association:String,
+        articles_Association :String,
         docId: { type: mongoose.Types.ObjectId,ref: "typeOfOperations" },
-        gst:String
+        gst:String,
+        referral:String
         
 
     },
@@ -77,7 +78,7 @@ const userSchema = mongoose.Schema({
     gstin_no:
     {
         pan_number: String,
-        pancard_document: Object
+        pancard_document: String
     },
     business_details:{
         businessName: {
@@ -93,7 +94,7 @@ const userSchema = mongoose.Schema({
             type: String
         },
         pancard: {
-            type: Object
+            type: String
         },
         contactPerson:{
             type:String
