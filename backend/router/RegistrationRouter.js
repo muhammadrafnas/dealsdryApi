@@ -112,7 +112,7 @@ router.post("/email", async (req, res, next) => {
 })
 
 
-// GSTIN confirmation 
+// GSTIN confirmation    kk
 router.post("/gstin", upload.single("proof"), async (req, res, next) => {
    console.log(req.body);
    console.log("api call");
