@@ -362,7 +362,7 @@ router.post("/businessAddress/billing", upload.single("addressProof"), async (re
 
 
 // Business address for shipping
-router.post("/businessAddress/shipping", async (req, res, next) => {
+router.post("/businessAddress/shipping", upload.single("shippingAddressProof"), async (req, res, next) => {
    try {
       let shippingAddressProof = await cloudinary.fileUpload(req.file)
       let response = await userController.businessAddressShipping(req.body, req.body.userId, shippingAddressProof)
