@@ -113,24 +113,45 @@ router.post("/email", async (req, res, next) => {
 
 
 // GSTIN confirmation 
-router.post("/gstin/yes", upload.single("gstinDocument"), async (req, res, next) => {
+router.post("/gstin", upload.single("proof"), async (req, res, next) => {
+   console.log(req.file);
    try {
       /*@cloudinary 
         files storing
      */
-      let gstDoumnat = await cloudinary.fileUpload(req.file)
-      let data = await userController.gstinYes(req.body, gstDoumnat)
-      if (data) {
-         res.status(200).json({
-            status: 1,
-            data: { message: "Successfully added " }
-         })
+      if(req.body.gst=="true"){
+         let gstDocument = await cloudinary.fileUpload(req.file)
+         let data = await userController.gstinYes(req.body, gstDocument)
+         if (data) {
+            res.status(200).json({
+               status: 1,
+               data: { message: "Successfully added " }
+            })
+         }
+         else {
+            res.status(501).json({
+               status: 0,
+               data: { message: "Somthing wrong!" }
+            })
+         }
       }
-      else {
-         res.status(501).json({
-            status: 0,
-            data: { message: "Somthing wrong!" }
-         })
+      if(req.body.gst=="false"){
+         let pancard = await cloudinary.fileUpload(req.file)
+         let response = await userController.gstNo(req.body, pancard)
+         if (response) {
+            res.status(200).json({
+               status: 1,
+               data: {
+                  message: "Successfully added"
+               }
+            })
+         }
+         else {
+            res.status(501).json({
+               status: 0,
+               data: { message: "Somthing wrong!" }
+            })
+         }
       }
    } catch (error) {
       next(error)
@@ -138,33 +159,33 @@ router.post("/gstin/yes", upload.single("gstinDocument"), async (req, res, next)
 })
 
 
-//gst no 
-router.post("/gstin/no", upload.single("pancard"), async (req, res, next) => {
-   try {
-      /*@cloudinary 
-         files storing
-      */
-      let pancard = await cloudinary.fileUpload(req.file)
-      let response = await userController.gstNo(req.body, pancard)
-      if (response) {
-         res.status(200).json({
-            status: 1,
-            data: {
-               message: "Successfully added"
-            }
-         })
-      }
-      else {
-         res.status(501).json({
-            status: 0,
-            data: { message: "Somthing wrong!" }
-         })
-      }
-   } catch (error) {
-      next(error)
-   }
+// //gst no 
+// router.post("/gstin/no", upload.single("pancard"), async (req, res, next) => {
+//    try {
+//       /*@cloudinary 
+//          files storing
+//       */
+//       let pancard = await cloudinary.fileUpload(req.file)
+//       let response = await userController.gstNo(req.body, pancard)
+//       if (response) {
+//          res.status(200).json({
+//             status: 1,
+//             data: {
+//                message: "Successfully added"
+//             }
+//          })
+//       }
+//       else {
+//          res.status(501).json({
+//             status: 0,
+//             data: { message: "Somthing wrong!" }
+//          })
+//       }
+//    } catch (error) {
+//       next(error)
+//    }
 
-})
+// })
 
 
 // select category
