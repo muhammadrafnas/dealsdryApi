@@ -25,7 +25,7 @@
  module.exports={
 
      sendverficationEmail : ({ _id, email }, res) => {
-         console.log("nodemailer");
+         console.log(res);
         const currentUrl = "https://dealsdryapi.herokuapp.com/api/v2/user";
         const uniqueString = uuidv4() + _id;
         //mail options
