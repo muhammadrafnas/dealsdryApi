@@ -214,7 +214,7 @@ router.post("/select/category", async (req, res, next) => {
 })
 
 
-// Business details
+// Business details get
 router.get("/business/details", async (req, res, next) => {
    try {
       if (req.query.gstin == "true") {

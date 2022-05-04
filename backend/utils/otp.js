@@ -10,7 +10,6 @@ const client = require("twilio")(accountSid, authToken)
 
 let mobileNumber;
 const verification = (mobile) => {
-    console.log(mobile);
     return new Promise((resolve, reject) => {
         client.verify.services(serviceSID).verifications.create({
             to: `+91${mobile}`,
@@ -27,6 +26,7 @@ const verification = (mobile) => {
                 resolve(false)
             }
         }).catch(err => {
+            console.log(err);
           resolve(false)
         })
 
