@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt')
 const { default: mongoose } = require("mongoose")
 
 module.exports = {
-  
+
     /*
 
 
@@ -13,13 +13,12 @@ module.exports = {
 
 
     */
-    
+
     checkPhone: (mobileNumber) => {
         return new Promise(async (resolve, reject) => {
             let exist = await user.find({
                 mobile_number: mobileNumber
-            })
-            console.log(exist != null);
+            }).select("_id")
             if (exist.length != 0) {
                 resolve({ status: true, user: exist })
             } else {
@@ -37,8 +36,9 @@ module.exports = {
             let data = await user.create({
                 mobile_number: phoneNumber
             })
+            console.log(data);
             if (data) {
-                resolve(data)
+                resolve(data._id)
             }
         }).catch((err) => {
             throw new Error(err)
@@ -107,9 +107,9 @@ module.exports = {
     },
 
 
-   /*
-   @GST gst confirmation if gst yes call this funaction
-   */
+    /*
+    @GST gst confirmation if gst yes call this funaction
+    */
 
     gstinYes: (userData, proof) => {
         return new Promise(async (resolve, reject) => {
@@ -122,7 +122,7 @@ module.exports = {
             if (data) {
                 resolve(data)
             }
-            else{
+            else {
                 resolve()
             }
         })
@@ -192,14 +192,14 @@ module.exports = {
             }
         })
     },
-    
 
-     /*
-    @Type of operaton 
-    get type of operation from database label and id of the 
-    type of operation
-   
-    */
+
+    /*
+   @Type of operaton 
+   get type of operation from database label and id of the 
+   type of operation
+  
+   */
 
     getTypeOfOperation: () => {
         return new Promise(async (resolve, reject) => {
@@ -212,13 +212,13 @@ module.exports = {
     },
 
 
-     /*
-    @Business 
-    This is the post data .data store into database 
-    after adding the data promise resolve eny error is found
-    promise reject
-    
-    */
+    /*
+   @Business 
+   This is the post data .data store into database 
+   after adding the data promise resolve eny error is found
+   promise reject
+
+   */
 
     postBusinessDetails: (userData, pancard) => {
 
@@ -247,11 +247,20 @@ module.exports = {
             }).catch((err) => {
                 reject(err)
             })
-            let userName = await user.findOne({
+            let userDetails = await user.findOne({
                 _id: userId
             }).select("business_details.businessAuthorizedName business_details.businessName gstin_no gstin_yes ")
+
             if (documentsList) {
-                resolve({ guidelinesDoc: documentsList, userName: userName })
+                if (userDetails.gstin_no.pancard_document) {
+
+                    documentsList.push(userDetails.gstin_no.pancard_document)
+                }
+                if (userDetails.gstin_yes.gstin_document) {
+
+                    documentsList.push(userDetails.gstin_yes.gstin_document) 
+                }
+                resolve({ guidelinesDoc: documentsList, businessAuthorizedName: userDetails.business_details.businessAuthorizedName,businessName: userDetails.business_details.businessName })
             }
             else {
                 resolve()
@@ -430,7 +439,7 @@ module.exports = {
     getPendencyDocument: (userID, gst, referral, operationId) => {
         userID = mongoose.Types.ObjectId(userID)
         let pendency = {}
-        let doc=[]
+        let doc = []
         return new Promise(async (resolve, reject) => {
             let documents = await guidlineDoc.find({
                 operationId: operationId
@@ -470,7 +479,7 @@ module.exports = {
                             }
                         }
                     }
-                    pendency.documents=doc
+                    pendency.documents = doc
                 }
                 else {
                     pendency.docuemnt = documents
@@ -495,7 +504,7 @@ module.exports = {
         return new Promise(async (resolve, reject) => {
             let userData = await user.findOne({
                 _id: userId
-            }).select("business_details email mobile_number gstin_yes gstin_no,business_billing_address business_shipping_address")
+            }).select("business_details email mobile_number gstin_yes gstin_no business_billing_address business_shipping_address")
             if (userData) {
                 resolve(userData)
             }
