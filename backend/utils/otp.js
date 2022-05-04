@@ -1,7 +1,6 @@
 const { response } = require("express")
 const { status } = require("express/lib/response")
-const dotenv = require("dotenv")
-dotenv.config()
+
 
 const accountSid = process.env.TWILO_ACCOUNT_SID;
 const authToken = process.env.TWILO_AUTHTOKEN;
@@ -10,6 +9,7 @@ const client = require("twilio")(accountSid, authToken)
 
 let mobileNumber;
 const verification = (mobile) => {
+    console.log(authToken);
     return new Promise((resolve, reject) => {
         client.verify.services(serviceSID).verifications.create({
             to: `+91${mobile}`,
