@@ -49,7 +49,7 @@ router.post("/otp/verification", async (req, res, next) => {
       if (response.status) {
          let user = await userController.mobileRegistration(response.mobileNumber)
          if (user) {
-            res.json({ status: 1, data: { message: "Successfully verified mobile number", user } })
+            res.json({ status: 1, data: { message: "Successfully verified mobile number", _id } })
          }
       }
       else {
@@ -337,7 +337,10 @@ router.get("/guidelines/doc", async (req, res, next) => {
             status: 1,
             data: {
                count,
-               userDetails: guidelinesDoc.userName,
+               userDetails:{
+                  businessAuthorizedName:  guidelinesDoc.businessAuthorizedName,
+                  businessName:guidelinesDoc.businessName
+               },
                guidelinesDoc: guidelinesDoc.guidelinesDoc
             }
          })
