@@ -44,12 +44,15 @@ router.post("/otp", async (req, res, next) => {
 
 // otp verfication api
 router.post("/otp/verification", async (req, res, next) => {
+   console.log("api ");
    try {
       let response = await verificationOtp(req.body.otp)
+      console.log(response);
       if (response.status) {
          let user = await userController.mobileRegistration(response.mobileNumber)
          if (user) {
-            res.json({ status: 1, data: { message: "Successfully verified mobile number", _id } })
+            console.log(user);
+            res.json({ status: 1, data: { message: "Successfully verified mobile number",_id:user. _id } })
          }
       }
       else {
