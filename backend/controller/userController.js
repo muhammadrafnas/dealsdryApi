@@ -1,16 +1,18 @@
 const { reject, promise } = require("bcrypt/promises")
 const { user, business, businessDiffrent, whatsappSubscription } = require("../model/userModel")
 const { docList, guidlineDoc } = require("../model/documentModel")
+const Category=require("../model/categoryModel")
+const {Device} = require("../model/deviceModel")
 const bcrypt = require('bcrypt')
+const {geoLocation}=require("../utils/geoLocation")
 const { default: mongoose } = require("mongoose")
+const { resolve } = require("path")
 
 module.exports = {
 
     /*
 
-
         Controller file store the data and get data from the data base
-
 
     */
 
@@ -31,9 +33,9 @@ module.exports = {
             }
         })
     },
-    mobileRegistration: (phoneNumber) => {
+    mobileRegistration: (phoneNumber,userId) => {
         return new Promise(async (resolve, reject) => {
-            let data = await user.create({
+            let data = await user.findByIdAndUpdate(userId,{
                 mobile_number: phoneNumber
             })
             console.log(data);
@@ -258,9 +260,9 @@ module.exports = {
                 }
                 if (userDetails.gstin_yes.gstin_document) {
 
-                    documentsList.push(userDetails.gstin_yes.gstin_document) 
+                    documentsList.push(userDetails.gstin_yes.gstin_document)
                 }
-                resolve({ guidelinesDoc: documentsList, businessAuthorizedName: userDetails.business_details.businessAuthorizedName,businessName: userDetails.business_details.businessName })
+                resolve({ guidelinesDoc: documentsList, businessAuthorizedName: userDetails.business_details.businessAuthorizedName, businessName: userDetails.business_details.businessName })
             }
             else {
                 resolve()
@@ -510,6 +512,54 @@ module.exports = {
             }
             else {
                 resolve()
+            }
+        })
+    },
+    addDevice: (userData) => {
+        return new Promise(async (resolve, reject) => {
+            let device = await Device.findOne({ deviceId: userData.deviceId })
+            if (device) {
+                let deviceCollection = await Device.updateOne(
+                    { deviceId: userData.deviceId },
+                    userData
+                )
+                if (deviceCollection) {
+                    console.log(device._id);
+                    let userCollection=await user.findOne({
+                          device:device._id
+                    }).select("_id")
+                    resolve(userCollection)
+                }
+            }
+            else {
+                  let deviceCollection=await Device.create(userData)
+                  if(deviceCollection){
+                    let geoRes=await geoLocation(userData.lat,userData.long)
+                    const regCollection = await user.create({
+                        device: deviceCollection._id,
+                        geoLocation: geoRes,
+                        timeStamp: new Date()
+                    });
+                     if(regCollection){
+                         resolve(regCollection._id)
+                     }
+                  }
+            }
+        })
+    },
+    getcategory:()=>{
+        return new Promise(async(resolve,reject)=>{
+            let categoryCollection=await Category.find(
+              {}
+            ).catch((err)=>{
+                reject(err)
+            })
+            if(categoryCollection){
+                resolve(categoryCollection)
+            }
+            else
+            {
+                resolve({data:"No category"})
             }
         })
     }
