@@ -1,6 +1,7 @@
 const { reject, promise } = require("bcrypt/promises")
 const { user, business, businessDiffrent, whatsappSubscription } = require("../model/userModel")
 const { docList, guidlineDoc } = require("../model/documentModel")
+const Category=require("../model/categoryModel")
 const {Device} = require("../model/deviceModel")
 const bcrypt = require('bcrypt')
 const {geoLocation}=require("../utils/geoLocation")
@@ -11,9 +12,7 @@ module.exports = {
 
     /*
 
-
         Controller file store the data and get data from the data base
-
 
     */
 
@@ -525,7 +524,11 @@ module.exports = {
                     userData
                 )
                 if (deviceCollection) {
-                    resolve({ deviceCollection })
+                    console.log(device._id);
+                    let userCollection=await user.findOne({
+                          device:device._id
+                    }).select("_id")
+                    resolve(userCollection)
                 }
             }
             else {
@@ -541,6 +544,22 @@ module.exports = {
                          resolve(regCollection._id)
                      }
                   }
+            }
+        })
+    },
+    getcategory:()=>{
+        return new Promise(async(resolve,reject)=>{
+            let categoryCollection=await Category.find(
+              {}
+            ).catch((err)=>{
+                reject(err)
+            })
+            if(categoryCollection){
+                resolve(categoryCollection)
+            }
+            else
+            {
+                resolve({data:"No category"})
             }
         })
     }

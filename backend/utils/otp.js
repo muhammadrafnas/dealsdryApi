@@ -26,7 +26,7 @@ const verification = (mobile) => {
             }
         }).catch(err => {
             console.log(err);
-          resolve(false)
+          reject(err)
         })
 
     })

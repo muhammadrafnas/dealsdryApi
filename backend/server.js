@@ -7,6 +7,7 @@ const logger = require("morgan")
 const registrationRouter = require("./router/RegistrationRouter")
 const documentUploadRouter = require("./router/DocumentUploadRouter")
 const deviceRouter = require("./router/DeviceRouter")
+const category=require("./router/CategoryRouter")
 const connectDB = require("./config/db")
 const { uploadDocuments } = require("./controller/userController")
 
@@ -22,6 +23,7 @@ app.use(cors())
 app.use("/api/v2/user", registrationRouter)
 app.use("/api/v2/user/doc", documentUploadRouter)
 app.use("/api/v2/user/device", deviceRouter)
+app.use("/api/v2/user/category",category)
 app.use("/icons", express.static(__dirname + '/public/icons'));
 
 
