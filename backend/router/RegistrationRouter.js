@@ -16,7 +16,7 @@ router.post("/otp", async (req, res, next) => {
    try {
       let phoneExist = await userController.checkPhone(req.body.mobileNumber)
       if (phoneExist.status) {
-         res.json({ status: 1, data: { message: "Phone number verification already done", userData: phoneExist.user, mobile_number_exists: "true" } })
+         res.json({ status: 1, data: { message: "Phone number verification already done", mobile_number_exists: "true" } })
       }
       else {
          let response = await sendOtp(req.body.mobileNumber)
@@ -48,7 +48,7 @@ router.post("/otp/verification", async (req, res, next) => {
       if (response.status) {
          let user = await userController.mobileRegistration(response.mobileNumber,req.body.userId)
          if (user) {
-            res.json({ status: 1, data: { message: "Successfully verified mobile number",_id:user. _id } })
+            res.json({ status: 1, data: { message: "Successfully verified mobile number" } })
          }
       }
       else {
