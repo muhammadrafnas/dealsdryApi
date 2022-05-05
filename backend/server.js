@@ -3,10 +3,11 @@ const dotenv = require("dotenv")
 dotenv.config()
 const app = express()
 const cors = require("cors")
-const logger=require("morgan")
+const logger = require("morgan")
 const registrationRouter = require("./router/RegistrationRouter")
-const documentUploadRouter=require("./router/DocumentUploadRouter")
-const connectDB=require("./config/db")
+const documentUploadRouter = require("./router/DocumentUploadRouter")
+const deviceRouter = require("./router/DeviceRouter")
+const connectDB = require("./config/db")
 const { uploadDocuments } = require("./controller/userController")
 
 connectDB()
@@ -20,13 +21,13 @@ app.use(
 app.use(cors())
 app.use("/api/v2/user", registrationRouter)
 app.use("/api/v2/user/doc", documentUploadRouter)
-app.use("/icons",express.static(__dirname + '/public/icons'));
+app.use("/api/v2/user/device", deviceRouter)
+app.use("/icons", express.static(__dirname + '/public/icons'));
 
 
-app.use((err,req,res,next)=>{
-    console.log(err);
+app.use((err, req, res, next) => {
     res.status(404).json({
-        error:err.message
+        error: err.message
     })
 })
 

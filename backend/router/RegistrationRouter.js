@@ -13,7 +13,6 @@ dotenv.config()
 
 // send OTP api for mobile number verification
 router.post("/otp", async (req, res, next) => {
-   console.log(req.body);
    try {
       let phoneExist = await userController.checkPhone(req.body.mobileNumber)
       if (phoneExist.status) {
@@ -44,14 +43,11 @@ router.post("/otp", async (req, res, next) => {
 
 // otp verfication api
 router.post("/otp/verification", async (req, res, next) => {
-   console.log("api ");
    try {
       let response = await verificationOtp(req.body.otp)
-      console.log(response);
       if (response.status) {
-         let user = await userController.mobileRegistration(response.mobileNumber)
+         let user = await userController.mobileRegistration(response.mobileNumber,req.body.userId)
          if (user) {
-            console.log(user);
             res.json({ status: 1, data: { message: "Successfully verified mobile number",_id:user. _id } })
          }
       }
@@ -117,8 +113,6 @@ router.post("/email", async (req, res, next) => {
 
 // GSTIN confirmations
 router.post("/gstin", upload.single("proof"), async (req, res, next) => {
-   console.log(req.body);
-   console.log("api call");
    try {
       /*@cloudinary 
         files storing
@@ -305,7 +299,7 @@ router.post("/business/details", upload.single("pancard"), async (req, res, next
          files storing
       */
       let pancard = await cloudinary.fileUpload(req.file)
-      console.log(pancard);
+     
       let data = await userController.postBusinessDetails(req.body, pancard)
       if (data) {
          res.status(200).json({

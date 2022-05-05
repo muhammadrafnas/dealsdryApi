@@ -17,7 +17,13 @@ const userSchema = mongoose.Schema({
     {
         gstin_number: String,
         gstin_document: String
+    },
+    device: { type: mongoose.Types.ObjectId, ref: "devices" },
+    geoLocation: {
+        type: String,
+        default: ''
     }
+
     ,
     category: {
         type: Array
@@ -47,7 +53,7 @@ const userSchema = mongoose.Schema({
             business_shipping_address_type: String,
             business_contact_person_name: String,
             business_contact_person_mobile: String,
-            buyer_business_address_proof_name:String
+            buyer_business_address_proof_name: String
         }
     ],
     documents: {
@@ -60,14 +66,12 @@ const userSchema = mongoose.Schema({
         shop_board_photo: String,
         firm_pancard: String,
         partnership_deed: String,
-        certificate_incorporation:String,
-        memorandum_association:String,
-        articles_Association :String,
-        docId: { type: mongoose.Types.ObjectId,ref: "typeOfOperations" },
-        gst:String,
-        referral:String
-        
-
+        certificate_incorporation: String,
+        memorandum_association: String,
+        articles_Association: String,
+        docId: { type: mongoose.Types.ObjectId, ref: "typeOfOperations" },
+        gst: String,
+        referral: String
     },
     business_type: {
         type: String
@@ -80,7 +84,7 @@ const userSchema = mongoose.Schema({
         pan_number: String,
         pancard_document: String
     },
-    business_details:{
+    business_details: {
         businessName: {
             type: String
         },
@@ -96,12 +100,16 @@ const userSchema = mongoose.Schema({
         pancard: {
             type: String
         },
-        contactPerson:{
-            type:String
+        contactPerson: {
+            type: String
         },
-        desigination:{
-            type:String
+        desigination: {
+            type: String
         }
+    },
+    timeStamp: {
+        type: Date,
+        default: ''
     }
 })
 
@@ -155,13 +163,13 @@ const whatsappsubscriptions = mongoose.Schema({
         type: Number
     }
 })
-const businessDetails=mongoose.model("businesses",business)
+const businessDetails = mongoose.model("businesses", business)
 const businessDiffrent = mongoose.model("businessContact", businessDiffrentSchema)
 const user = mongoose.model("users", userSchema)
 const whatsappSub = mongoose.model("whatsappSubscription", whatsappsubscriptions)
 module.exports = {
     user: user,
-    business:businessDetails,
+    business: businessDetails,
     businessDiffrent: businessDiffrent,
     whatsappSubscription: whatsappSub
 }
