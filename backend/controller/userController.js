@@ -176,7 +176,7 @@ module.exports = {
         return new Promise(async (resolve, reject) => {
             let data = await user.findOne(
                 { _id: userId }
-            ).select("gstin_yes.gst_details.legal_name gstin_yes.gst_details.type_Of_operation  ").catch((err) => {
+            ).select("gstin_yes.gst_details.legal_name gstin_yes.gst_details.type_Of_operation gstin_yes.gstin_number gstin_yes.gstin_document ").catch((err) => {
                 reject(err)
             })
             console.log(data);
@@ -189,7 +189,7 @@ module.exports = {
         return new Promise(async (resolve, reject) => {
             let data = await user.findOne({
                 _id:userId
-            }).select("gstin_no.pan_Details").catch((err) => {
+            }).select("gstin_no.pan_Details gstin_no.pan_number gstin_no.pancard_document ").catch((err) => {
                 reject(err)
             })
             if (data) {
