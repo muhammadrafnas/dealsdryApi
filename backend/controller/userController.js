@@ -273,6 +273,10 @@ Funcation calling from Registration router password storing becrypt format for s
                             x.label="Business proof"
                             x.imgUrl=userDetails.gstin_yes.gstin_document
                         }
+                        if(x.documentName=="Shipping Address proof"){
+                            x.label="Shipping Address proof"
+                            x.imgUrl=userDetails.gstin_yes.gstin_document
+                        }
                     }
                 }
                 resolve({ guidelinesDoc: documentsList, businessAuthorizedName: userDetails.business_details.businessAuthorizedName, businessName: userDetails.business_details.businessName })
