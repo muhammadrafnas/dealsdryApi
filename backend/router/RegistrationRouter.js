@@ -3,8 +3,8 @@ const router = express.Router()
 const { sendOtp, verificationOtp } = require("../utils/otp")
 const userController = require("../controller/userController")
 const { sendverficationEmail } = require("../utils/nodeMailer")
+const {gstDetailsGetfromApi}=require("../utils/zoopApi")
 var fs = require('fs');
-const cloudinary = require("../utils/cloudinary")
 const fetch = require('node-fetch');
 const dotenv = require("dotenv")
 const upload = require("../utils/multer")
@@ -118,8 +118,8 @@ router.post("/gstin", upload.single("proof"), async (req, res, next) => {
         files storing
      */
       if(req.body.gst=="true"){
-         let gstDocument = await cloudinary.fileUpload(req.file)
-         let data = await userController.gstinYes(req.body, gstDocument)
+         let gstDetails=await gstDetailsGetfromApi(req.body.gstinNumber)
+         let data = await userController.gstinYes(req.body, req.file.filename,gstDetails)
          if (data) {
             res.status(200).json({
                status: 1,
@@ -134,8 +134,7 @@ router.post("/gstin", upload.single("proof"), async (req, res, next) => {
          }
       }
       if(req.body.gst=="false"){
-         let pancard = await cloudinary.fileUpload(req.file)
-         let response = await userController.gstNo(req.body, pancard)
+         let response = await userController.gstNo(req.body,  req.file.filename)
          if (response) {
             res.status(200).json({
                status: 1,
@@ -155,35 +154,6 @@ router.post("/gstin", upload.single("proof"), async (req, res, next) => {
       next(error)
    }
 })
-
-
-// //gst no 
-// router.post("/gstin/no", upload.single("pancard"), async (req, res, next) => {
-//    try {
-//       /*@cloudinary 
-//          files storing
-//       */
-//       let pancard = await cloudinary.fileUpload(req.file)
-//       let response = await userController.gstNo(req.body, pancard)
-//       if (response) {
-//          res.status(200).json({
-//             status: 1,
-//             data: {
-//                message: "Successfully added"
-//             }
-//          })
-//       }
-//       else {
-//          res.status(501).json({
-//             status: 0,
-//             data: { message: "Somthing wrong!" }
-//          })
-//       }
-//    } catch (error) {
-//       next(error)
-//    }
-
-// })
 
 
 // select category
@@ -216,11 +186,11 @@ router.get("/business/details", async (req, res, next) => {
    try {
       if (req.query.gstin == "true") {
          if (req.query.contactPerson == "false") {
-            let data = await userController.getBusinessDetials()
+            let data = await userController.getBusinessDetialsGst(req.query.userId)
             if (data) {
                res.status(200).json({
                   status: 1,
-                  data
+                  data:data.gstin_yes.gst_details
                })
             }
             else {
@@ -298,9 +268,7 @@ router.post("/business/details", upload.single("pancard"), async (req, res, next
       /*@cloudinary 
          files storing
       */
-      let pancard = await cloudinary.fileUpload(req.file)
-     
-      let data = await userController.postBusinessDetails(req.body, pancard)
+      let data = await userController.postBusinessDetails(req.body,req.file ?  req.file.filename : null )
       if (data) {
          res.status(200).json({
             status: 1,
@@ -358,8 +326,8 @@ router.get("/guidelines/doc", async (req, res, next) => {
 //Business address for billing
 router.post("/businessAddress/billing", upload.single("addressProof"), async (req, res, next) => {
    try {
-      let addressProof = await cloudinary.fileUpload(req.file)
-      let response = await userController.businessAddress(req.body, req.body.userId, addressProof)
+     
+      let response = await userController.businessAddress(req.body, req.body.userId, req.file ? req.file.filename : null )
       if (response) {
          res.status(200).json({
             status: 1,
@@ -386,8 +354,7 @@ router.post("/businessAddress/billing", upload.single("addressProof"), async (re
 // Business address for shipping
 router.post("/businessAddress/shipping", upload.single("shippingAddressProof"), async (req, res, next) => {
    try {
-      let shippingAddressProof = await cloudinary.fileUpload(req.file)
-      let response = await userController.businessAddressShipping(req.body, req.body.userId, shippingAddressProof)
+      let response = await userController.businessAddressShipping(req.body, req.body.userId, req.file ? req.file.filename : null)
       if (response) {
          res.status(200).json({
             status: 1,

@@ -1,6 +1,5 @@
 const express = require("express")
 const router = express.Router()
-const cloudinary=require("../utils/cloudinary")
 const dotenv = require("dotenv")
 const upload=require("../utils/multer")
 const userController = require("../controller/userController")
@@ -20,9 +19,7 @@ router.post("/upload",upload.fields([{name:'panCard'},{name:'addressProofFront'}
        }
        else
        {
-          let uploadedResponse=await  cloudinary.docUpload(req.files)
-          console.log(uploadedResponse);
-          let docuemnt = await userController.uploadDocuments(uploadedResponse, req.body.docId,req.body.gst,req.body.referral, req.body.userId)
+          let docuemnt = await userController.uploadDocuments(req.files, req.body.docId,req.body.gst,req.body.referral, req.body.userId)
           if (docuemnt) {
              res.status(200).json({
                 status: 1,
