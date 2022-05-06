@@ -191,7 +191,7 @@ router.get("/business/details", async (req, res, next) => {
             if (data) {
                res.status(200).json({
                   status: 1,
-                  data:data.gstin_yes.gst_details
+                  data:data.gstin_yes
                })
             }
             else {
