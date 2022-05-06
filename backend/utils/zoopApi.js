@@ -6,6 +6,11 @@ const axiosGst = axios.create({
     headers: { 'api-key': process.env.ZOOP_API_KEY, 'app-id': process.env.ZOOP_APP_ID }
 });
 
+const axiosPan = axios.create({
+    baseURL: "https://test.zoop.one/api/v1/in/identity/pan",
+    headers: { 'api-key': process.env.ZOOP_API_KEY, 'app-id': process.env.ZOOP_APP_ID }
+});
+
 async function gstDetailsGetfromApi(gstNumber) {
     let { data } = await axiosGst.post("/lite",
         {
@@ -25,7 +30,20 @@ async function gstDetailsGetfromApi(gstNumber) {
 }
 
 async function getPanDetailsfromApi(panNumber) {
-
+    let {data} = await axiosPan.post("/lite", {
+        "data": {
+            "customer_pan_number": "FQJPM7573Q",
+            "consent": "Y",
+            "consent_text": "I hear by declare my consent agreement for fetching my information via ZOOP API."
+        }
+    })
+    if(data.success == true){
+        return {status:data.result.pan_status,name:data.result.user_full_name,panNumber:data.result.pan_number}
+    }
+    else {
+        return { pannumber:panNumber, status:"Not valid" }
+    } 
+        
 }
 
 
@@ -33,5 +51,5 @@ async function getPanDetailsfromApi(panNumber) {
 
 module.exports = {
     gstDetailsGetfromApi: gstDetailsGetfromApi,
-    getPanDetailsfromApi: getPanDetailsfromApi
+    panDetailsGetfromApi: getPanDetailsfromApi
 }

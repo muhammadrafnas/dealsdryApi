@@ -3,7 +3,7 @@ const router = express.Router()
 const { sendOtp, verificationOtp } = require("../utils/otp")
 const userController = require("../controller/userController")
 const { sendverficationEmail } = require("../utils/nodeMailer")
-const {gstDetailsGetfromApi}=require("../utils/zoopApi")
+const {gstDetailsGetfromApi,panDetailsGetfromApi}=require("../utils/zoopApi")
 var fs = require('fs');
 const fetch = require('node-fetch');
 const dotenv = require("dotenv")
@@ -134,7 +134,9 @@ router.post("/gstin", upload.single("proof"), async (req, res, next) => {
          }
       }
       if(req.body.gst=="false"){
-         let response = await userController.gstNo(req.body,  req.file.filename)
+         let pandetails=await panDetailsGetfromApi(req.body.panNumber)
+         console.log(pandetails);
+         let response = await userController.gstNo(req.body,  req.file.filename,pandetails)
          if (response) {
             res.status(200).json({
                status: 1,
@@ -185,7 +187,6 @@ router.post("/select/category", async (req, res, next) => {
 router.get("/business/details", async (req, res, next) => {
    try {
       if (req.query.gstin == "true") {
-         if (req.query.contactPerson == "false") {
             let data = await userController.getBusinessDetialsGst(req.query.userId)
             if (data) {
                res.status(200).json({
@@ -202,12 +203,13 @@ router.get("/business/details", async (req, res, next) => {
                })
             }
          }
-         if (req.query.contactPerson == "true") {
-            let data = await userController.getBusinessDetialsDifferent()
+         if (req.query.gstin == "false") {
+            console.log("else");
+            let data = await userController.getBusinessDetialsPanCard(req.query.userId)
             if (data) {
                res.status(200).json({
                   status: 1,
-                  data
+                  data:data.gstin_no
                })
             }
             else {
@@ -219,15 +221,8 @@ router.get("/business/details", async (req, res, next) => {
                })
             }
          }
-      }
-      else {
-         res.status(200).json({
-            status: 0,
-            data: {
-               message: "You don't have GST.Please enter the data"
-            }
-         })
-      }
+      
+  
 
    } catch (error) {
       next(error)
@@ -326,7 +321,6 @@ router.get("/guidelines/doc", async (req, res, next) => {
 //Business address for billing
 router.post("/businessAddress/billing", upload.single("addressProof"), async (req, res, next) => {
    try {
-     
       let response = await userController.businessAddress(req.body, req.body.userId, req.file ? req.file.filename : null )
       if (response) {
          res.status(200).json({
