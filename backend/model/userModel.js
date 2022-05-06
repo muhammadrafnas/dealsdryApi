@@ -83,7 +83,8 @@ const userSchema = mongoose.Schema({
     gstin_no:
     {
         pan_number: String,
-        pancard_document: String
+        pancard_document: String,
+        pan_Details:Object
     },
     business_details: {
         businessName: {

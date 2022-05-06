@@ -130,11 +130,13 @@ module.exports = {
             }
         })
     },
-    gstNo: (userData, docuemnt) => {
+    gstNo: (userData, docuemnt, panDetails) => {
+        console.log(panDetails);
         return new Promise(async (resolve, reject) => {
             let data = await user.findByIdAndUpdate(userData.userId, {
                 "gstin_no.pan_number": userData.panNumber,
-                "gstin_no.pancard_document": "http://54.234.115.71:5000/document/" + docuemnt
+                "gstin_no.pancard_document": "http://54.234.115.71:5000/document/" + docuemnt,
+                "gstin_no.pan_Details": panDetails
             }).catch((err) => {
                 reject(err)
             })
@@ -173,7 +175,7 @@ module.exports = {
     getBusinessDetialsGst: (userId) => {
         return new Promise(async (resolve, reject) => {
             let data = await user.findOne(
-                { _id:userId}
+                { _id: userId }
             ).select("gstin_yes.gst_details.legal_name gstin_yes.gst_details.type_Of_operation  ").catch((err) => {
                 reject(err)
             })
@@ -183,11 +185,11 @@ module.exports = {
             reject(err)
         })
     },
-
-    getBusinessDetialsDifferent: () => {
+    getBusinessDetialsPanCard: (userId) => {
         return new Promise(async (resolve, reject) => {
-            let data = await businessDiffrent.find({
-            }).catch((err) => {
+            let data = await user.findOne({
+                _id:userId
+            }).select("gstin_no.pan_Details").catch((err) => {
                 reject(err)
             })
             if (data) {
