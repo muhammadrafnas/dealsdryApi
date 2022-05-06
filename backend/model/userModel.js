@@ -16,7 +16,8 @@ const userSchema = mongoose.Schema({
     gstin_yes:
     {
         gstin_number: String,
-        gstin_document: String
+        gstin_document: String,
+        gst_details:Object
     },
     device: { type: mongoose.Types.ObjectId, ref: "devices" },
     geoLocation: {

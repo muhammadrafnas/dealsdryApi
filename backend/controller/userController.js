@@ -1,10 +1,10 @@
 const { reject, promise } = require("bcrypt/promises")
 const { user, business, businessDiffrent, whatsappSubscription } = require("../model/userModel")
 const { docList, guidlineDoc } = require("../model/documentModel")
-const Category=require("../model/categoryModel")
-const {Device} = require("../model/deviceModel")
+const Category = require("../model/categoryModel")
+const { Device } = require("../model/deviceModel")
 const bcrypt = require('bcrypt')
-const {geoLocation}=require("../utils/geoLocation")
+const { geoLocation } = require("../utils/geoLocation")
 const { default: mongoose } = require("mongoose")
 const { resolve } = require("path")
 
@@ -33,9 +33,9 @@ module.exports = {
             }
         })
     },
-    mobileRegistration: (phoneNumber,userId) => {
+    mobileRegistration: (phoneNumber, userId) => {
         return new Promise(async (resolve, reject) => {
-            let data = await user.findByIdAndUpdate(userId,{
+            let data = await user.findByIdAndUpdate(userId, {
                 mobile_number: phoneNumber
             })
             console.log(data);
@@ -113,11 +113,12 @@ module.exports = {
     @GST gst confirmation if gst yes call this funaction
     */
 
-    gstinYes: (userData, proof) => {
+    gstinYes: (userData, proof, gstDetails) => {
         return new Promise(async (resolve, reject) => {
             let data = await user.findByIdAndUpdate(userData.userId, {
                 "gstin_yes.gstin_number": userData.gstinNumber,
-                "gstin_yes.gstin_document": proof
+                "gstin_yes.gstin_document": "http://54.234.115.71:5000/document/" + proof,
+                "gstin_yes.gst_details": gstDetails
             }).catch((err) => {
                 reject(err)
             })
@@ -133,7 +134,7 @@ module.exports = {
         return new Promise(async (resolve, reject) => {
             let data = await user.findByIdAndUpdate(userData.userId, {
                 "gstin_no.pan_number": userData.panNumber,
-                "gstin_no.pancard_document": docuemnt
+                "gstin_no.pancard_document": "http://54.234.115.71:5000/document/" + docuemnt
             }).catch((err) => {
                 reject(err)
             })
@@ -169,11 +170,11 @@ module.exports = {
     get Business details from database
     */
 
-    getBusinessDetials: () => {
+    getBusinessDetialsGst: (userId) => {
         return new Promise(async (resolve, reject) => {
-            let data = await business.find(
-                {}
-            ).catch((err) => {
+            let data = await user.findOne(
+                { _id:userId}
+            ).select("gstin_yes.gst_details.legal_name gstin_yes.gst_details.type_Of_operation  ").catch((err) => {
                 reject(err)
             })
             console.log(data);
@@ -223,7 +224,9 @@ module.exports = {
    */
 
     postBusinessDetails: (userData, pancard) => {
-
+        if (pancard != null) {
+            pancard = "http://54.234.115.71:5000/document/" + pancard
+        }
         return new Promise(async (resolve, reject) => {
             let data = await user.findByIdAndUpdate(userData.userId, {
                 "business_details.businessName": userData.businessName,
@@ -270,6 +273,9 @@ module.exports = {
         })
     },
     businessAddress: (data, userId, addressProof) => {
+        if (addressProof != null) {
+            addressProof = "http://54.234.115.71:5000/document/" + addressProof
+        }
         return new Promise(async (resolve, reject) => {
             let response = await user.findByIdAndUpdate(userId, {
                 $push: {
@@ -297,6 +303,9 @@ module.exports = {
         })
     },
     businessAddressShipping: (data, userId, shippingAddressProof) => {
+        if (shippingAddressProof != null) {
+            shippingAddressProof = "http://54.234.115.71:5000/document/" + shippingAddressProof
+        }
         return new Promise(async (resolve, reject) => {
             let response = await user.findByIdAndUpdate(userId, {
                 $push:
@@ -322,22 +331,29 @@ module.exports = {
             }
         })
     },
-    uploadDocuments: (docuemnt, docId, gst, referral, userId) => {
+    uploadDocuments: (document, docId, gst, referral, userId) => {
+        let doc = {}
+        for (let x in document) {
+            for (let y of Object.values(document)) {
+                doc[x] = "http://54.234.115.71:5000/document/" + Object.values(y[0].filename).join("")
+            }
+        }
+        console.log(doc);
         return new Promise(async (resolve, reject) => {
             let data = await user.findByIdAndUpdate(userId, {
                 "documents.docId": docId,
-                "documents.pan_card": docuemnt.panCard,
-                "documents.personal_address_proof_front_copy": docuemnt.addressProofFront,
-                "documents.personal_address_proof_back_copy": docuemnt.addressProofBack,
-                "documents.business_proof": docuemnt.businessProof,
-                "documents.shipping_address_proof": docuemnt.shippingAddreesProof,
-                "documents.shop_owner_photo": docuemnt.shopOwnerPhoto,
-                "documents.shop_board_photo": docuemnt.shopBoardPhoto,
-                "documents.firm_pancard": docuemnt.firmPancard,
-                "documents.partnership_deed": docuemnt.partnershipDeed,
-                "documents.certificate_incorporation": docuemnt.certificateIncorporation,
-                "documents.memorandum_association": docuemnt.memorandumAssociation,
-                "documents.articles_Association": docuemnt.ArticlesAssociation,
+                "documents.pan_card": doc.panCard,
+                "documents.personal_address_proof_front_copy": doc.addressProofFront,
+                "documents.personal_address_proof_back_copy": doc.addressProofBack,
+                "documents.business_proof": doc.businessProof,
+                "documents.shipping_address_proof": doc.shippingAddreesProof,
+                "documents.shop_owner_photo": doc.shopOwnerPhoto,
+                "documents.shop_board_photo": doc.shopBoardPhoto,
+                "documents.firm_pancard": doc.firmPancard,
+                "documents.partnership_deed": doc.partnershipDeed,
+                "documents.certificate_incorporation": doc.certificateIncorporation,
+                "documents.memorandum_association": doc.memorandumAssociation,
+                "documents.articles_Association": doc.ArticlesAssociation,
                 "documents.gst": gst,
                 "documents.referral": referral
 
@@ -525,41 +541,40 @@ module.exports = {
                 )
                 if (deviceCollection) {
                     console.log(device._id);
-                    let userCollection=await user.findOne({
-                          device:device._id
+                    let userCollection = await user.findOne({
+                        device: device._id
                     }).select("_id")
                     resolve(userCollection)
                 }
             }
             else {
-                  let deviceCollection=await Device.create(userData)
-                  if(deviceCollection){
-                    let geoRes=await geoLocation(userData.lat,userData.long)
+                let deviceCollection = await Device.create(userData)
+                if (deviceCollection) {
+                    let geoRes = await geoLocation(userData.lat, userData.long)
                     const regCollection = await user.create({
                         device: deviceCollection._id,
                         geoLocation: geoRes,
                         timeStamp: new Date()
                     });
-                     if(regCollection){
-                         resolve(regCollection._id)
-                     }
-                  }
+                    if (regCollection) {
+                        resolve(regCollection._id)
+                    }
+                }
             }
         })
     },
-    getcategory:()=>{
-        return new Promise(async(resolve,reject)=>{
-            let categoryCollection=await Category.find(
-              {}
-            ).catch((err)=>{
+    getcategory: () => {
+        return new Promise(async (resolve, reject) => {
+            let categoryCollection = await Category.find(
+                {}
+            ).catch((err) => {
                 reject(err)
             })
-            if(categoryCollection){
+            if (categoryCollection) {
                 resolve(categoryCollection)
             }
-            else
-            {
-                resolve({data:"No category"})
+            else {
+                resolve({ data: "No category" })
             }
         })
     }

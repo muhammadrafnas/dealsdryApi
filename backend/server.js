@@ -25,7 +25,7 @@ app.use("/api/v2/user/doc", documentUploadRouter)
 app.use("/api/v2/user/device", deviceRouter)
 app.use("/api/v2/user/category",category)
 app.use("/icons", express.static(__dirname + '/public/icons'));
-
+app.use("/document", express.static(__dirname + '/public/documents'));
 
 app.use((err, req, res, next) => {
     res.status(404).json({
