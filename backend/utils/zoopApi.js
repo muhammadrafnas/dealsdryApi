@@ -12,6 +12,7 @@ const axiosPan = axios.create({
 });
 
 async function gstDetailsGetfromApi(gstNumber) {
+    console.log(gstNumber);
     let { data } = await axiosGst.post("/lite",
         {
             "data": {
