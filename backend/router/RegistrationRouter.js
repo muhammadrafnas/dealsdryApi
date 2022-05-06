@@ -50,6 +50,15 @@ router.post("/otp/verification", async (req, res, next) => {
          if (user) {
             res.json({ status: 1, data: { message: "Successfully verified mobile number" } })
          }
+         else
+         {
+            res.json({
+               status:0,
+               data:{
+                  message:"Wrong"
+               }
+            })
+         }
       }
       else {
          res.status(501).json({
@@ -66,7 +75,7 @@ router.post("/otp/verification", async (req, res, next) => {
 router.post("/email/referral", async (req, res, next) => {
    try {
       let response = await userController.emailPasswordReferralRegistartion(req.body)
-      if (response.status) {
+      if (response) {
          res.status(200).json({
             status: 1, data: {
                message: "Successfully added"
@@ -76,7 +85,7 @@ router.post("/email/referral", async (req, res, next) => {
       else {
          res.status(501).json({
             status: 0,
-            data: { message: "wrong!" }
+            data: { message: "Wrong" }
          })
       }
    } catch (error) {
@@ -92,7 +101,7 @@ router.post("/email", async (req, res, next) => {
       if (response) {
          res.status(200).json({
             status: 1,
-            data: { message: "Successfully added email and password " }
+            data: { message: "Successfully added" }
 
          })
       }
@@ -100,7 +109,7 @@ router.post("/email", async (req, res, next) => {
          res.status(501).json({
             status: 0,
             data: {
-               message: "Somthing wrong!"
+               message: "Wrong"
             }
          })
       }
@@ -129,7 +138,7 @@ router.post("/gstin", upload.single("proof"), async (req, res, next) => {
          else {
             res.status(501).json({
                status: 0,
-               data: { message: "Somthing wrong!" }
+               data: { message: "User not found" }
             })
          }
       }
@@ -148,11 +157,12 @@ router.post("/gstin", upload.single("proof"), async (req, res, next) => {
          else {
             res.status(501).json({
                status: 0,
-               data: { message: "Somthing wrong!" }
+               data: { message: "User not found" }
             })
          }
       }
    } catch (error) {
+      console.log(error);
       next(error)
    }
 })
@@ -172,7 +182,7 @@ router.post("/select/category", async (req, res, next) => {
          res.status(501).json({
             status: 0,
             data: {
-               message: "Try agian"
+               message: "Wrong"
             }
          })
       }
@@ -198,13 +208,12 @@ router.get("/business/details", async (req, res, next) => {
                res.status(501).json({
                   status: 0,
                   data: {
-                     message: "Try agin"
+                     message: "Wrong"
                   }
                })
             }
          }
          if (req.query.gstin == "false") {
-            console.log("else");
             let data = await userController.getBusinessDetialsPanCard(req.query.userId)
             if (data) {
                res.status(200).json({
@@ -216,7 +225,7 @@ router.get("/business/details", async (req, res, next) => {
                res.status(501).json({
                   status: 0,
                   data: {
-                     message: "Try again"
+                     message: "Wrong"
                   }
                })
             }
@@ -276,7 +285,7 @@ router.post("/business/details", upload.single("pancard"), async (req, res, next
          res.status(501).json({
             status: 0,
             data: {
-               message: "Try again"
+               message: "Wrong"
             }
          })
       }
@@ -334,7 +343,7 @@ router.post("/businessAddress/billing", upload.single("addressProof"), async (re
          res.status(501).json({
             status: 0,
             data: {
-               message: "Try again"
+               message: "User not found"
             }
          })
       }
@@ -361,7 +370,7 @@ router.post("/businessAddress/shipping", upload.single("shippingAddressProof"), 
          res.status(501).json({
             status: 0,
             data: {
-               message: "Internal server error"
+               message: "User not found"
             }
          })
       }
@@ -387,7 +396,7 @@ router.get("/pendency/detect", async (req, res, next) => {
          res.status(501).json({
             status: 0,
             data: {
-               message: "user not found"
+               message: "Wrong"
             }
          })
       }
@@ -409,7 +418,7 @@ router.get("/withoutPendencyDocument", async (req, res, next) => {
       else {
          res.status(501).json({
             status: 0,
-            message: "Internal server error"
+            message: "Wrong"
          })
       }
    } catch (error) {
@@ -428,6 +437,14 @@ router.get("/whatsappSubscription", async (req, res, next) => {
                message: "Whatsapp subscription successfully"
             }
          })
+      }
+      else{
+          res.status(501).json({
+             status:1,
+             data:{
+                message:"Wrong"
+             }
+          })
       }
    } catch (error) {
       next(error)
@@ -452,7 +469,7 @@ router.get("/email/verification", async (req, res, next) => {
       else {
          res.status(501).json({
             status: 0,
-            message: "Email not found"
+            message: "Wrong"
          })
       }
    } catch (error) {
@@ -493,7 +510,7 @@ router.post("/business/type", async (req, res, next) => {
          res.status(501).json({
             status: 0,
             data: {
-               message: "Internal server issue"
+               message: "Wrong"
             }
          })
       }
@@ -539,7 +556,7 @@ router.get("/:userId/info", async (req, res, next) => {
          res.status(501).json({
             status: 0,
             data: {
-               message: "User not found"
+               message: "Wrong"
             }
          })
       }
@@ -547,14 +564,6 @@ router.get("/:userId/info", async (req, res, next) => {
       next(error)
    }
 
-})
-
-// icons api
-router.get("/icons/:img", (req, res) => {
-   fs.readFile("public/icons/" + req.params.img, function (err, data) {
-      if (err) throw err; // Fail if the file can't be read.
-      console.log(data);
-   });
 })
 
 // reach to Home screen  as guest user .

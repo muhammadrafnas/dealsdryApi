@@ -11,9 +11,7 @@ const { resolve } = require("path")
 module.exports = {
 
     /*
-
         Controller file store the data and get data from the data base
-
     */
 
     checkPhone: (mobileNumber) => {
@@ -42,69 +40,58 @@ module.exports = {
             if (data) {
                 resolve(data._id)
             }
-        }).catch((err) => {
-            throw new Error(err)
+            else
+            {
+                resolve()
+            }
         })
     },
 
-
-
-
     /*
-        Email and password and referral is optional store to database
-
-        Funcation calling from Registration router password storing becrypt format for security purpose
-
+Email and password and referral is optional store to database
+Funcation calling from Registration router password storing becrypt format for security purpose
     */
 
     emailPasswordReferralRegistartion: (data) => {
         return new Promise(async (resolve, reject) => {
             data.password = await bcrypt.hash(data.password, 10)
-            let userData = await user.updateOne({ _id: data.userId }, {
-                $set: {
+            let userData = await user.findByIdAndUpdate( data.userId , {
                     email: data.email, password: data.password, referral_id: data.referralCode
-                }
+                
             }
             ).catch((err) => {
                 reject(err)
             })
-            if (userData != null) {
-                resolve({ status: true, data: userData })
+            console.log(userData);
+            if (userData) {
+                resolve(userData)
             }
             else {
-                resolve({ status: false })
+                resolve()
             }
-        }).catch((err) => {
-            throw new Error(err)
         })
     },
 
-
     /*
-
     Email storing without refferal 
-
     */
     emailPasswordRegistartion: (data) => {
+        console.log("testing");
         console.log(data);
         return new Promise(async (resolve, reject) => {
             data.password = await bcrypt.hash(data.password, 10)
-            let userData = await user.updateOne({ _id: data.userId }, {
-                $set: {
+            let userData = await user.findByIdAndUpdate( data.userId , {
                     email: data.email, password: data.password
-                }
             }
             ).catch((err) => {
                 reject(err)
             })
-            if (userData != null) {
-                resolve({ status: true, data: userData })
+            if (userData) {
+                resolve(userData )
             }
             else {
-                resolve({ status: false })
+                resolve()
             }
-        }).catch((err) => {
-            throw new Error(err)
         })
     },
 
@@ -143,10 +130,12 @@ module.exports = {
             if (data) {
                 resolve(data)
             }
+            else
+            {
+                resolve()
+            }
         })
     },
-
-
 
     /*
     Registarion user select the category store to the data base
@@ -163,15 +152,17 @@ module.exports = {
             if (userData) {
                 resolve(userData)
             }
+            else
+            {
+                resolve()
+            }
         })
     },
-
 
     /*
     @Business 
     get Business details from database
     */
-
     getBusinessDetialsGst: (userId) => {
         return new Promise(async (resolve, reject) => {
             let data = await user.findOne(
@@ -195,15 +186,16 @@ module.exports = {
             if (data) {
                 resolve(data)
             }
+            else
+            {
+                resolve()
+            }
         })
     },
-
-
     /*
    @Type of operaton 
    get type of operation from database label and id of the 
    type of operation
-  
    */
 
     getTypeOfOperation: () => {
@@ -212,6 +204,10 @@ module.exports = {
             })
             if (typeOfOperations) {
                 resolve(typeOfOperations)
+            }
+            else
+            {
+                resolve()
             }
         })
     },
@@ -244,6 +240,10 @@ module.exports = {
             if (data) {
                 resolve(data)
             }
+            else
+            {
+                resolve()
+            }
         })
     },
     getGuidelinesDoc: (operationId, referral, gst, userId) => {
@@ -260,12 +260,20 @@ module.exports = {
 
             if (documentsList) {
                 if (userDetails.gstin_no.pancard_document) {
-
-                    documentsList.push(userDetails.gstin_no.pancard_document)
+                    for(let x of documentsList){
+                        if(x.documentName =="PAN Card"){
+                            x.label="PAN Card"
+                            x.imgUrl=userDetails.gstin_no.pancard_document
+                        }
+                    }
                 }
                 if (userDetails.gstin_yes.gstin_document) {
-
-                    documentsList.push(userDetails.gstin_yes.gstin_document)
+                    for(let x of documentsList){
+                        if(x.documentName =="Business proof"){
+                            x.label="Business proof"
+                            x.imgUrl=userDetails.gstin_yes.gstin_document
+                        }
+                    }
                 }
                 resolve({ guidelinesDoc: documentsList, businessAuthorizedName: userDetails.business_details.businessAuthorizedName, businessName: userDetails.business_details.businessName })
             }
@@ -301,6 +309,10 @@ module.exports = {
             })
             if (response) {
                 resolve(response)
+            }
+            else
+            {
+                resolve()
             }
         })
     },
@@ -377,6 +389,10 @@ module.exports = {
             if (subscription) {
                 resolve(subscription)
             }
+            else
+            {
+                resolve()
+            }
         })
     },
     businessType: (userData) => {
@@ -389,6 +405,10 @@ module.exports = {
             })
             if (data) {
                 resolve(data)
+            }
+            else
+            {
+                resolve()
             }
         })
     },
