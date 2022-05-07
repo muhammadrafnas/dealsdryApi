@@ -6,6 +6,7 @@ const userController = require("../controller/userController")
 
 router.post("/add",async(req,res)=>{
     let response=await userController.addDevice(req.body)
+    console.log(response);
     if(response){
         res.json({
             status:1,

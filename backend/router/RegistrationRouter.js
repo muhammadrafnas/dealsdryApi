@@ -299,7 +299,6 @@ router.post("/business/details", upload.single("pancard"), async (req, res, next
 router.get("/guidelines/doc", async (req, res, next) => {
    try {
       let guidelinesDoc = await userController.getGuidelinesDoc(req.query.operationId, req.query.referral, req.query.gst, req.query.userId)
-      console.log(guidelinesDoc);
       if (guidelinesDoc) {
          let count = guidelinesDoc.guidelinesDoc.length
          res.status(200).json({
