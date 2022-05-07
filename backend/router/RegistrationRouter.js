@@ -123,30 +123,32 @@ router.post("/email", async (req, res, next) => {
 // GSTIN confirmations
 router.post("/gstin", upload.single("proof"), async (req, res, next) => {
    try {
-      /*@cloudinary 
-        files storing
-     */
       if(req.body.gst=="true"){
          let gstDetails=await gstDetailsGetfromApi(req.body.gstinNumber)
          let data = await userController.gstinYes(req.body, req.file.filename,gstDetails)
-         if (data) {
+         if (data.gst==false) {
             res.status(200).json({
                status: 1,
                data: { message: "Successfully added " }
             })
          }
+         else if(data.gst==true){
+            res.status(501).json({
+               status: 0,
+               data: { message: "Gst Exists" }
+            })
+         }
          else {
             res.status(501).json({
                status: 0,
-               data: { message: "User not found" }
+               data: { message: "wrong" }
             })
          }
       }
       if(req.body.gst=="false"){
          let pandetails=await panDetailsGetfromApi(req.body.panNumber)
-         console.log(pandetails);
          let response = await userController.gstNo(req.body,  req.file.filename,pandetails)
-         if (response) {
+         if (response.pancard==false) {
             res.status(200).json({
                status: 1,
                data: {
@@ -154,10 +156,16 @@ router.post("/gstin", upload.single("proof"), async (req, res, next) => {
                }
             })
          }
+         else if(response.pancard==true){
+            res.status(501).json({
+               status: 0,
+               data: { message: "Pancard Exists" }
+            })
+         }
          else {
             res.status(501).json({
                status: 0,
-               data: { message: "User not found" }
+               data: { message: "worng" }
             })
          }
       }
@@ -269,9 +277,6 @@ router.get("/business/types", async (req, res, next) => {
 // Business details post api
 router.post("/business/details", upload.single("pancard"), async (req, res, next) => {
    try {
-      /*@cloudinary 
-         files storing
-      */
       let data = await userController.postBusinessDetails(req.body,req.file ?  req.file.filename : null )
       if (data) {
          res.status(200).json({
@@ -305,10 +310,6 @@ router.get("/guidelines/doc", async (req, res, next) => {
             status: 1,
             data: {
                count,
-               userDetails:{
-                  businessAuthorizedName:  guidelinesDoc.businessAuthorizedName,
-                  businessName:guidelinesDoc.businessName
-               },
                guidelinesDoc: guidelinesDoc.guidelinesDoc
             }
          })

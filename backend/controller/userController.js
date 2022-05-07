@@ -40,8 +40,7 @@ module.exports = {
             if (data) {
                 resolve(data._id)
             }
-            else
-            {
+            else {
                 resolve()
             }
         })
@@ -55,9 +54,9 @@ Funcation calling from Registration router password storing becrypt format for s
     emailPasswordReferralRegistartion: (data) => {
         return new Promise(async (resolve, reject) => {
             data.password = await bcrypt.hash(data.password, 10)
-            let userData = await user.findByIdAndUpdate( data.userId , {
-                    email: data.email, password: data.password, referral_id: data.referralCode
-                
+            let userData = await user.findByIdAndUpdate(data.userId, {
+                email: data.email, password: data.password, referral_id: data.referralCode
+
             }
             ).catch((err) => {
                 reject(err)
@@ -80,14 +79,14 @@ Funcation calling from Registration router password storing becrypt format for s
         console.log(data);
         return new Promise(async (resolve, reject) => {
             data.password = await bcrypt.hash(data.password, 10)
-            let userData = await user.findByIdAndUpdate( data.userId , {
-                    email: data.email, password: data.password
+            let userData = await user.findByIdAndUpdate(data.userId, {
+                email: data.email, password: data.password
             }
             ).catch((err) => {
                 reject(err)
             })
             if (userData) {
-                resolve(userData )
+                resolve(userData)
             }
             else {
                 resolve()
@@ -102,24 +101,33 @@ Funcation calling from Registration router password storing becrypt format for s
 
     gstinYes: (userData, proof, gstDetails) => {
         return new Promise(async (resolve, reject) => {
-            let data = await user.findByIdAndUpdate(userData.userId, {
-                "gstin_yes.gstin_number": userData.gstinNumber,
-                "gstin_yes.gstin_document": "http://54.234.115.71:5000/document/" + proof,
-                "gstin_yes.gst_details": gstDetails
-            }).catch((err) => {
-                reject(err)
-            })
-            if (data) {
-                resolve(data)
+            let gstExist = await user.findOne({ "gstin_yes.gstin_number": userData.gstinNumber })
+            if (gstExist) {
+                resolve({ gst: true })
             }
             else {
-                resolve()
+                let data = await user.findByIdAndUpdate(userData.userId, {
+                    "gstin_yes.gstin_number": userData.gstinNumber,
+                    "gstin_yes.gstin_document": "http://54.234.115.71:5000/document/" + proof,
+                    "gstin_yes.gst_details": gstDetails
+                }).catch((err) => {
+                    reject(err)
+                })
+                if (data) {
+                    resolve({ gst: false })
+                }
+                else {
+                    resolve()
+                }
             }
         })
     },
     gstNo: (userData, docuemnt, panDetails) => {
-        console.log(panDetails);
         return new Promise(async (resolve, reject) => {
+            let pancardExist = await user.findOne({ "gstin_no.pan_number": userData.panNumber })
+            if (pancardExist) {
+                resolve({ pancard: true })
+            }
             let data = await user.findByIdAndUpdate(userData.userId, {
                 "gstin_no.pan_number": userData.panNumber,
                 "gstin_no.pancard_document": "http://54.234.115.71:5000/document/" + docuemnt,
@@ -128,10 +136,9 @@ Funcation calling from Registration router password storing becrypt format for s
                 reject(err)
             })
             if (data) {
-                resolve(data)
+                resolve({ pancard: false })
             }
-            else
-            {
+            else {
                 resolve()
             }
         })
@@ -152,8 +159,7 @@ Funcation calling from Registration router password storing becrypt format for s
             if (userData) {
                 resolve(userData)
             }
-            else
-            {
+            else {
                 resolve()
             }
         })
@@ -179,15 +185,14 @@ Funcation calling from Registration router password storing becrypt format for s
     getBusinessDetialsPanCard: (userId) => {
         return new Promise(async (resolve, reject) => {
             let data = await user.findOne({
-                _id:userId
+                _id: userId
             }).select("gstin_no.pan_Details gstin_no.pan_number gstin_no.pancard_document ").catch((err) => {
                 reject(err)
             })
             if (data) {
                 resolve(data)
             }
-            else
-            {
+            else {
                 resolve()
             }
         })
@@ -205,8 +210,7 @@ Funcation calling from Registration router password storing becrypt format for s
             if (typeOfOperations) {
                 resolve(typeOfOperations)
             }
-            else
-            {
+            else {
                 resolve()
             }
         })
@@ -240,8 +244,7 @@ Funcation calling from Registration router password storing becrypt format for s
             if (data) {
                 resolve(data)
             }
-            else
-            {
+            else {
                 resolve()
             }
         })
@@ -259,26 +262,38 @@ Funcation calling from Registration router password storing becrypt format for s
             }).select("business_details.businessAuthorizedName business_details.businessName gstin_no gstin_yes ")
             if (documentsList) {
                 if (userDetails.gstin_no.pancard_document) {
-                    for(let x of documentsList){
-                        if(x.documentName =="PAN Card"){
-                            x.label="PAN Card"
-                            x._doc.docurl=userDetails.gstin_no.pancard_document
+                    for (let x of documentsList) {
+                        if (x.documentName == "PAN Card") {
+                            x.label = "PAN Card"
+                            x._doc.docurl = userDetails.gstin_no.pancard_document
+                        }
+                        if (x.documentName == "PAN Card" || x.documentName == "Personal Address proof front copy" || x.documentName == "Personal Address proof back copy" || x.documentName == "Business proof" || x.documentName == "Shipping Address proof") {
+                            x._doc.ownerName = userDetails.business_details.businessAuthorizedName
+                        }
+                        else {
+                            x._doc.ownerName = userDetails.business_details.businessName
                         }
                     }
                 }
                 if (userDetails.gstin_yes.gstin_document) {
-                    for(let x of documentsList){
-                        if(x.documentName =="Business proof"){
-                            x.label="Business proof"
-                            x._doc.docurl=userDetails.gstin_yes.gstin_document;
+                    for (let x of documentsList) {
+                        if (x.documentName == "Business proof") {
+                            x.label = "Business proof"
+                            x._doc.docurl = userDetails.gstin_yes.gstin_document;
                         }
-                        if(x.documentName=="Shipping Address proof"){
-                            x.label="Shipping Address proof"
-                            x._doc.docurl=userDetails.gstin_yes.gstin_document
+                        if (x.documentName == "Shipping Address proof") {
+                            x.label = "Shipping Address proof"
+                            x._doc.docurl = userDetails.gstin_yes.gstin_document
+                        }
+                        if (x.documentName == "PAN Card" || x.documentName == "Personal Address proof front copy" || x.documentName == "Personal Address proof back copy" || x.documentName == "Business proof" || x.documentName == "Shipping Address proof") {
+                            x._doc.ownerName = userDetails.business_details.businessAuthorizedName
+                        }
+                        else {
+                            x._doc.ownerName = userDetails.business_details.businessName
                         }
                     }
                 }
-                resolve({ guidelinesDoc: documentsList, businessAuthorizedName: userDetails.business_details.businessAuthorizedName, businessName: userDetails.business_details.businessName })
+                resolve({ guidelinesDoc: documentsList })
             }
             else {
                 resolve()
@@ -313,8 +328,7 @@ Funcation calling from Registration router password storing becrypt format for s
             if (response) {
                 resolve(response)
             }
-            else
-            {
+            else {
                 resolve()
             }
         })
@@ -391,8 +405,7 @@ Funcation calling from Registration router password storing becrypt format for s
             if (subscription) {
                 resolve(subscription)
             }
-            else
-            {
+            else {
                 resolve()
             }
         })
@@ -408,8 +421,7 @@ Funcation calling from Registration router password storing becrypt format for s
             if (data) {
                 resolve(data)
             }
-            else
-            {
+            else {
                 resolve()
             }
         })
@@ -484,7 +496,7 @@ Funcation calling from Registration router password storing becrypt format for s
         let doc = []
         return new Promise(async (resolve, reject) => {
             let documents = await guidlineDoc.find({
-                operationId: operationId,gst:gst,referral:referral
+                operationId: operationId, gst: gst, referral: referral
             })
             let userData = await user.aggregate([
                 { $match: { _id: userID } },
@@ -569,7 +581,7 @@ Funcation calling from Registration router password storing becrypt format for s
                     let userCollection = await user.findOne({
                         device: device._id
                     }).select("_id")
-                    if(userCollection){
+                    if (userCollection) {
                         resolve(userCollection)
                     }
                 }
