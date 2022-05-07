@@ -488,7 +488,7 @@ Funcation calling from Registration router password storing becrypt format for s
         let doc = []
         return new Promise(async (resolve, reject) => {
             let documents = await guidlineDoc.find({
-                operationId: operationId
+                operationId: operationId,gst:gst,referral:referral
             })
             let userData = await user.aggregate([
                 { $match: { _id: userID } },
