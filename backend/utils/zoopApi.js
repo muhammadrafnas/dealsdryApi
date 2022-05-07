@@ -12,8 +12,8 @@ const axiosPan = axios.create({
 });
 
 async function gstDetailsGetfromApi(gstNumber) {
-    console.log(gstNumber);
-    let { data } = await axiosGst.post("/lite",
+    try {
+        let { data } = await axiosGst.post("/lite",
         {
             "data": {
                 "business_gstin_number": gstNumber,
@@ -27,24 +27,29 @@ async function gstDetailsGetfromApi(gstNumber) {
     else {
         return { gstNumber: gstNumber, status: false }
     }
-
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 async function getPanDetailsfromApi(panNumber) {
-    let {data} = await axiosPan.post("/lite", {
-        "data": {
-            "customer_pan_number": "FQJPM7573Q",
-            "consent": "Y",
-            "consent_text": "I hear by declare my consent agreement for fetching my information via ZOOP API."
+    try {
+        let {data} = await axiosPan.post("/lite", {
+            "data": {
+                "customer_pan_number": panNumber,
+                "consent": "Y",
+                "consent_text": "I hear by declare my consent agreement for fetching my information via ZOOP API."
+            }
+        })
+        if(data.success == true){
+            return {status:data.result.pan_status,name:data.result.user_full_name,panNumber:data.result.pan_number}
         }
-    })
-    if(data.success == true){
-        return {status:data.result.pan_status,name:data.result.user_full_name,panNumber:data.result.pan_number}
-    }
-    else {
-        return { pannumber:panNumber, status:"Not valid" }
-    } 
-        
+        else {
+            return { pannumber:panNumber, status:"Not valid" }
+        } 
+    } catch (error) {
+        console.log(error);
+    }    
 }
 
 
