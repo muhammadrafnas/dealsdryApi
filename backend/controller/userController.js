@@ -257,15 +257,12 @@ Funcation calling from Registration router password storing becrypt format for s
             let userDetails = await user.findOne({
                 _id: userId
             }).select("business_details.businessAuthorizedName business_details.businessName gstin_no gstin_yes ")
-            documentsList.forEach(object => {
-                object["color"] = "FFF";
-              });
             if (documentsList) {
                 if (userDetails.gstin_no.pancard_document) {
                     for(let x of documentsList){
                         if(x.documentName =="PAN Card"){
                             x.label="PAN Card"
-                            x.gst=userDetails.gstin_no.pancard_document
+                            x._doc.docurl=userDetails.gstin_no.pancard_document
                         }
                     }
                 }
@@ -273,11 +270,11 @@ Funcation calling from Registration router password storing becrypt format for s
                     for(let x of documentsList){
                         if(x.documentName =="Business proof"){
                             x.label="Business proof"
-                            x.gst=userDetails.gstin_yes.gstin_document;
+                            x._doc.docurl=userDetails.gstin_yes.gstin_document;
                         }
                         if(x.documentName=="Shipping Address proof"){
                             x.label="Shipping Address proof"
-                            x.gst=userDetails.gstin_yes.gstin_document
+                            x._doc.docurl=userDetails.gstin_yes.gstin_document
                         }
                     }
                 }
