@@ -259,6 +259,7 @@ Funcation calling from Registration router password storing becrypt format for s
             }).select("business_details.businessAuthorizedName business_details.businessName gstin_no gstin_yes ")
 
             if (documentsList) {
+                console.log(documentsList);
                 if (userDetails.gstin_no.pancard_document) {
                     for(let x of documentsList){
                         if(x.documentName =="PAN Card"){
@@ -266,12 +267,13 @@ Funcation calling from Registration router password storing becrypt format for s
                             x.imgUrl=userDetails.gstin_no.pancard_document
                         }
                     }
+                    console.log(documentsList);
                 }
                 if (userDetails.gstin_yes.gstin_document) {
                     for(let x of documentsList){
                         if(x.documentName =="Business proof"){
                             x.label="Business proof"
-                            x.imgUrl=userDetails.gstin_yes.gstin_document
+                            x.imgUrl=userDetails.gstin_yes.gstin_document;
                         }
                         if(x.documentName=="Shipping Address proof"){
                             x.label="Shipping Address proof"
@@ -279,6 +281,7 @@ Funcation calling from Registration router password storing becrypt format for s
                         }
                     }
                 }
+                console.log(documentsList);
                 resolve({ guidelinesDoc: documentsList, businessAuthorizedName: userDetails.business_details.businessAuthorizedName, businessName: userDetails.business_details.businessName })
             }
             else {
@@ -374,7 +377,6 @@ Funcation calling from Registration router password storing becrypt format for s
                 "documents.articles_Association": doc.ArticlesAssociation,
                 "documents.gst": gst,
                 "documents.referral": referral
-
             }).catch((err) => {
                 reject(err)
             })
@@ -526,7 +528,7 @@ Funcation calling from Registration router password storing becrypt format for s
                     pendency.documents = doc
                 }
                 else {
-                    pendency.docuemnt = documents
+                    pendency.documents = documents
                 }
 
                 if (userData[0].whatsappSub.length == 0) {
@@ -560,6 +562,7 @@ Funcation calling from Registration router password storing becrypt format for s
     addDevice: (userData) => {
         return new Promise(async (resolve, reject) => {
             let device = await Device.findOne({ deviceId: userData.deviceId })
+            console.log("device" + device);
             if (device) {
                 let deviceCollection = await Device.updateOne(
                     { deviceId: userData.deviceId },
@@ -570,7 +573,9 @@ Funcation calling from Registration router password storing becrypt format for s
                     let userCollection = await user.findOne({
                         device: device._id
                     }).select("_id")
-                    resolve(userCollection)
+                    if(userCollection){
+                        resolve(userCollection)
+                    }
                 }
             }
             else {
@@ -583,6 +588,7 @@ Funcation calling from Registration router password storing becrypt format for s
                         timeStamp: new Date()
                     });
                     if (regCollection) {
+                        console.log(regCollection);
                         resolve(regCollection._id)
                     }
                 }
