@@ -253,7 +253,11 @@ Funcation calling from Registration router password storing becrypt format for s
     },
     getGuidelinesDoc: (operationId, referral, gst, userId) => {
         return new Promise(async (resolve, reject) => {
-            let uploadedDocUrl={}
+            let uploadedDocUrl={
+                pancard:null,
+                businessProof:null,
+                shippingAddressProof:null
+            }
             let documentsList = await guidlineDoc.find({
                 operationId: operationId, referral: referral, gst: gst
 
@@ -273,19 +277,20 @@ Funcation calling from Registration router password storing becrypt format for s
                             uploadedDocUrl["pancard"]=userDetails.gstin_no.pancard_document
                         }
                         if(x.documentName == "Business proof"){
-                            let count=userDetails.business_shipping_address.length
-                            if(userDetails.business_shipping_address[count-1].buyer_business_address_proof_name){
+                            let count=userDetails.business_billing_address.length
+                    
+                            if(userDetails.business_billing_address.length !=0 ){
                                 x.label = "Business proof"
-                                x._doc.docurl = userDetails.business_billing_address[0].buyer_business_address_proof_name
-                                uploadedDocUrl["businessProof"]= userDetails.business_billing_address[0].buyer_business_address_proof_name
+                                x._doc.docurl = userDetails.business_billing_address[count-1].buyer_business_address_proof_name
+                                uploadedDocUrl["businessProof"]= userDetails.business_billing_address[count-1].buyer_business_address_proof_name
                             }
                         }
                         if(x.documentName == "Shipping Address proof"){
-                            let count=userDetails.business_billing_address.length
-                            if(userDetails.business_billing_address[count-1].buyer_business_address_proof_name){
+                            let count=userDetails.business_shipping_address.length
+                            if(userDetails.business_shipping_address !=0){
                                 x.label = "Shipping Address proof"
-                                x._doc.docurl = userDetails.business_billing_address[0].buyer_business_address_proof_name
-                                uploadedDocUrl["shippingAddressProof"]= userDetails.business_billing_address[0].buyer_business_address_proof_name
+                                x._doc.docurl = userDetails.business_shipping_address[count-1].buyer_business_address_proof_name
+                                uploadedDocUrl["shippingAddressProof"]= userDetails.business_shipping_address[count-1].buyer_business_address_proof_name
                             }
                         }
                         if (x.documentName == "PAN Card" || x.documentName == "Personal Address proof front copy" || x.documentName == "Personal Address proof back copy" || x.documentName == "Business proof" || x.documentName == "Shipping Address proof") {
@@ -556,10 +561,10 @@ Funcation calling from Registration router password storing becrypt format for s
                 
                             let docname = Object.values(x.documentName).join("").replace(/ /g, "_")
                            
-                            if(userData[0].gstin_no && docname.toLowerCase()=="pan_card" || userData[0].business_shipping_address[countOne-1].buyer_business_address_proof_name && docname.toLowerCase()=="shipping_address_proof"){
+                            if(userData[0].gstin_no && docname.toLowerCase()=="pan_card" || userData[0].business_shipping_address.length !=0 && userData[0].business_shipping_address[countOne-1].buyer_business_address_proof_name && docname.toLowerCase()=="shipping_address_proof" ){
                                   //NO DATA PUSH TO ARRAY
                             }
-                            else if(userData[0].gstin_yes && docname.toLowerCase()=="business_proof" || userData[0].business_billing_address[count-1].buyer_business_address_proof_name && docname.toLowerCase()=="business_proof" ||  userData[0].gstin_yes && docname.toLowerCase()=="shipping_address_proof"  ){
+                            else if(userData[0].gstin_yes && docname.toLowerCase()=="business_proof" || userData[0].business_billing_address.length !=0  && userData[0].business_billing_address[count-1].buyer_business_address_proof_name && docname.toLowerCase()=="business_proof" ||  userData[0].gstin_yes && docname.toLowerCase()=="shipping_address_proof"  ){
                                   //NO DATA PUSH TO ARRAY
                             }
                             else if (Object.keys(userData[0].documents).includes(docname.toLowerCase()) == false) {
@@ -573,10 +578,10 @@ Funcation calling from Registration router password storing becrypt format for s
                     for(let x of documents){
                         let docname = Object.values(x.documentName).join("").replace(/ /g, "_")
                        
-                        if(userData[0].gstin_no && docname.toLowerCase()=="pan_card" || userData[0].business_shipping_address[countOne-1].buyer_business_address_proof_name && docname.toLowerCase()=="shipping_address_proof" ){
+                        if(userData[0].gstin_no && docname.toLowerCase()=="pan_card" || userData[0].business_shipping_address.length !=0 && userData[0].business_shipping_address[countOne-1].buyer_business_address_proof_name && docname.toLowerCase()=="shipping_address_proof"  ){
                           //NO DATA PUSH TO ARRAY
                         }
-                        else if(userData[0].gstin_yes && docname.toLowerCase()=="business_proof" || userData[0].business_billing_address[count-1].buyer_business_address_proof_name && docname.toLowerCase()=="business_proof" || userData[0].gstin_yes && docname.toLowerCase()=="shipping_address_proof" ) 
+                        else if(userData[0].gstin_yes && docname.toLowerCase()=="business_proof" || userData[0].gstin_yes && docname.toLowerCase()=="shipping_address_proof" || userData[0].business_billing_address.length !=0 && userData[0].business_billing_address[count-1].buyer_business_address_proof_name && docname.toLowerCase()=="business_proof") 
                         {
                           //NO DATA PUSH TO ARRAY
                           console.log(x);
