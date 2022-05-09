@@ -312,6 +312,7 @@ router.get("/guidelines/doc", async (req, res, next) => {
             status: 1,
             data: {
                count,
+               uploadedDocUrl:guidelinesDoc.uploadedDocUrl,
                guidelinesDoc: guidelinesDoc.guidelinesDoc
             }
          })
