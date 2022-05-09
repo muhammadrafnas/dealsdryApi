@@ -309,7 +309,7 @@ Funcation calling from Registration router password storing becrypt format for s
                 $push: {
                     business_billing_address: {
                         business_billing_address_pin_code: data.pinCode,
-                        business_billing_address_town_area: data.townArea,
+                        business_billing_address_town_area: data.town,
                         business_billing_address: data.billingAddress,
                         business_billing_address_landmark: data.landmark,
                         business_billing_address_city: data.city,
@@ -558,9 +558,20 @@ Funcation calling from Registration router password storing becrypt format for s
         return new Promise(async (resolve, reject) => {
             let userData = await user.findOne({
                 _id: userId
-            }).select("business_details email mobile_number gstin_yes gstin_no business_billing_address business_shipping_address")
+            }).select("business_details.businessAuthorizedName business_details.businessName email mobile_number gstin_yes.gstin_number gstin_no.pan_number business_billing_address")
+            let userInfo = {}
             if (userData) {
-                resolve(userData)
+                userInfo["businessName"] = userData.business_details.businessName
+                userInfo["businessAuthorizedName"] = userData.business_details.businessAuthorizedName
+                userInfo["email"] = userData.email
+                userInfo["mobile_number"] = userData.mobile_number
+                userInfo["gstin_yes.gstin_number"] = userData.gstin_yes.gstin_number
+                userInfo["gstin_no.pan_number"] = userData.gstin_no.pan_number
+                userInfo["business_billing_address"] = userData.business_billing_address[0].business_billing_address
+                userInfo["state"] = userData.business_billing_address[0].business_billing_address_state
+                userInfo["town"] = userData.business_billing_address[0].business_billing_address_town_area
+                userInfo["pincode"] = userData.business_billing_address[0].business_billing_address_pin_code
+                resolve(userInfo)
             }
             else {
                 resolve()
