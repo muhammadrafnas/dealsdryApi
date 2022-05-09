@@ -253,6 +253,7 @@ Funcation calling from Registration router password storing becrypt format for s
     },
     getGuidelinesDoc: (operationId, referral, gst, userId) => {
         return new Promise(async (resolve, reject) => {
+            let uploadedDocUrl={}
             let documentsList = await guidlineDoc.find({
                 operationId: operationId, referral: referral, gst: gst
 
@@ -269,12 +270,14 @@ Funcation calling from Registration router password storing becrypt format for s
                         if (x.documentName == "PAN Card") {
                             x.label = "PAN Card"
                             x._doc.docurl = userDetails.gstin_no.pancard_document
+                            uploadedDocUrl["pancard"]=userDetails.gstin_no.pancard_document
                         }
                         if(x.documentName == "Business proof"){
                             let count=userDetails.business_shipping_address.length
                             if(userDetails.business_shipping_address[count-1].buyer_business_address_proof_name){
                                 x.label = "Business proof"
                                 x._doc.docurl = userDetails.business_billing_address[0].buyer_business_address_proof_name
+                                uploadedDocUrl["businessProof"]= userDetails.business_billing_address[0].buyer_business_address_proof_name
                             }
                         }
                         if(x.documentName == "Shipping Address proof"){
@@ -282,6 +285,7 @@ Funcation calling from Registration router password storing becrypt format for s
                             if(userDetails.business_billing_address[count-1].buyer_business_address_proof_name){
                                 x.label = "Shipping Address proof"
                                 x._doc.docurl = userDetails.business_billing_address[0].buyer_business_address_proof_name
+                                uploadedDocUrl["shippingAddressProof"]= userDetails.business_billing_address[0].buyer_business_address_proof_name
                             }
                         }
                         if (x.documentName == "PAN Card" || x.documentName == "Personal Address proof front copy" || x.documentName == "Personal Address proof back copy" || x.documentName == "Business proof" || x.documentName == "Shipping Address proof") {
@@ -297,20 +301,23 @@ Funcation calling from Registration router password storing becrypt format for s
                         if (x.documentName == "Business proof") {
                             x.label = "Business proof"
                             x._doc.docurl = userDetails.gstin_yes.gstin_document;
+                            uploadedDocUrl["businessProof"]= userDetails.gstin_yes.gstin_document
                         }
                         if (x.documentName == "Shipping Address proof") {
                             x.label = "Shipping Address proof"
                             x._doc.docurl = userDetails.gstin_yes.gstin_document
+                            uploadedDocUrl["shippingAddressProof"]=userDetails.gstin_yes.gstin_document
                         }
                         if (x.documentName == "PAN Card" || x.documentName == "Personal Address proof front copy" || x.documentName == "Personal Address proof back copy" || x.documentName == "Business proof" || x.documentName == "Shipping Address proof") {
                             x._doc.ownerName = userDetails.business_details.businessAuthorizedName
+                
                         }
                         else {
                             x._doc.ownerName = userDetails.business_details.businessName
                         }
                     }
                 }
-                resolve({ guidelinesDoc: documentsList })
+                resolve({ guidelinesDoc: documentsList,uploadedDocUrl:uploadedDocUrl })
             }
             else {
                 resolve()
