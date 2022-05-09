@@ -544,12 +544,12 @@ router.get("/pincode", async (req, res, next) => {
 // User info
 router.get("/:userId/info", async (req, res, next) => {
    try {
-      let data = await userController.userDataInfo(req.params.userId)
-      if (data) {
+      let userInfo = await userController.userDataInfo(req.params.userId)
+      if (userInfo) {
          res.status(200).json({
             status: 1,
             data: {
-               data
+               userInfo
             }
          })
       }
