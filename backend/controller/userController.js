@@ -7,6 +7,7 @@ const bcrypt = require('bcrypt')
 const { geoLocation } = require("../utils/geoLocation")
 const { default: mongoose } = require("mongoose")
 const { resolve } = require("path")
+const { count } = require("console")
 
 module.exports = {
 
@@ -123,6 +124,7 @@ Funcation calling from Registration router password storing becrypt format for s
         })
     },
     gstNo: (userData, docuemnt, panDetails) => {
+        
         return new Promise(async (resolve, reject) => {
             let pancardExist = await user.findOne({ "gstin_no.pan_number": userData.panNumber })
             if (pancardExist) {
@@ -259,13 +261,28 @@ Funcation calling from Registration router password storing becrypt format for s
             })
             let userDetails = await user.findOne({
                 _id: userId
-            }).select("business_details.businessAuthorizedName business_details.businessName gstin_no gstin_yes ")
+            }).select("business_details.businessAuthorizedName business_details.businessName gstin_no gstin_yes business_billing_address  business_shipping_address ")
             if (documentsList) {
                 if (userDetails.gstin_no.pancard_document) {
                     for (let x of documentsList) {
+                        console.log(x.documentName);
                         if (x.documentName == "PAN Card") {
                             x.label = "PAN Card"
                             x._doc.docurl = userDetails.gstin_no.pancard_document
+                        }
+                        if(x.documentName == "Business proof"){
+                            let count=userDetails.business_shipping_address.length
+                            if(userDetails.business_shipping_address[count-1].buyer_business_address_proof_name){
+                                x.label = "Business proof"
+                                x._doc.docurl = userDetails.business_billing_address[0].buyer_business_address_proof_name
+                            }
+                        }
+                        if(x.documentName == "Shipping Address proof"){
+                            let count=userDetails.business_billing_address.length
+                            if(userDetails.business_billing_address[count-1].buyer_business_address_proof_name){
+                                x.label = "Shipping Address proof"
+                                x._doc.docurl = userDetails.business_billing_address[0].buyer_business_address_proof_name
+                            }
                         }
                         if (x.documentName == "PAN Card" || x.documentName == "Personal Address proof front copy" || x.documentName == "Personal Address proof back copy" || x.documentName == "Business proof" || x.documentName == "Shipping Address proof") {
                             x._doc.ownerName = userDetails.business_details.businessAuthorizedName
@@ -523,12 +540,22 @@ Funcation calling from Registration router password storing becrypt format for s
             })
 
             if (!userData.length == 0) {
+                let count=userData[0].business_billing_address.length;
+                let countOne=userData[0].business_shipping_address.length
                 if (!userData[0].doc.length == 0) {
+                    console.log(count);
                     for (let x of userData[0].doc) {
                         if (x.gst == gst && x.referral == referral) {
-                            console.log(x);
+                
                             let docname = Object.values(x.documentName).join("").replace(/ /g, "_")
-                            if (Object.keys(userData[0].documents).includes(docname.toLowerCase()) == false) {
+                           
+                            if(userData[0].gstin_no && docname.toLowerCase()=="pan_card" || userData[0].business_shipping_address[countOne-1].buyer_business_address_proof_name && docname.toLowerCase()=="shipping_address_proof"){
+                                  //NO DATA PUSH TO ARRAY
+                            }
+                            else if(userData[0].gstin_yes && docname.toLowerCase()=="business_proof" || userData[0].business_billing_address[count-1].buyer_business_address_proof_name && docname.toLowerCase()=="business_proof" ||  userData[0].gstin_yes && docname.toLowerCase()=="shipping_address_proof"  ){
+                                  //NO DATA PUSH TO ARRAY
+                            }
+                            else if (Object.keys(userData[0].documents).includes(docname.toLowerCase()) == false) {
                                 doc.push(x)
                             }
                         }
@@ -536,7 +563,22 @@ Funcation calling from Registration router password storing becrypt format for s
                     pendency.documents = doc
                 }
                 else {
-                    pendency.documents = documents
+                    for(let x of documents){
+                        let docname = Object.values(x.documentName).join("").replace(/ /g, "_")
+                       
+                        if(userData[0].gstin_no && docname.toLowerCase()=="pan_card" || userData[0].business_shipping_address[countOne-1].buyer_business_address_proof_name && docname.toLowerCase()=="shipping_address_proof" ){
+                          //NO DATA PUSH TO ARRAY
+                        }
+                        else if(userData[0].gstin_yes && docname.toLowerCase()=="business_proof" || userData[0].business_billing_address[count-1].buyer_business_address_proof_name && docname.toLowerCase()=="business_proof" || userData[0].gstin_yes && docname.toLowerCase()=="shipping_address_proof" ) 
+                        {
+                          //NO DATA PUSH TO ARRAY
+                          console.log(x);
+                        }
+                        else{
+                            doc.push(x)
+                        }
+                    }
+                    pendency.documents = doc
                 }
 
                 if (userData[0].whatsappSub.length == 0) {
