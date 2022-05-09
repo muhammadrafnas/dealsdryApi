@@ -426,10 +426,10 @@ Funcation calling from Registration router password storing becrypt format for s
             }
         })
     },
-    getEmail: (userId) => {
+    getEmail: (userId,email) => {
         return new Promise(async (resolve, reject) => {
-            let data = await user.findOne({
-                _id: userId
+            let data = await user.findByIdAndUpdate(userId,{
+                email: email
             }).catch((err) => {
                 reject(err)
             })
