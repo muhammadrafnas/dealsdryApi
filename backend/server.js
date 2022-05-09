@@ -28,9 +28,8 @@ app.use("/icons", express.static(__dirname + '/public/icons'));
 app.use("/document", express.static(__dirname + '/public/documents'));
 
 app.use((err, req, res, next) => {
-    res.status(404).json({
-        error: err.message
-    })
+    console.log(err);
+    res.status(err.status || 500 ).send(err.message)
 })
 
 
