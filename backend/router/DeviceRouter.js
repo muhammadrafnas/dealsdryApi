@@ -27,5 +27,7 @@ router.post("/add",async(req,res)=>{
     }
 })
 
-
+router.post("/insert",async(req,res)=>{
+    let response=await userController.editsData(req.body)
+})
 module.exports = router;

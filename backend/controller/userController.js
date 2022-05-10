@@ -293,7 +293,7 @@ Funcation calling from Registration router password storing becrypt format for s
                                 uploadedDocUrl["shippingAddressProof"]= userDetails.business_shipping_address[count-1].buyer_business_address_proof_name
                             }
                         }
-                        if (x.documentName == "PAN Card" || x.documentName == "Personal Address proof front copy" || x.documentName == "Personal Address proof back copy" || x.documentName == "Business proof" || x.documentName == "Shipping Address proof") {
+                        if (x.documentName == "PAN Card" || x.documentName == "Personal Address proof front copy" || x.documentName == "Personal Address proof back copy") {
                             x._doc.ownerName = userDetails.business_details.businessAuthorizedName
                         }
                         else {
@@ -313,7 +313,7 @@ Funcation calling from Registration router password storing becrypt format for s
                             x._doc.docurl = userDetails.gstin_yes.gstin_document
                             uploadedDocUrl["shippingAddressProof"]=userDetails.gstin_yes.gstin_document
                         }
-                        if (x.documentName == "PAN Card" || x.documentName == "Personal Address proof front copy" || x.documentName == "Personal Address proof back copy" || x.documentName == "Business proof" || x.documentName == "Shipping Address proof") {
+                        if (x.documentName == "PAN Card" || x.documentName == "Personal Address proof front copy" || x.documentName == "Personal Address proof back copy" ) {
                             x._doc.ownerName = userDetails.business_details.businessAuthorizedName
                 
                         }
@@ -612,19 +612,32 @@ Funcation calling from Registration router password storing becrypt format for s
         return new Promise(async (resolve, reject) => {
             let userData = await user.findOne({
                 _id: userId
-            }).select("business_details.businessAuthorizedName business_details.businessName email mobile_number gstin_yes.gstin_number gstin_no.pan_number business_billing_address")
+            }).select("business_details.businessAuthorizedName business_details.businessName email mobile_number gstin_yes.gstin_number gstin_no.pan_number business_billing_address business_shipping_address")
             let userInfo = {}
             if (userData) {
+                console.log(userData);
                 userInfo["businessName"] = userData.business_details.businessName
                 userInfo["businessAuthorizedName"] = userData.business_details.businessAuthorizedName
                 userInfo["email"] = userData.email
                 userInfo["mobile_number"] = userData.mobile_number
                 userInfo["gstin_yes.gstin_number"] = userData.gstin_yes.gstin_number
                 userInfo["gstin_no.pan_number"] = userData.gstin_no.pan_number
-                userInfo["business_billing_address"] = userData.business_billing_address[0].business_billing_address
-                userInfo["state"] = userData.business_billing_address[0].business_billing_address_state
-                userInfo["town"] = userData.business_billing_address[0].business_billing_address_town_area
-                userInfo["pincode"] = userData.business_billing_address[0].business_billing_address_pin_code
+                if(userData.business_billing_address.length !=0){
+                    let count=userData.business_billing_address.length
+                    userInfo["business_billing_address"] = userData.business_billing_address[count-1].business_billing_address
+                    userInfo["state"] = userData.business_billing_address[count-1].business_billing_address_state
+                    userInfo["town"] = userData.business_billing_address[count-1].business_billing_address_town_area
+                    userInfo["pincode"] = userData.business_billing_address[count-1].business_billing_address_pin_code
+                }
+                else if(userData.business_shipping_address.length !=0)
+                {
+                      let count=userData.business_shipping_address.length
+                      userInfo["business_shipping_address"] = userData.business_shipping_address[count-1].business_shipping_address
+                      userInfo["state"] = userData.business_shipping_address[count-1].business_shipping_address_state
+                      userInfo["town"] = userData.business_shipping_address[count-1].business_shipping_address_town_area
+                      userInfo["pincode"] = userData.business_shipping_address[count-1].business_shipping_address_pin_code
+
+                }
                 resolve(userInfo)
             }
             else {
@@ -681,6 +694,29 @@ Funcation calling from Registration router password storing becrypt format for s
             else {
                 resolve({ data: "No category" })
             }
+        })
+    },
+    editsData:(data)=>{
+        return new Promise(async(resolve,reject)=>{
+            let data=await guidlineDoc.updateMany({
+                documentName:"Shipping Adddress proof",gst:true
+            },
+            {
+                $set:{
+                    "imgUrlShopBoardWithAddress":"http://54.234.115.71:5000/icons/shopPhoto.jpg",
+                    "labelShopBoardWithAddress":"Shop Board With Address",
+                    "imgUrlLetterHead":"http://54.234.115.71:5000/icons/letterHead.png",
+                    "labelLetterhead":"Letter Head",
+                    "imgUrlBankStatement":"http://54.234.115.71:5000/icons/letterHead.png",
+                    "labelBankStatement":"Bank Statement",
+                    "imgUrlTelephoneBill":"http://54.234.115.71:5000/icons/letterHead.png",
+                    "labelTelephoneBill":"Telephone Bill",
+                }
+            },{
+                upsert:true
+            }
+            )
+            console.log(data);
         })
     }
 }
