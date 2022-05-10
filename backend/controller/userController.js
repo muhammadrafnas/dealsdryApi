@@ -1,6 +1,7 @@
 const { reject, promise } = require("bcrypt/promises")
 const { user, business, businessDiffrent, whatsappSubscription } = require("../model/userModel")
 const { docList, guidlineDoc } = require("../model/documentModel")
+const {gstDetailsGetfromApi,panDetailsGetfromApi}=require("../utils/zoopApi")
 const Category = require("../model/categoryModel")
 const { Device } = require("../model/deviceModel")
 const bcrypt = require('bcrypt')
@@ -123,13 +124,14 @@ Funcation calling from Registration router password storing becrypt format for s
             }
         })
     },
-    gstNo: (userData, docuemnt, panDetails) => {
-        
+    gstNo: (userData, docuemnt) => {
         return new Promise(async (resolve, reject) => {
             let pancardExist = await user.findOne({ "gstin_no.pan_number": userData.panNumber })
             if (pancardExist) {
                 resolve({ pancard: true })
             }
+            let panDetails=await panDetailsGetfromApi(userData.panNumber)
+            console.log(panDetails);
             let data = await user.findByIdAndUpdate(userData.userId, {
                 "gstin_no.pan_number": userData.panNumber,
                 "gstin_no.pancard_document": "http://54.234.115.71:5000/document/" + docuemnt,
@@ -172,12 +174,14 @@ Funcation calling from Registration router password storing becrypt format for s
     get Business details from database
     */
     getBusinessDetialsGst: (userId) => {
+        console.log(userId);
         return new Promise(async (resolve, reject) => {
             let data = await user.findOne(
                 { _id: userId }
-            ).select("gstin_yes.gst_details.legal_name gstin_yes.gst_details.type_Of_operation gstin_yes.gstin_number gstin_yes.gstin_document ").catch((err) => {
+            ).select("gstin_yes.gst_details.legal_name gstin_yes.gst_details.trade_name   gstin_yes.gst_details.type_Of_operation gstin_yes.gstin_number gstin_yes.gstin_document ").catch((err) => {
                 reject(err)
             })
+            console.log("data");
             console.log(data);
             resolve(data)
         }).catch((err) => {
@@ -192,6 +196,7 @@ Funcation calling from Registration router password storing becrypt format for s
                 reject(err)
             })
             if (data) {
+                console.log(data);
                 resolve(data)
             }
             else {
@@ -696,25 +701,32 @@ Funcation calling from Registration router password storing becrypt format for s
             }
         })
     },
-    editsData:(data)=>{
-        return new Promise(async(resolve,reject)=>{
-            let data=await guidlineDoc.updateMany({
-                documentName:"Articles of Association (AOA)"
-            },
-            {
-                $set:{
-                    // "imgUrlTelephoneBill":"http://54.234.115.71:5000/icons/telephone.png",
-                    // "imgUrlShopBoardWithAddress":"http://54.234.115.71:5000/icons/shopBoradWithaddress.jpg",
-                    // "imgUrlLetterHead":"http://54.234.115.71:5000/icons/cover-letter.png",
-                    // "imgUrlBankStatement":"http://54.234.115.71:5000/icons/bankStatement.jpg",
-                    "imgUrl":"http://54.234.115.71:5000/icons/aoa.jpg",
-                    "label":"Upload AOA of",
+    // editsData:(data)=>{
+    //     return new Promise(async(resolve,reject)=>{
+    //         let data=await guidlineDoc.create({
+    //             operationId: "626a4066807330c5db7e4174",
+    //             documentName: "Memorandum of Association (MOA)",
+    //             documentOptions: "Memorandum of Association (MOA)",
+    //             businessName: "Public Limited Company",
+    //             referral: "false",
+    //             gst: "true",
+    //             label: "Upload MOA of",
+    //             imgUrl: "http://54.234.115.71:5000/icons/MOA.png",
+    //         },
+    //         // {
+    //         //     $set:{
+    //         //         // "imgUrlTelephoneBill":"http://54.234.115.71:5000/icons/telephone.png",
+    //         //         // "imgUrlShopBoardWithAddress":"http://54.234.115.71:5000/icons/shopBoradWithaddress.jpg",
+    //         //         // "imgUrlLetterHead":"http://54.234.115.71:5000/icons/cover-letter.png",
+    //         //         // "imgUrlBankStatement":"http://54.234.115.71:5000/icons/bankStatement.jpg",
+    //         //         "imgUrl":"http://54.234.115.71:5000/icons/aoa.jpg",
+    //         //         "label":"Upload AOA of",
 
 
-                }
-            }
-            )
-            console.log(data);
-        })
-    }
+    //         //     }
+    //         // }
+    //         )
+    //         console.log(data);
+    //     })
+    // }
 }

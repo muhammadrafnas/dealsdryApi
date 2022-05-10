@@ -146,10 +146,7 @@ router.post("/gstin", upload.single("proof"), async (req, res, next) => {
          }
       }
       if(req.body.gst=="false"){
-         let pandetails={}
-        pandetails["user_full_name"]="Manish sir"
-         console.log(pandetails);
-         let response = await userController.gstNo(req.body,req.file.filename,pandetails)
+         let response = await userController.gstNo(req.body,req.file.filename)
          if (response.pancard==false) {
             res.status(200).json({
                status: 1,
