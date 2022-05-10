@@ -21,8 +21,10 @@ async function gstDetailsGetfromApi(gstNumber) {
                 "consent_text": "I hear by declare my consent agreement for fetching my information via ZOOP API"
             }
         })
+        console.log(data);
     if (data.success == true) {
-        return { status: data.result.current_registration_status, legal_name: data.result.legal_name, business_address: data.result.primary_business_address, type_Of_operation: data.result.business_nature, data_registration: data.result.register_date }
+    
+        return { status: data.result.current_registration_status, legal_name: data.result.legal_name, business_address: data.result.primary_business_address,trade_name:data.result.trade_name, type_Of_operation: data.result.business_nature, data_registration: data.result.register_date }
     }
     else {
         return { gstNumber: gstNumber, status: false }
