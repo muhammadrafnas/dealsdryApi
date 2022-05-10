@@ -699,21 +699,19 @@ Funcation calling from Registration router password storing becrypt format for s
     editsData:(data)=>{
         return new Promise(async(resolve,reject)=>{
             let data=await guidlineDoc.updateMany({
-                documentName:"Shipping Adddress proof",gst:true
+                documentName:"Articles of Association (AOA)"
             },
             {
                 $set:{
-                    "imgUrlShopBoardWithAddress":"http://54.234.115.71:5000/icons/shopPhoto.jpg",
-                    "labelShopBoardWithAddress":"Shop Board With Address",
-                    "imgUrlLetterHead":"http://54.234.115.71:5000/icons/letterHead.png",
-                    "labelLetterhead":"Letter Head",
-                    "imgUrlBankStatement":"http://54.234.115.71:5000/icons/letterHead.png",
-                    "labelBankStatement":"Bank Statement",
-                    "imgUrlTelephoneBill":"http://54.234.115.71:5000/icons/letterHead.png",
-                    "labelTelephoneBill":"Telephone Bill",
+                    // "imgUrlTelephoneBill":"http://54.234.115.71:5000/icons/telephone.png",
+                    // "imgUrlShopBoardWithAddress":"http://54.234.115.71:5000/icons/shopBoradWithaddress.jpg",
+                    // "imgUrlLetterHead":"http://54.234.115.71:5000/icons/cover-letter.png",
+                    // "imgUrlBankStatement":"http://54.234.115.71:5000/icons/bankStatement.jpg",
+                    "imgUrl":"http://54.234.115.71:5000/icons/aoa.jpg",
+                    "label":"Upload AOA of",
+
+
                 }
-            },{
-                upsert:true
             }
             )
             console.log(data);

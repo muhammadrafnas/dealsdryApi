@@ -29,7 +29,12 @@ const guidelinesdocs=mongoose.Schema({
     imgUrlTelephoneBill:String,
     labelTelephoneBill:String,
     imgUrlUdogAadhaar:String,
-    labelUdogAadhaar:String
+    labelUdogAadhaar:String,
+    imgUrlVistingcard:String,
+    labelVisitingCard:String,
+    imgUrlBillBook:String,
+    labelBillBook:String
+
 
 })
 const docLists=mongoose.model("typeOfOperations",docList)
