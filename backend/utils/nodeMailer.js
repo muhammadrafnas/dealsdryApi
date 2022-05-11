@@ -26,7 +26,7 @@
 
      sendverficationEmail : ({ _id, email }, res) => {
          console.log(res);
-        const currentUrl = "https://dealsdryapi.herokuapp.com/api/v2/user";
+        const currentUrl = "http://54.234.115.71:5000/api/v2/user";
         const uniqueString = uuidv4() + _id;
         //mail options
         const mailOptions = {
