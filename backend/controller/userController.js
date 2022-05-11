@@ -7,6 +7,7 @@ const { Device } = require("../model/deviceModel")
 const bcrypt = require('bcrypt')
 const { geoLocation } = require("../utils/geoLocation")
 const { default: mongoose } = require("mongoose")
+const { UserList } = require("twilio/lib/rest/conversations/v1/user")
 
 
 module.exports = {
@@ -271,18 +272,19 @@ Funcation calling from Registration router password storing becrypt format for s
             let userDetails = await user.findOne({
                 _id: userId
             }).select("business_details.businessAuthorizedName business_details.businessName gstin_no gstin_yes business_billing_address  business_shipping_address ")
-            if (documentsList) {
+            if (userDetails && documentsList) {
                 if (userDetails.gstin_no.pancard_document) {
                     for (let x of documentsList) {
-                        console.log("gst");
+            
                         if (x.documentName == "PAN Card") {
                             x.label = "PAN Card"
                             x._doc.docurl = userDetails.gstin_no.pancard_document
                             uploadedDocUrl["pancard"]=userDetails.gstin_no.pancard_document
                         }
                         if(x.documentName == "Business proof"){
-                           
-                            if(userDetails.business_billing_address){
+            
+                            if(userDetails.business_billing_address.buyer_business_address_proof_name){
+                              
                                 x.label = "Business proof"
                                 x._doc.docurl = userDetails.business_billing_address.buyer_business_address_proof_name
                                 uploadedDocUrl["businessProof"]= userDetails.business_billing_address.buyer_business_address_proof_name
@@ -387,6 +389,10 @@ Funcation calling from Registration router password storing becrypt format for s
             })
             if (response) {
                 resolve(response)
+            }
+            else
+            {
+                resolve()
             }
         })
     },
@@ -619,7 +625,7 @@ Funcation calling from Registration router password storing becrypt format for s
                 userInfo["mobile_number"] = userData.mobile_number
                 userInfo["gstin_yes.gstin_number"] = userData.gstin_yes.gstin_number
                 userInfo["gstin_no.pan_number"] = userData.gstin_no.pan_number
-                if(userData.business_billing_address){
+                if(userData.business_billing_address.business_billing_address){
                     userInfo["business_billing_address"] = userData.business_billing_address.business_billing_address
                     userInfo["state"] = userData.business_billing_address.business_billing_address_state
                     userInfo["town"] = userData.business_billing_address.business_billing_address_town_area

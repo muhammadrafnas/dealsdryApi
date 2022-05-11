@@ -318,7 +318,7 @@ router.get("/guidelines/doc", async (req, res, next) => {
          res.status(501).json({
             status: 0,
             data: {
-               message: "No Guidelines Documnets"
+               message: "wrong"
             }
          })
       }
@@ -343,7 +343,7 @@ router.post("/businessAddress/billing", upload.single("addressProof"), async (re
          res.status(501).json({
             status: 0,
             data: {
-               message: "User not found"
+               message: "wrong"
             }
          })
       }
@@ -370,7 +370,7 @@ router.post("/businessAddress/shipping", upload.single("shippingAddressProof"), 
          res.status(501).json({
             status: 0,
             data: {
-               message: "User not found"
+               message: "wrong"
             }
          })
       }
