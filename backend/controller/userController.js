@@ -571,6 +571,13 @@ Funcation calling from Registration router password storing becrypt format for s
                                   //NO DATA PUSH TO ARRAY
                             }
                             else if (Object.keys(userData[0].documents).includes(docname.toLowerCase()) == false) {
+                                if (x.documentName == "PAN Card" || x.documentName == "Personal Address proof front copy" || x.documentName == "Personal Address proof back copy" ) {
+                                    x.ownerName = userData[0].business_details.businessAuthorizedName
+                        
+                                }
+                                else {
+                                    x.ownerName = userData[0].business_details.businessName
+                                }
                                 doc.push(x)
                             }
                         }
@@ -698,32 +705,25 @@ Funcation calling from Registration router password storing becrypt format for s
             }
         })
     },
-    // editsData:(data)=>{
-    //     return new Promise(async(resolve,reject)=>{
-    //         let data=await guidlineDoc.create({
-    //             operationId: "626a4066807330c5db7e4174",
-    //             documentName: "Memorandum of Association (MOA)",
-    //             documentOptions: "Memorandum of Association (MOA)",
-    //             businessName: "Public Limited Company",
-    //             referral: "false",
-    //             gst: "true",
-    //             label: "Upload MOA of",
-    //             imgUrl: "http://54.234.115.71:5000/icons/MOA.png",
-    //         },
-    //         // {
-    //         //     $set:{
-    //         //         // "imgUrlTelephoneBill":"http://54.234.115.71:5000/icons/telephone.png",
-    //         //         // "imgUrlShopBoardWithAddress":"http://54.234.115.71:5000/icons/shopBoradWithaddress.jpg",
-    //         //         // "imgUrlLetterHead":"http://54.234.115.71:5000/icons/cover-letter.png",
-    //         //         // "imgUrlBankStatement":"http://54.234.115.71:5000/icons/bankStatement.jpg",
-    //         //         "imgUrl":"http://54.234.115.71:5000/icons/aoa.jpg",
-    //         //         "label":"Upload AOA of",
+    editsData:(data)=>{
+        return new Promise(async(resolve,reject)=>{
+            let data=await guidlineDoc.updateMany({
+                documentName:"Shipping Address proof",gst:false
+            },
+            {
+                $set:{
+                    // "imgUrlTelephoneBill":"http://54.234.115.71:5000/icons/telephone.png",
+                    // "imgUrlShopBoardWithAddress":"http://54.234.115.71:5000/icons/shopBoradWithaddress.jpg",
+                    // "imgUrlLetterHead":"http://54.234.115.71:5000/icons/cover-letter.png",
+                    // "imgUrlBankStatement":"http://54.234.115.71:5000/icons/bankStatement.jpg",
+                    "imgUrlBillBook":"https://dealsdryapi.herokuapp.com/icons/bill_book_img.png",
+                    "labelBillBook":"Bill Book",
 
 
-    //         //     }
-    //         // }
-    //         )
-    //         console.log(data);
-    //     })
-    // }
+                }
+            }
+            )
+            console.log(data);
+        })
+    }
 }
