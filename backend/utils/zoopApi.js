@@ -50,6 +50,7 @@ async function getPanDetailsfromApi(panNumber) {
             return { pannumber:panNumber, status:"Not valid" }
         } 
     } catch (error) {
+        console.log(error);
         return null
     }    
 }
