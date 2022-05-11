@@ -29,7 +29,7 @@ const userSchema = mongoose.Schema({
     category: {
         type: Array
     },
-    business_billing_address: [
+    business_billing_address: 
         {
             business_billing_address_pin_code: Number,
             business_billing_address_town_area: String,
@@ -42,7 +42,7 @@ const userSchema = mongoose.Schema({
             business_contact_person_name: String,
             business_contact_person_mobile: String,
         }
-    ],
+    ,
     business_shipping_address: [
         {
             business_shipping_address_pin_code: String,
