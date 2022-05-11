@@ -594,9 +594,17 @@ Funcation calling from Registration router password storing becrypt format for s
                         else if(userData[0].gstin_yes && docname.toLowerCase()=="business_proof" || userData[0].gstin_yes && docname.toLowerCase()=="shipping_address_proof" || userData[0].business_billing_address && userData[0].business_billing_address.buyer_business_address_proof_name && docname.toLowerCase()=="business_proof") 
                         {
                           //NO DATA PUSH TO ARRAY
-                          console.log(x);
+        
                         }
                         else{
+                            if (x.documentName == "PAN Card" || x.documentName == "Personal Address proof front copy" || x.documentName == "Personal Address proof back copy" ) {
+                                console.log();
+                                x._doc.ownerName = userData[0].business_details.businessAuthorizedName
+                    
+                            }
+                            else {
+                                x._doc.ownerName = userData[0].business_details.businessName
+                            }
                             doc.push(x)
                         }
                     }
