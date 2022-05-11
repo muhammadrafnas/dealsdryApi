@@ -7,8 +7,7 @@ const { Device } = require("../model/deviceModel")
 const bcrypt = require('bcrypt')
 const { geoLocation } = require("../utils/geoLocation")
 const { default: mongoose } = require("mongoose")
-const { resolve } = require("path")
-const { count } = require("console")
+
 
 module.exports = {
 
@@ -275,19 +274,18 @@ Funcation calling from Registration router password storing becrypt format for s
             if (documentsList) {
                 if (userDetails.gstin_no.pancard_document) {
                     for (let x of documentsList) {
-                        console.log(x.documentName);
+                        console.log("gst");
                         if (x.documentName == "PAN Card") {
                             x.label = "PAN Card"
                             x._doc.docurl = userDetails.gstin_no.pancard_document
                             uploadedDocUrl["pancard"]=userDetails.gstin_no.pancard_document
                         }
                         if(x.documentName == "Business proof"){
-                            let count=userDetails.business_billing_address.length
-                    
-                            if(userDetails.business_billing_address.length !=0 ){
+                           
+                            if(userDetails.business_billing_address){
                                 x.label = "Business proof"
-                                x._doc.docurl = userDetails.business_billing_address[count-1].buyer_business_address_proof_name
-                                uploadedDocUrl["businessProof"]= userDetails.business_billing_address[count-1].buyer_business_address_proof_name
+                                x._doc.docurl = userDetails.business_billing_address.buyer_business_address_proof_name
+                                uploadedDocUrl["businessProof"]= userDetails.business_billing_address.buyer_business_address_proof_name
                             }
                         }
                         if(x.documentName == "Shipping Address proof"){
@@ -340,21 +338,17 @@ Funcation calling from Registration router password storing becrypt format for s
         }
         return new Promise(async (resolve, reject) => {
             let response = await user.findByIdAndUpdate(userId, {
-                $push: {
-                    business_billing_address: {
-                        business_billing_address_pin_code: data.pinCode,
-                        business_billing_address_town_area: data.town,
-                        business_billing_address: data.billingAddress,
-                        business_billing_address_landmark: data.landmark,
-                        business_billing_address_city: data.city,
-                        business_billing_address_state: data.state,
-                        buyer_business_address_proof_name: addressProof,
-                        business_billing_address_type: data.addressType,
-                        business_contact_person_name: data.contactPersonName,
-                        business_contact_person_mobile: data.contactPersonMobile,
-
-                    }
-                }
+                   
+                "business_billing_address.business_billing_address_pin_code": data.pinCode,
+                "business_billing_address.business_billing_address_town_area": data.town,
+                "business_billing_address.business_billing_address": data.billingAddress,
+                "business_billing_address.business_billing_address_landmark": data.landmark,
+                "business_billing_address.business_billing_address_city": data.city,
+                "business_billing_address.business_billing_address_state": data.state,
+                "business_billing_address.buyer_business_address_proof_name": addressProof,
+                "business_billing_address.business_billing_address_type": data.addressType,
+                "business_billing_address.business_contact_person_name": data.contactPersonName,
+                "business_billing_address.business_contact_person_mobile": data.contactPersonMobile,
 
             }).catch((err) => {
                 reject(err)
@@ -557,10 +551,8 @@ Funcation calling from Registration router password storing becrypt format for s
             })
 
             if (!userData.length == 0) {
-                let count=userData[0].business_billing_address.length;
                 let countOne=userData[0].business_shipping_address.length
                 if (!userData[0].doc.length == 0) {
-                    console.log(count);
                     for (let x of userData[0].doc) {
                         if (x.gst == gst && x.referral == referral) {
                 
@@ -569,7 +561,7 @@ Funcation calling from Registration router password storing becrypt format for s
                             if(userData[0].gstin_no && docname.toLowerCase()=="pan_card" || userData[0].business_shipping_address.length !=0 && userData[0].business_shipping_address[countOne-1].buyer_business_address_proof_name && docname.toLowerCase()=="shipping_address_proof" ){
                                   //NO DATA PUSH TO ARRAY
                             }
-                            else if(userData[0].gstin_yes && docname.toLowerCase()=="business_proof" || userData[0].business_billing_address.length !=0  && userData[0].business_billing_address[count-1].buyer_business_address_proof_name && docname.toLowerCase()=="business_proof" ||  userData[0].gstin_yes && docname.toLowerCase()=="shipping_address_proof"  ){
+                            else if(userData[0].gstin_yes && docname.toLowerCase()=="business_proof" || userData[0].business_billing_address  && userData[0].business_billing_address.buyer_business_address_proof_name && docname.toLowerCase()=="business_proof" ||  userData[0].gstin_yes && docname.toLowerCase()=="shipping_address_proof"  ){
                                   //NO DATA PUSH TO ARRAY
                             }
                             else if (Object.keys(userData[0].documents).includes(docname.toLowerCase()) == false) {
@@ -586,7 +578,7 @@ Funcation calling from Registration router password storing becrypt format for s
                         if(userData[0].gstin_no && docname.toLowerCase()=="pan_card" || userData[0].business_shipping_address.length !=0 && userData[0].business_shipping_address[countOne-1].buyer_business_address_proof_name && docname.toLowerCase()=="shipping_address_proof"  ){
                           //NO DATA PUSH TO ARRAY
                         }
-                        else if(userData[0].gstin_yes && docname.toLowerCase()=="business_proof" || userData[0].gstin_yes && docname.toLowerCase()=="shipping_address_proof" || userData[0].business_billing_address.length !=0 && userData[0].business_billing_address[count-1].buyer_business_address_proof_name && docname.toLowerCase()=="business_proof") 
+                        else if(userData[0].gstin_yes && docname.toLowerCase()=="business_proof" || userData[0].gstin_yes && docname.toLowerCase()=="shipping_address_proof" || userData[0].business_billing_address && userData[0].business_billing_address.buyer_business_address_proof_name && docname.toLowerCase()=="business_proof") 
                         {
                           //NO DATA PUSH TO ARRAY
                           console.log(x);
@@ -627,12 +619,11 @@ Funcation calling from Registration router password storing becrypt format for s
                 userInfo["mobile_number"] = userData.mobile_number
                 userInfo["gstin_yes.gstin_number"] = userData.gstin_yes.gstin_number
                 userInfo["gstin_no.pan_number"] = userData.gstin_no.pan_number
-                if(userData.business_billing_address.length !=0){
-                    let count=userData.business_billing_address.length
-                    userInfo["business_billing_address"] = userData.business_billing_address[count-1].business_billing_address
-                    userInfo["state"] = userData.business_billing_address[count-1].business_billing_address_state
-                    userInfo["town"] = userData.business_billing_address[count-1].business_billing_address_town_area
-                    userInfo["pincode"] = userData.business_billing_address[count-1].business_billing_address_pin_code
+                if(userData.business_billing_address){
+                    userInfo["business_billing_address"] = userData.business_billing_address.business_billing_address
+                    userInfo["state"] = userData.business_billing_address.business_billing_address_state
+                    userInfo["town"] = userData.business_billing_address.business_billing_address_town_area
+                    userInfo["pincode"] = userData.business_billing_address.business_billing_address_pin_code
                 }
                 else if(userData.business_shipping_address.length !=0)
                 {
