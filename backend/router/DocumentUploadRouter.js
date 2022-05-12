@@ -9,7 +9,7 @@ dotenv.config()
 // Upload documents 
 router.post("/upload",upload.fields([{name:'panCard'},{name:'addressProofFront'},{name:"addressProofBack"},{name:"businessproof"},{name:"shippingAddressProof"},{name:"shopOwnerPhoto"},{name:"shopBoardPhoto"},{name:"firmPancard"},{name:"partnershipDeed"},{name:"certificateIncorporation"},{name:"memorandumAssociation"},{name:"ArticlesAssociation"}]), async (req, res, next) => {
     try {
-       console.log(Object.keys(req.files).length);
+       console.log(req.files);
        if(Object.keys(req.files).length === 0){
           res.status(200).json({
              status:1,
