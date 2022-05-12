@@ -574,7 +574,7 @@ Funcation calling from Registration router password storing becrypt format for s
                                   //NO DATA PUSH TO ARRAY
                             }
                             else if( userData[0].gstin_yes && docname.toLowerCase()=="shipping_address_proof" || userData[0].business_billing_address  && userData[0].business_billing_address.buyer_business_address_proof_name && docname.toLowerCase()=="shipping_address_proof" && userData[0].business_shipping_address.length !=0 && userData[0].business_shipping_address[countOne-1].buyer_business_address_proof_name ==null   || userData[0].business_shipping_address.length !=0 && userData[0].business_shipping_address[countOne-1].buyer_business_address_proof_name && docname.toLowerCase()=="shipping_address_proof" ){
-
+                                  //NO DATA PUSH TO ARRAY
                             }
                             else if (Object.keys(userData[0].documents).includes(docname.toLowerCase()) == false) {
                                 if (x.documentName == "PAN Card" || x.documentName == "Personal Address proof front copy" || x.documentName == "Personal Address proof back copy" ) {
