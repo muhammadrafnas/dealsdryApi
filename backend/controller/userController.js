@@ -413,8 +413,8 @@ Funcation calling from Registration router password storing becrypt format for s
                 "documents.pan_card": doc.panCard,
                 "documents.personal_address_proof_front_copy": doc.addressProofFront,
                 "documents.personal_address_proof_back_copy": doc.addressProofBack,
-                "documents.business_proof": doc.businessProof,
-                "documents.shipping_address_proof": doc.shippingAddreesProof,
+                "documents.business_proof": doc.businessproof,
+                "documents.shipping_address_proof": doc.shippingAddressProof,
                 "documents.shop_owner_photo": doc.shopOwnerPhoto,
                 "documents.shop_board_photo": doc.shopBoardPhoto,
                 "documents.firm_pancard": doc.firmPancard,
@@ -429,6 +429,10 @@ Funcation calling from Registration router password storing becrypt format for s
             })
             if (data) {
                 resolve(data)
+            }
+            else
+            {
+                resolve()
             }
         })
     },
