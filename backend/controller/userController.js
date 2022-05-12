@@ -401,11 +401,10 @@ Funcation calling from Registration router password storing becrypt format for s
         })
     },
     uploadDocuments: (document, docId, gst, referral, userId) => {
+        console.log(document);
         let doc = {}
-        for (let x in document) {
-            for (let y of Object.values(document)) {
-                doc[x] = "http://54.234.115.71:5000/document/" + Object.values(y[0].filename).join("")
-            }
+        for (let [key,value] of  Object.entries(document)) { 
+                doc[key] = "http://54.234.115.71:5000/document/" + value[0].filename
         }
         console.log(doc);
         return new Promise(async (resolve, reject) => {
