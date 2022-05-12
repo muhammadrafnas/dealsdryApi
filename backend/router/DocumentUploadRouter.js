@@ -11,7 +11,7 @@ router.post("/upload",upload.fields([{name:'panCard'},{name:'addressProofFront'}
     try {
        if(Object.keys(req.files).length === 0){
           res.status(501).json({
-             status:0,
+             status:1,
              data:{
                 message:"File upload pending"
              }
