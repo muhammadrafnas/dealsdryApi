@@ -282,9 +282,7 @@ Funcation calling from Registration router password storing becrypt format for s
                             uploadedDocUrl["pancard"]=userDetails.gstin_no.pancard_document
                         }
                         if(x.documentName == "Business proof"){
-            
-                            if(userDetails.business_billing_address.buyer_business_address_proof_name){
-                              
+                            if(userDetails.business_billing_address.buyer_business_address_proof_name && userDetails.business_shipping_address !=0){
                                 x.label = "Business proof"
                                 x._doc.docurl = userDetails.business_billing_address.buyer_business_address_proof_name
                                 uploadedDocUrl["businessProof"]= userDetails.business_billing_address.buyer_business_address_proof_name
@@ -296,6 +294,12 @@ Funcation calling from Registration router password storing becrypt format for s
                                 x.label = "Shipping Address proof"
                                 x._doc.docurl = userDetails.business_shipping_address[count-1].buyer_business_address_proof_name
                                 uploadedDocUrl["shippingAddressProof"]= userDetails.business_shipping_address[count-1].buyer_business_address_proof_name
+                            }
+                            else
+                            {
+                                x.label = "Shipping Address proof"
+                                x._doc.docurl = userDetails.business_billing_address.buyer_business_address_proof_name
+                                uploadedDocUrl["shippingAddressProof"]= userDetails.business_billing_address.buyer_business_address_proof_name
                             }
                         }
                         if (x.documentName == "PAN Card" || x.documentName == "Personal Address proof front copy" || x.documentName == "Personal Address proof back copy") {
@@ -555,7 +559,6 @@ Funcation calling from Registration router password storing becrypt format for s
             ]).catch((err) => {
                 reject(err)
             })
-
             if (!userData.length == 0) {
                 let countOne=userData[0].business_shipping_address.length
                 if (!userData[0].doc.length == 0) {
@@ -564,11 +567,14 @@ Funcation calling from Registration router password storing becrypt format for s
                 
                             let docname = Object.values(x.documentName).join("").replace(/ /g, "_")
                            
-                            if(userData[0].gstin_no && docname.toLowerCase()=="pan_card" || userData[0].business_shipping_address.length !=0 && userData[0].business_shipping_address[countOne-1].buyer_business_address_proof_name && docname.toLowerCase()=="shipping_address_proof" ){
+                            if(userData[0].gstin_no && docname.toLowerCase()=="pan_card"){
                                   //NO DATA PUSH TO ARRAY
                             }
-                            else if(userData[0].gstin_yes && docname.toLowerCase()=="business_proof" || userData[0].business_billing_address  && userData[0].business_billing_address.buyer_business_address_proof_name && docname.toLowerCase()=="business_proof" ||  userData[0].gstin_yes && docname.toLowerCase()=="shipping_address_proof"  ){
+                            else if(userData[0].gstin_yes && docname.toLowerCase()=="business_proof" || userData[0].business_billing_address  && userData[0].business_billing_address.buyer_business_address_proof_name && docname.toLowerCase()=="business_proof" && userData[0].business_shipping_address.length !=0 && userData[0].business_shipping_address[countOne-1].buyer_business_address_proof_name !=null ){
                                   //NO DATA PUSH TO ARRAY
+                            }
+                            else if( userData[0].gstin_yes && docname.toLowerCase()=="shipping_address_proof" || userData[0].business_billing_address  && userData[0].business_billing_address.buyer_business_address_proof_name && docname.toLowerCase()=="shipping_address_proof" && userData[0].business_shipping_address.length !=0 && userData[0].business_shipping_address[countOne-1].buyer_business_address_proof_name ==null   || userData[0].business_shipping_address.length !=0 && userData[0].business_shipping_address[countOne-1].buyer_business_address_proof_name && docname.toLowerCase()=="shipping_address_proof" ){
+
                             }
                             else if (Object.keys(userData[0].documents).includes(docname.toLowerCase()) == false) {
                                 if (x.documentName == "PAN Card" || x.documentName == "Personal Address proof front copy" || x.documentName == "Personal Address proof back copy" ) {
@@ -724,8 +730,10 @@ Funcation calling from Registration router password storing becrypt format for s
                     // "imgUrlShopBoardWithAddress":"http://54.234.115.71:5000/icons/shopBoradWithaddress.jpg",
                     // "imgUrlLetterHead":"http://54.234.115.71:5000/icons/cover-letter.png",
                     // "imgUrlBankStatement":"http://54.234.115.71:5000/icons/bankStatement.jpg",
-                    "imgUrlBillBook":"https://dealsdryapi.herokuapp.com/icons/bill_book_img.png",
+                    // "imgUrlBillBook":"https://dealsdryapi.herokuapp.com/icons/bill_book_img.png",
                     "labelBillBook":"Bill Book",
+                   
+
 
 
                 }
