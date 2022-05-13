@@ -24,7 +24,8 @@
 
  module.exports={
 
-     sendverficationEmail : ({ _id, email }, res) => {
+     sendverficationEmail : (_id, res) => {
+        console.log(_id);
          console.log(res);
         const currentUrl = "http://54.234.115.71:5000/api/v2/user";
         const uniqueString = uuidv4() + _id;
