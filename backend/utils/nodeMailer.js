@@ -5,7 +5,7 @@
  const bcrypt = require('bcrypt')
  
  let transporter = nodemailer.createTransport({
-    service: "hotmail",
+    service: "gmail",
     auth: {
          user: process.env.AUTH_EMAIL,
          pass: process.env.AUTH_PASS
@@ -26,7 +26,7 @@
 
      sendverficationEmail : (_id, res) => {
         console.log(_id);
-         console.log(res);
+         console.log(process.env.AUTH_EMAIL);
         const currentUrl = "http://54.234.115.71:5000/api/v2/user";
         const uniqueString = uuidv4() + _id;
         //mail options
