@@ -661,8 +661,16 @@ Funcation calling from Registration router password storing becrypt format for s
                 if(userData[0].gstin_yes){
                     userInfo["gstin_yes.gstin_number"] = userData[0].gstin_yes.gstin_number
                 }
+                else
+                {
+                    userInfo["gstin_yes.gstin_number"] =null
+                }
                 if(userData[0].gstin_no){
                     userInfo["gstin_no.pan_number"] = userData[0].gstin_no.pan_number
+                }
+                else
+                {
+                    userInfo["gstin_no.pan_number"]=null
                 }
                 if(userData[0].business_billing_address){
                     userInfo["business_billing_address"] = userData[0].business_billing_address.business_billing_address
