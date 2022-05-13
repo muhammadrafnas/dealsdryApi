@@ -275,7 +275,6 @@ Funcation calling from Registration router password storing becrypt format for s
             if (userDetails && documentsList) {
                 if (userDetails.gstin_no.pancard_document) {
                     for (let x of documentsList) {
-
                         if (x.documentName == "PAN Card") {
                             x.label = "PAN Card"
                             x._doc.docurl = userDetails.gstin_no.pancard_document
@@ -295,7 +294,7 @@ Funcation calling from Registration router password storing becrypt format for s
                                 x._doc.docurl = userDetails.business_shipping_address[count - 1].buyer_business_address_proof_name
                                 uploadedDocUrl["shippingAddressProof"] = userDetails.business_shipping_address[count - 1].buyer_business_address_proof_name
                             }
-                            if(userDetails.business_shipping_address.length != 0 && userDetails.business_billing_address) {
+                            if(userDetails.business_shipping_address.length == 0 && userDetails.business_billing_address) {
                                 x.label = "Shipping Address proof"
                                 x._doc.docurl = userDetails.business_billing_address.buyer_business_address_proof_name
                                 uploadedDocUrl["shippingAddressProof"] = userDetails.business_billing_address.buyer_business_address_proof_name

@@ -29,7 +29,12 @@ app.use("/document", express.static(__dirname + '/public/documents'));
 
 app.use((err, req, res, next) => {
     console.log(err);
-    res.status(err.status || 500 ).send(err.message)
+    res.status(err.status || 500 ).json({
+        status:0,
+        data:{
+            message:err.message
+        }
+    })
 })
 
 
