@@ -637,33 +637,62 @@ Funcation calling from Registration router password storing becrypt format for s
     },
     userDataInfo: (userId) => {
         return new Promise(async (resolve, reject) => {
-            let userData = await user.findOne({
-                _id: userId
-            }).select("business_details.businessAuthorizedName business_details.businessName email mobile_number gstin_yes.gstin_number gstin_no.pan_number business_billing_address business_shipping_address")
+              userId = mongoose.Types.ObjectId(userId)
+            let userData = await user.aggregate([
+               {$match:{_id:userId}},
+               {
+                   $lookup:{
+                    from: "whatsappsubscriptions",
+                    localField: "_id",
+                    foreignField: "userId",
+                    as: "whatsappSub"
+                   }
+               }
+            ]).catch((err)=>{
+                reject(err)
+            })
             let userInfo = {}
-            if (userData) {
+            if (userData[0].business_details && userData[0].mobile_number && userData[0].email) {
                 console.log(userData);
-                userInfo["businessName"] = userData.business_details.businessName
-                userInfo["businessAuthorizedName"] = userData.business_details.businessAuthorizedName
-                userInfo["email"] = userData.email
-                userInfo["mobile_number"] = userData.mobile_number
-                userInfo["gstin_yes.gstin_number"] = userData.gstin_yes.gstin_number
-                userInfo["gstin_no.pan_number"] = userData.gstin_no.pan_number
-                if(userData.business_billing_address.business_billing_address){
-                    userInfo["business_billing_address"] = userData.business_billing_address.business_billing_address
-                    userInfo["state"] = userData.business_billing_address.business_billing_address_state
-                    userInfo["town"] = userData.business_billing_address.business_billing_address_town_area
-                    userInfo["pincode"] = userData.business_billing_address.business_billing_address_pin_code
+                userInfo["businessName"] = userData[0].business_details.businessName
+                userInfo["businessAuthorizedName"] = userData[0].business_details.businessAuthorizedName
+                userInfo["email"] = userData[0].email
+                userInfo["mobile_number"] = userData[0].mobile_number
+                if(userData[0].gstin_yes){
+                    userInfo["gstin_yes.gstin_number"] = userData[0].gstin_yes.gstin_number
                 }
-                else if(userData.business_shipping_address.length !=0)
+                if(userData[0].gstin_no){
+                    userInfo["gstin_no.pan_number"] = userData[0].gstin_no.pan_number
+                }
+                if(userData[0].business_billing_address){
+                    userInfo["business_billing_address"] = userData[0].business_billing_address.business_billing_address
+                    userInfo["state"] = userData[0].business_billing_address.business_billing_address_state
+                    userInfo["town"] = userData[0].business_billing_address.business_billing_address_town_area
+                    userInfo["pincode"] = userData[0].business_billing_address.business_billing_address_pin_code
+                }
+                else if(userData[0].business_shipping_address.length !=0)
                 {
-                      let count=userData.business_shipping_address.length
-                      userInfo["business_shipping_address"] = userData.business_shipping_address[count-1].business_shipping_address
-                      userInfo["state"] = userData.business_shipping_address[count-1].business_shipping_address_state
-                      userInfo["town"] = userData.business_shipping_address[count-1].business_shipping_address_town_area
-                      userInfo["pincode"] = userData.business_shipping_address[count-1].business_shipping_address_pin_code
+                      let count=userData[0].business_shipping_address.length
+                      userInfo["business_shipping_address"] = userData[0].business_shipping_address[count-1].business_shipping_address
+                      userInfo["state"] = userData[0].business_shipping_address[count-1].business_shipping_address_state
+                      userInfo["town"] = userData[0].business_shipping_address[count-1].business_shipping_address_town_area
+                      userInfo["pincode"] = userData[0].business_shipping_address[count-1].business_shipping_address_pin_code
 
                 }
+                if(userData[0].email_verified=="success"){
+                    userInfo["Email_Status"]="Verfied"
+            }
+            else
+            {
+                userInfo["Email_Status"]="Not Verfied"
+            }
+            if(!userData[0].whatsappSub.length == 0){
+                userInfo["whatsapp_status"]="Whatsapp subscribed"
+            }
+            else
+            {
+                userInfo["whatsapp_status"]="Whatsapp not subscribed"
+            }
                 resolve(userInfo)
             }
             else {
