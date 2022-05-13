@@ -78,7 +78,8 @@ const userSchema = mongoose.Schema({
         type: Array
     },
     email_verified: {
-        type: String
+        type: String,
+        default:null
     },
     gstin_no:
     {
