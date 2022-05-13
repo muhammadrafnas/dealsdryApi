@@ -282,7 +282,7 @@ Funcation calling from Registration router password storing becrypt format for s
                             uploadedDocUrl["pancard"] = userDetails.gstin_no.pancard_document
                         }
                         if (x.documentName == "Business proof") {
-                            if (userDetails.business_billing_address.buyer_business_address_proof_name && userDetails.business_shipping_address != 0) {
+                            if (userDetails.business_billing_address.buyer_business_address_proof_name && userDetails.business_shipping_address.length != 0) {
                                 x.label = "Business proof"
                                 x._doc.docurl = userDetails.business_billing_address.buyer_business_address_proof_name
                                 uploadedDocUrl["businessProof"] = userDetails.business_billing_address.buyer_business_address_proof_name
@@ -290,12 +290,12 @@ Funcation calling from Registration router password storing becrypt format for s
                         }
                         if (x.documentName == "Shipping Address proof") {
                             let count = userDetails.business_shipping_address.length
-                            if (userDetails.business_shipping_address != 0) {
+                            if (userDetails.business_shipping_address.length != 0) {
                                 x.label = "Shipping Address proof"
                                 x._doc.docurl = userDetails.business_shipping_address[count - 1].buyer_business_address_proof_name
                                 uploadedDocUrl["shippingAddressProof"] = userDetails.business_shipping_address[count - 1].buyer_business_address_proof_name
                             }
-                            else {
+                            if(userDetails.business_shipping_address.length != 0 && userDetails.business_billing_address) {
                                 x.label = "Shipping Address proof"
                                 x._doc.docurl = userDetails.business_billing_address.buyer_business_address_proof_name
                                 uploadedDocUrl["shippingAddressProof"] = userDetails.business_billing_address.buyer_business_address_proof_name
@@ -771,10 +771,6 @@ Funcation calling from Registration router password storing becrypt format for s
                         // "imgUrlBankStatement":"http://54.234.115.71:5000/icons/bankStatement.jpg",
                         // "imgUrlBillBook":"https://dealsdryapi.herokuapp.com/icons/bill_book_img.png",
                         "labelBillBook": "Bill Book",
-
-
-
-
                     }
                 }
             )
