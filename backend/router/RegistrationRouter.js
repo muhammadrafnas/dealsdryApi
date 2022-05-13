@@ -454,6 +454,7 @@ router.get("/whatsappSubscription", async (req, res, next) => {
 
 // Email verification
 router.get("/email/verification", async (req, res, next) => {
+   console.log(req.query.userId);
    try {
       let response = await userController.getEmail(req.query.userId,req.query.email)
       if (response) {
