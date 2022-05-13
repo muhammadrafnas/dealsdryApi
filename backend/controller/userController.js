@@ -1,7 +1,7 @@
 const { reject, promise } = require("bcrypt/promises")
 const { user, business, businessDiffrent, whatsappSubscription } = require("../model/userModel")
 const { docList, guidlineDoc } = require("../model/documentModel")
-const {gstDetailsGetfromApi,panDetailsGetfromApi}=require("../utils/zoopApi")
+const { gstDetailsGetfromApi, panDetailsGetfromApi } = require("../utils/zoopApi")
 const Category = require("../model/categoryModel")
 const { Device } = require("../model/deviceModel")
 const bcrypt = require('bcrypt')
@@ -130,7 +130,7 @@ Funcation calling from Registration router password storing becrypt format for s
             if (pancardExist) {
                 resolve({ pancard: true })
             }
-            let panDetails=await panDetailsGetfromApi(userData.panNumber)
+            let panDetails = await panDetailsGetfromApi(userData.panNumber)
             console.log(panDetails);
             let data = await user.findByIdAndUpdate(userData.userId, {
                 "gstin_no.pan_number": userData.panNumber,
@@ -258,10 +258,10 @@ Funcation calling from Registration router password storing becrypt format for s
     },
     getGuidelinesDoc: (operationId, referral, gst, userId) => {
         return new Promise(async (resolve, reject) => {
-            let uploadedDocUrl={
-                pancard:null,
-                businessProof:null,
-                shippingAddressProof:null
+            let uploadedDocUrl = {
+                pancard: null,
+                businessProof: null,
+                shippingAddressProof: null
             }
             let documentsList = await guidlineDoc.find({
                 operationId: operationId, referral: referral, gst: gst
@@ -275,31 +275,30 @@ Funcation calling from Registration router password storing becrypt format for s
             if (userDetails && documentsList) {
                 if (userDetails.gstin_no.pancard_document) {
                     for (let x of documentsList) {
-            
+
                         if (x.documentName == "PAN Card") {
                             x.label = "PAN Card"
                             x._doc.docurl = userDetails.gstin_no.pancard_document
-                            uploadedDocUrl["pancard"]=userDetails.gstin_no.pancard_document
+                            uploadedDocUrl["pancard"] = userDetails.gstin_no.pancard_document
                         }
-                        if(x.documentName == "Business proof"){
-                            if(userDetails.business_billing_address.buyer_business_address_proof_name && userDetails.business_shipping_address !=0){
+                        if (x.documentName == "Business proof") {
+                            if (userDetails.business_billing_address.buyer_business_address_proof_name && userDetails.business_shipping_address != 0) {
                                 x.label = "Business proof"
                                 x._doc.docurl = userDetails.business_billing_address.buyer_business_address_proof_name
-                                uploadedDocUrl["businessProof"]= userDetails.business_billing_address.buyer_business_address_proof_name
+                                uploadedDocUrl["businessProof"] = userDetails.business_billing_address.buyer_business_address_proof_name
                             }
                         }
-                        if(x.documentName == "Shipping Address proof"){
-                            let count=userDetails.business_shipping_address.length
-                            if(userDetails.business_shipping_address !=0){
+                        if (x.documentName == "Shipping Address proof") {
+                            let count = userDetails.business_shipping_address.length
+                            if (userDetails.business_shipping_address != 0) {
                                 x.label = "Shipping Address proof"
-                                x._doc.docurl = userDetails.business_shipping_address[count-1].buyer_business_address_proof_name
-                                uploadedDocUrl["shippingAddressProof"]= userDetails.business_shipping_address[count-1].buyer_business_address_proof_name
+                                x._doc.docurl = userDetails.business_shipping_address[count - 1].buyer_business_address_proof_name
+                                uploadedDocUrl["shippingAddressProof"] = userDetails.business_shipping_address[count - 1].buyer_business_address_proof_name
                             }
-                            else
-                            {
+                            else {
                                 x.label = "Shipping Address proof"
                                 x._doc.docurl = userDetails.business_billing_address.buyer_business_address_proof_name
-                                uploadedDocUrl["shippingAddressProof"]= userDetails.business_billing_address.buyer_business_address_proof_name
+                                uploadedDocUrl["shippingAddressProof"] = userDetails.business_billing_address.buyer_business_address_proof_name
                             }
                         }
                         if (x.documentName == "PAN Card" || x.documentName == "Personal Address proof front copy" || x.documentName == "Personal Address proof back copy") {
@@ -315,23 +314,23 @@ Funcation calling from Registration router password storing becrypt format for s
                         if (x.documentName == "Business proof") {
                             x.label = "Business proof"
                             x._doc.docurl = userDetails.gstin_yes.gstin_document;
-                            uploadedDocUrl["businessProof"]= userDetails.gstin_yes.gstin_document
+                            uploadedDocUrl["businessProof"] = userDetails.gstin_yes.gstin_document
                         }
                         if (x.documentName == "Shipping Address proof") {
                             x.label = "Shipping Address proof"
                             x._doc.docurl = userDetails.gstin_yes.gstin_document
-                            uploadedDocUrl["shippingAddressProof"]=userDetails.gstin_yes.gstin_document
+                            uploadedDocUrl["shippingAddressProof"] = userDetails.gstin_yes.gstin_document
                         }
-                        if (x.documentName == "PAN Card" || x.documentName == "Personal Address proof front copy" || x.documentName == "Personal Address proof back copy" ) {
+                        if (x.documentName == "PAN Card" || x.documentName == "Personal Address proof front copy" || x.documentName == "Personal Address proof back copy") {
                             x._doc.ownerName = userDetails.business_details.businessAuthorizedName
-                
+
                         }
                         else {
                             x._doc.ownerName = userDetails.business_details.businessName
                         }
                     }
                 }
-                resolve({ guidelinesDoc: documentsList,uploadedDocUrl:uploadedDocUrl })
+                resolve({ guidelinesDoc: documentsList, uploadedDocUrl: uploadedDocUrl })
             }
             else {
                 resolve()
@@ -344,7 +343,7 @@ Funcation calling from Registration router password storing becrypt format for s
         }
         return new Promise(async (resolve, reject) => {
             let response = await user.findByIdAndUpdate(userId, {
-                   
+
                 "business_billing_address.business_billing_address_pin_code": data.pinCode,
                 "business_billing_address.business_billing_address_town_area": data.town,
                 "business_billing_address.business_billing_address": data.billingAddress,
@@ -394,8 +393,7 @@ Funcation calling from Registration router password storing becrypt format for s
             if (response) {
                 resolve(response)
             }
-            else
-            {
+            else {
                 resolve()
             }
         })
@@ -403,8 +401,8 @@ Funcation calling from Registration router password storing becrypt format for s
     uploadDocuments: (document, docId, gst, referral, userId) => {
         console.log(document);
         let doc = {}
-        for (let [key,value] of  Object.entries(document)) { 
-                doc[key] = "http://54.234.115.71:5000/document/" + value[0].filename
+        for (let [key, value] of Object.entries(document)) {
+            doc[key] = "http://54.234.115.71:5000/document/" + value[0].filename
         }
         console.log(doc);
         return new Promise(async (resolve, reject) => {
@@ -430,8 +428,7 @@ Funcation calling from Registration router password storing becrypt format for s
             if (data) {
                 resolve(data)
             }
-            else
-            {
+            else {
                 resolve()
             }
         })
@@ -467,9 +464,9 @@ Funcation calling from Registration router password storing becrypt format for s
             }
         })
     },
-    getEmail: (userId,email) => {
+    getEmail: (userId, email) => {
         return new Promise(async (resolve, reject) => {
-            let data = await user.findByIdAndUpdate(userId,{
+            let data = await user.findByIdAndUpdate(userId, {
                 email: email
             }).catch((err) => {
                 reject(err)
@@ -563,26 +560,26 @@ Funcation calling from Registration router password storing becrypt format for s
                 reject(err)
             })
             if (!userData.length == 0) {
-                let countOne=userData[0].business_shipping_address.length
+                let countOne = userData[0].business_shipping_address.length
                 if (!userData[0].doc.length == 0) {
                     for (let x of userData[0].doc) {
                         if (x.gst == gst && x.referral == referral) {
-                
+
                             let docname = Object.values(x.documentName).join("").replace(/ /g, "_")
-                           
-                            if(userData[0].gstin_no && docname.toLowerCase()=="pan_card"){
-                                  //NO DATA PUSH TO ARRAY
+
+                            if (userData[0].gstin_no && docname.toLowerCase() == "pan_card") {
+                                //NO DATA PUSH TO ARRAY
                             }
-                            else if(userData[0].gstin_yes && docname.toLowerCase()=="business_proof" || userData[0].business_billing_address  && userData[0].business_billing_address.buyer_business_address_proof_name && docname.toLowerCase()=="business_proof" && userData[0].business_shipping_address.length !=0 && userData[0].business_shipping_address[countOne-1].buyer_business_address_proof_name !=null ){
-                                  //NO DATA PUSH TO ARRAY
+                            else if (userData[0].gstin_yes && docname.toLowerCase() == "business_proof" || userData[0].business_billing_address && userData[0].business_billing_address.buyer_business_address_proof_name && docname.toLowerCase() == "business_proof" && userData[0].business_shipping_address.length != 0 && userData[0].business_shipping_address[countOne - 1].buyer_business_address_proof_name != null) {
+                                //NO DATA PUSH TO ARRAY
                             }
-                            else if( userData[0].gstin_yes && docname.toLowerCase()=="shipping_address_proof" || userData[0].business_billing_address  && userData[0].business_billing_address.buyer_business_address_proof_name && docname.toLowerCase()=="shipping_address_proof" && userData[0].business_shipping_address.length !=0 && userData[0].business_shipping_address[countOne-1].buyer_business_address_proof_name ==null   || userData[0].business_shipping_address.length !=0 && userData[0].business_shipping_address[countOne-1].buyer_business_address_proof_name && docname.toLowerCase()=="shipping_address_proof" ){
-                                  //NO DATA PUSH TO ARRAY
+                            else if (userData[0].gstin_yes && docname.toLowerCase() == "shipping_address_proof" || userData[0].business_billing_address && userData[0].business_billing_address.buyer_business_address_proof_name && docname.toLowerCase() == "shipping_address_proof" && userData[0].business_shipping_address.length != 0 && userData[0].business_shipping_address[countOne - 1].buyer_business_address_proof_name == null || userData[0].business_shipping_address.length != 0 && userData[0].business_shipping_address[countOne - 1].buyer_business_address_proof_name && docname.toLowerCase() == "shipping_address_proof") {
+                                //NO DATA PUSH TO ARRAY
                             }
                             else if (Object.keys(userData[0].documents).includes(docname.toLowerCase()) == false) {
-                                if (x.documentName == "PAN Card" || x.documentName == "Personal Address proof front copy" || x.documentName == "Personal Address proof back copy" ) {
+                                if (x.documentName == "PAN Card" || x.documentName == "Personal Address proof front copy" || x.documentName == "Personal Address proof back copy") {
                                     x.ownerName = userData[0].business_details.businessAuthorizedName
-                        
+
                                 }
                                 else {
                                     x.ownerName = userData[0].business_details.businessName
@@ -594,22 +591,21 @@ Funcation calling from Registration router password storing becrypt format for s
                     pendency.documents = doc
                 }
                 else {
-                    for(let x of documents){
+                    for (let x of documents) {
                         let docname = Object.values(x.documentName).join("").replace(/ /g, "_")
-                       
-                        if(userData[0].gstin_no && docname.toLowerCase()=="pan_card" || userData[0].business_shipping_address.length !=0 && userData[0].business_shipping_address[countOne-1].buyer_business_address_proof_name && docname.toLowerCase()=="shipping_address_proof"  ){
-                          //NO DATA PUSH TO ARRAY
+
+                        if (userData[0].gstin_no && docname.toLowerCase() == "pan_card" || userData[0].business_shipping_address.length != 0 && userData[0].business_shipping_address[countOne - 1].buyer_business_address_proof_name && docname.toLowerCase() == "shipping_address_proof") {
+                            //NO DATA PUSH TO ARRAY
                         }
-                        else if(userData[0].gstin_yes && docname.toLowerCase()=="business_proof" || userData[0].gstin_yes && docname.toLowerCase()=="shipping_address_proof" || userData[0].business_billing_address && userData[0].business_billing_address.buyer_business_address_proof_name && docname.toLowerCase()=="business_proof") 
-                        {
-                          //NO DATA PUSH TO ARRAY
-        
+                        else if (userData[0].gstin_yes && docname.toLowerCase() == "business_proof" || userData[0].gstin_yes && docname.toLowerCase() == "shipping_address_proof" || userData[0].business_billing_address && userData[0].business_billing_address.buyer_business_address_proof_name && docname.toLowerCase() == "business_proof") {
+                            //NO DATA PUSH TO ARRAY
+
                         }
-                        else{
-                            if (x.documentName == "PAN Card" || x.documentName == "Personal Address proof front copy" || x.documentName == "Personal Address proof back copy" ) {
+                        else {
+                            if (x.documentName == "PAN Card" || x.documentName == "Personal Address proof front copy" || x.documentName == "Personal Address proof back copy") {
                                 console.log();
                                 x._doc.ownerName = userData[0].business_details.businessAuthorizedName
-                    
+
                             }
                             else {
                                 x._doc.ownerName = userData[0].business_details.businessName
@@ -637,75 +633,78 @@ Funcation calling from Registration router password storing becrypt format for s
     },
     userDataInfo: (userId) => {
         return new Promise(async (resolve, reject) => {
-              userId = mongoose.Types.ObjectId(userId)
+            userId = mongoose.Types.ObjectId(userId)
             let userData = await user.aggregate([
-               {$match:{_id:userId}},
-               {
-                   $lookup:{
-                    from: "whatsappsubscriptions",
-                    localField: "_id",
-                    foreignField: "userId",
-                    as: "whatsappSub"
-                   }
-               }
-            ]).catch((err)=>{
+                { $match: { _id: userId } },
+                {
+                    $lookup: {
+                        from: "whatsappsubscriptions",
+                        localField: "_id",
+                        foreignField: "userId",
+                        as: "whatsappSub"
+                    }
+                }
+            ]).catch((err) => {
                 reject(err)
             })
             let userInfo = {}
-            if (userData[0].business_details && userData[0].mobile_number && userData[0].email) {
-                console.log(userData);
-                userInfo["businessName"] = userData[0].business_details.businessName
-                userInfo["businessAuthorizedName"] = userData[0].business_details.businessAuthorizedName
-                userInfo["email"] = userData[0].email
-                userInfo["mobile_number"] = userData[0].mobile_number
-                if(userData[0].gstin_yes){
-                    userInfo["gstin_yes.gstin_number"] = userData[0].gstin_yes.gstin_number
-                }
-                else
-                {
-                    userInfo["gstin_yes.gstin_number"] =null
-                }
-                if(userData[0].gstin_no){
-                    userInfo["gstin_no.pan_number"] = userData[0].gstin_no.pan_number
-                }
-                else
-                {
-                    userInfo["gstin_no.pan_number"]=null
-                }
-                if(userData[0].business_billing_address){
-                    userInfo["business_billing_address"] = userData[0].business_billing_address.business_billing_address
-                    userInfo["state"] = userData[0].business_billing_address.business_billing_address_state
-                    userInfo["town"] = userData[0].business_billing_address.business_billing_address_town_area
-                    userInfo["pincode"] = userData[0].business_billing_address.business_billing_address_pin_code
-                }
-                else if(userData[0].business_shipping_address.length !=0)
-                {
-                      let count=userData[0].business_shipping_address.length
-                      userInfo["business_shipping_address"] = userData[0].business_shipping_address[count-1].business_shipping_address
-                      userInfo["state"] = userData[0].business_shipping_address[count-1].business_shipping_address_state
-                      userInfo["town"] = userData[0].business_shipping_address[count-1].business_shipping_address_town_area
-                      userInfo["pincode"] = userData[0].business_shipping_address[count-1].business_shipping_address_pin_code
-
-                }
-                if(userData[0].email_verified=="success"){
-                    userInfo["Email_Status"]="Verfied"
+            if(userData[0].business_details){
+                userInfo["businessName"] = userData[0].business_details.businessName ? userData[0].business_details.businessName : null
+                userInfo["businessAuthorizedName"] = userData[0].business_details.businessAuthorizedName ? userData[0].business_details.businessAuthorizedName : null
             }
             else
             {
-                userInfo["Email_Status"]="Not Verfied"
+                userInfo["businessName"] = null
+                userInfo["businessAuthorizedName"] = null
             }
-            if(!userData[0].whatsappSub.length == 0){
-                userInfo["whatsapp_status"]="Whatsapp subscribed"
-            }
-            else
-            {
-                userInfo["whatsapp_status"]="Whatsapp not subscribed"
-            }
-                resolve(userInfo)
+            userInfo["email"] = userData[0].email ? userData[0].email : null
+            userInfo["mobile_number"] = userData[0].mobile_number ? userData[0].mobile_number : null
+            if (userData[0].gstin_yes) {
+                userInfo["gstin_yes.gstin_number"] = userData[0].gstin_yes.gstin_number
             }
             else {
-                resolve()
+                userInfo["gstin_yes.gstin_number"] = null
             }
+            if (userData[0].gstin_no) {
+                userInfo["gstin_no.pan_number"] = userData[0].gstin_no.pan_number
+            }
+            else {
+                userInfo["gstin_no.pan_number"] = null
+            }
+            if (userData[0].business_billing_address) {
+                userInfo["business_billing_address"] = userData[0].business_billing_address.business_billing_address
+                userInfo["state"] = userData[0].business_billing_address.business_billing_address_state
+                userInfo["town"] = userData[0].business_billing_address.business_billing_address_town_area
+                userInfo["pincode"] = userData[0].business_billing_address.business_billing_address_pin_code
+            }
+            else if (userData[0].business_shipping_address.length != 0) {
+                let count = userData[0].business_shipping_address.length
+                userInfo["business_shipping_address"] = userData[0].business_shipping_address[count - 1].business_shipping_address
+                userInfo["state"] = userData[0].business_shipping_address[count - 1].business_shipping_address_state
+                userInfo["town"] = userData[0].business_shipping_address[count - 1].business_shipping_address_town_area
+                userInfo["pincode"] = userData[0].business_shipping_address[count - 1].business_shipping_address_pin_code
+
+            }
+            else {
+                userInfo["business_billing_address"] = null
+                userInfo["state"] = null
+                userInfo["town"] = null
+                userInfo["pincode"] = null
+            }
+            if (userData[0].email_verified == "success") {
+                userInfo["Email_Status"] = "Verfied"
+            }
+            else {
+                userInfo["Email_Status"] = "Not Verfied"
+            }
+            if (!userData[0].whatsappSub.length == 0) {
+                userInfo["whatsapp_status"] = "Whatsapp subscribed"
+            }
+            else {
+                userInfo["whatsapp_status"] = "Whatsapp not subscribed"
+            }
+            resolve(userInfo)
+
         })
     },
     addDevice: (userData) => {
@@ -759,25 +758,25 @@ Funcation calling from Registration router password storing becrypt format for s
             }
         })
     },
-    editsData:(data)=>{
-        return new Promise(async(resolve,reject)=>{
-            let data=await guidlineDoc.updateMany({
-                documentName:"Shipping Address proof",gst:false
+    editsData: (data) => {
+        return new Promise(async (resolve, reject) => {
+            let data = await guidlineDoc.updateMany({
+                documentName: "Shipping Address proof", gst: false
             },
-            {
-                $set:{
-                    // "imgUrlTelephoneBill":"http://54.234.115.71:5000/icons/telephone.png",
-                    // "imgUrlShopBoardWithAddress":"http://54.234.115.71:5000/icons/shopBoradWithaddress.jpg",
-                    // "imgUrlLetterHead":"http://54.234.115.71:5000/icons/cover-letter.png",
-                    // "imgUrlBankStatement":"http://54.234.115.71:5000/icons/bankStatement.jpg",
-                    // "imgUrlBillBook":"https://dealsdryapi.herokuapp.com/icons/bill_book_img.png",
-                    "labelBillBook":"Bill Book",
-                   
+                {
+                    $set: {
+                        // "imgUrlTelephoneBill":"http://54.234.115.71:5000/icons/telephone.png",
+                        // "imgUrlShopBoardWithAddress":"http://54.234.115.71:5000/icons/shopBoradWithaddress.jpg",
+                        // "imgUrlLetterHead":"http://54.234.115.71:5000/icons/cover-letter.png",
+                        // "imgUrlBankStatement":"http://54.234.115.71:5000/icons/bankStatement.jpg",
+                        // "imgUrlBillBook":"https://dealsdryapi.herokuapp.com/icons/bill_book_img.png",
+                        "labelBillBook": "Bill Book",
 
 
 
+
+                    }
                 }
-            }
             )
             console.log(data);
         })
