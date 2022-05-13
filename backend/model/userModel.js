@@ -75,7 +75,7 @@ const userSchema = mongoose.Schema({
         referral: String
     },
     business_type: {
-        type: String
+        type: Array
     },
     email_verified: {
         type: String
