@@ -567,21 +567,6 @@ router.get("/:userId/info", async (req, res, next) => {
 
 })
 
-// reach to Home screen  as guest user .
-router.get("/home", (req, res, next) => {
-   try {
-      res.status(200).json({
-         status: 1,
-         data: {
-            message: "Successfully enter to home screen"
-         }
-      })
-   } catch (error) {
-      next(error)
-   }
-
-})
-
 router.get("/referral", (req, res) => {
    let code = 12345678
    res.status(200).json({

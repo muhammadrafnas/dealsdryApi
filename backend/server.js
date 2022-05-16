@@ -8,8 +8,8 @@ const registrationRouter = require("./router/RegistrationRouter")
 const documentUploadRouter = require("./router/DocumentUploadRouter")
 const deviceRouter = require("./router/DeviceRouter")
 const category=require("./router/CategoryRouter")
+const homePage=require("./router/homePageRouter")
 const connectDB = require("./config/db")
-const { uploadDocuments } = require("./controller/userController")
 
 connectDB()
 app.use(logger('dev'))
@@ -24,6 +24,7 @@ app.use("/api/v2/user", registrationRouter)
 app.use("/api/v2/user/doc", documentUploadRouter)
 app.use("/api/v2/user/device", deviceRouter)
 app.use("/api/v2/user/category",category)
+app.use("/api/v2/user/home",homePage)
 app.use("/icons", express.static(__dirname + '/public/icons'));
 app.use("/document", express.static(__dirname + '/public/documents'));
 
