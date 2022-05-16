@@ -572,7 +572,7 @@ Funcation calling from Registration router password storing becrypt format for s
                             else if (userData[0].gstin_yes && docname.toLowerCase() == "business_proof" || userData[0].business_billing_address && userData[0].business_billing_address.buyer_business_address_proof_name && docname.toLowerCase() == "business_proof" && userData[0].business_shipping_address.length != 0 && userData[0].business_shipping_address[countOne - 1].buyer_business_address_proof_name != null) {
                                 //NO DATA PUSH TO ARRAY
                             }
-                            else if (userData[0].gstin_yes && docname.toLowerCase() == "shipping_address_proof" || userData[0].business_billing_address && userData[0].business_billing_address.buyer_business_address_proof_name && docname.toLowerCase() == "shipping_address_proof" && userData[0].business_shipping_address.length != 0 && userData[0].business_shipping_address[countOne - 1].buyer_business_address_proof_name == null || userData[0].business_shipping_address.length != 0 && userData[0].business_shipping_address[countOne - 1].buyer_business_address_proof_name && docname.toLowerCase() == "shipping_address_proof") {
+                            else if (userData[0].gstin_yes && docname.toLowerCase() == "shipping_address_proof" || userData[0].business_billing_address && userData[0].business_billing_address.buyer_business_address_proof_name && docname.toLowerCase() == "shipping_address_proof" && userData[0].business_shipping_address.length == 0 || userData[0].business_shipping_address.length != 0 && userData[0].business_shipping_address[countOne - 1].buyer_business_address_proof_name && docname.toLowerCase() == "shipping_address_proof") {
                                 //NO DATA PUSH TO ARRAY
                             }
                             else if (Object.keys(userData[0].documents).includes(docname.toLowerCase()) == false) {
@@ -593,12 +593,14 @@ Funcation calling from Registration router password storing becrypt format for s
                     for (let x of documents) {
                         let docname = Object.values(x.documentName).join("").replace(/ /g, "_")
 
-                        if (userData[0].gstin_no && docname.toLowerCase() == "pan_card" || userData[0].business_shipping_address.length != 0 && userData[0].business_shipping_address[countOne - 1].buyer_business_address_proof_name && docname.toLowerCase() == "shipping_address_proof") {
+                        if (userData[0].gstin_no && docname.toLowerCase() == "pan_card" ) {
                             //NO DATA PUSH TO ARRAY
                         }
-                        else if (userData[0].gstin_yes && docname.toLowerCase() == "business_proof" || userData[0].gstin_yes && docname.toLowerCase() == "shipping_address_proof" || userData[0].business_billing_address && userData[0].business_billing_address.buyer_business_address_proof_name && docname.toLowerCase() == "business_proof") {
+                        else if (userData[0].gstin_yes && docname.toLowerCase() == "business_proof" || userData[0].business_billing_address && userData[0].business_billing_address.buyer_business_address_proof_name && docname.toLowerCase() == "business_proof" && userData[0].business_shipping_address.length != 0 && userData[0].business_shipping_address[countOne - 1].buyer_business_address_proof_name != null) {
                             //NO DATA PUSH TO ARRAY
-
+                        }
+                        else if (userData[0].gstin_yes && docname.toLowerCase() == "shipping_address_proof" || userData[0].business_billing_address && userData[0].business_billing_address.buyer_business_address_proof_name && docname.toLowerCase() == "shipping_address_proof" && userData[0].business_shipping_address.length == 0  || userData[0].business_shipping_address.length != 0 && userData[0].business_shipping_address[countOne - 1].buyer_business_address_proof_name && docname.toLowerCase() == "shipping_address_proof") {
+                            //NO DATA PUSH TO ARRAY
                         }
                         else {
                             if (x.documentName == "PAN Card" || x.documentName == "Personal Address proof front copy" || x.documentName == "Personal Address proof back copy") {
