@@ -1,5 +1,5 @@
 
-let ENDPOINT = "http://54.234.115.71:5000/icons/"
+let ENDPOINT = "http://54.234.115.71:5000"
 
 module.exports = {
     banner_one: [
